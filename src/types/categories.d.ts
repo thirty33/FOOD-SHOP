@@ -1,22 +1,53 @@
 import { Pagination, SuccessResponse, UnauthorizedResponse, RateLimitResponse } from './responses.d.ts';
 
-//Component Object
-export interface Category {
-    id: number;
-    image: string;
-    discount: string;
-    title: string;
-    linkText: string;
-    href: string;
-}
+type PriceListLine = {
+    id: number | string;
+    unit_price: string;
+};
 
-//Api Object
-export interface CategoryData {
+type Product = {
     id: number;
     name: string;
     description: string;
-}
+    price: string;
+    image: string;
+    category_id: number;
+    code: string;
+    active: number;
+    measure_unit: string;
+    price_list: string;
+    stock: number;
+    weight: string;
+    allow_sales_without_stock: number;
+    price_list_lines: PriceListLine[];
+};
 
-export type MenuApiResponse = SuccessResponse<Pagination<CategoryData>> | UnauthorizedResponse | RateLimitResponse;
+type CategoryDetail = {
+    id: number;
+    name: string;
+    description: string;
+    products: Product[];
+};
+
+type Menu = {
+    id: number;
+    active: boolean;
+    title: string;
+    description: string;
+    publication_date: string;
+};
+
+export interface Category {
+    id: number;
+    order: number;
+    show_all_products: boolean;
+    category_id: number;
+    menu_id: number;
+    category: CategoryDetail | null;
+    menu: Menu;
+    products: Product[];
+};
+
+export type MenuApiResponse = SuccessResponse<Pagination<Category>> | UnauthorizedResponse | RateLimitResponse;
 
 export type CategoryItemPagination = Pagination<Category>;

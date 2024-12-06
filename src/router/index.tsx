@@ -10,6 +10,7 @@ import { Cart } from "../components/Cart";
 import { Checkout } from "../components/Checkout";
 import { OrderSummary } from "../components/OrderSummary";
 import { Orders } from "../components/Orders";
+import { CategoriesProducts } from "../components/CategoriesProducts";
 
 export const AppRouter = () => {
   const routes = useRoutes([
@@ -26,7 +27,8 @@ export const AppRouter = () => {
       path: ROUTES.CATEGORY_ROUTE,
       element: (
         <ProtectedRoute>
-          <Categories />
+          {/* <Categories /> */}
+          <CategoriesProducts />
         </ProtectedRoute>
       ),
     },
