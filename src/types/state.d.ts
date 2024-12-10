@@ -25,6 +25,8 @@ export interface globalState {
     menuItems: MenuItem[];
     categories: Category[];
     products: Product[];
+    currentPage: number;
+    hasMore: boolean;
 }
 
 export type Action = 
@@ -34,3 +36,5 @@ export type Action =
     | { type: typeof CART_ACTION_TYPES.SET_MENUS, payload: Pick<globalState, 'menuItems'> }
     | { type: typeof CART_ACTION_TYPES.SET_CATEGORIES, payload: Pick<globalState, 'categories'> }
     | { type: typeof CART_ACTION_TYPES.SET_PRODUCTS, payload: Pick<globalState, 'products'> }
+    | { type: typeof CART_ACTION_TYPES.SET_CURRENT_PAGE, payload: Pick<globalState, 'currentPage'> }
+    | { type: typeof CART_ACTION_TYPES.SET_HAS_MORE, payload: Pick<globalState, 'hasMore'>}

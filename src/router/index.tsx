@@ -1,6 +1,6 @@
 import { LoginForm } from "../components/LoginForm";
 import { Menus } from "../components/Menus";
-import { useRoutes } from "react-router-dom";
+import { useRoutes, useNavigate, useLocation } from "react-router-dom";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import { ROUTES } from "../config/routes";
 import { Categories } from "../components/Categories";
@@ -13,6 +13,7 @@ import { Orders } from "../components/Orders";
 import { CategoriesProducts } from "../components/CategoriesProducts";
 
 export const AppRouter = () => {
+  
   const routes = useRoutes([
     {
       path: ROUTES.MENUS,

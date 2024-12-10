@@ -139,5 +139,8 @@ export const InitialState: globalState = {
         //     products: []
         // }
     ],
-    products: []
+    products: [],
+    currentPage: 1,
+    // hasMore: true,
+    hasMore: false,
 };

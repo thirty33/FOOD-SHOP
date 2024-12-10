@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMenus } from "../../hooks/useMenus";
 import { SpinnerLoading } from "../SpinnerLoading";
 import { ROUTES } from "../../config/routes";
@@ -10,11 +10,21 @@ const MenuCard: React.FC<{
   imageUrl: string;
   menuId: string | number;
 }> = ({ title, menuId }) => {
+
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    // Scroll to the top of the page before navigating
+    // window.scrollTo(0, 0);
+    navigate(ROUTES.GET_CATEGORY_ROUTE(menuId));
+  };
+
   return (
-    <Link
-      to={{ pathname: ROUTES.GET_CATEGORY_ROUTE(menuId) }}
+    <div
+      onClick={handleClick}
       className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
-    >
+      >
+      {/* onClick={() => { window.scrollTo(0, 0); }} */}
       <img
         className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
         src={MenuImage}
@@ -28,7 +38,7 @@ const MenuCard: React.FC<{
           {description}
         </p> */}
       </div>
-    </Link>
+    </div>
   );
 };
 

@@ -28,6 +28,20 @@ const UPDATE_STATE_BY_ACTION = {
             ...state,
             products: (action.payload as Pick<globalState, 'products'>).products,
         };
+    },
+
+    [CART_ACTION_TYPES.SET_CURRENT_PAGE]: (state: globalState, action: Action) => {
+        return {
+            ...state,
+            currentPage: (action.payload as Pick<globalState, 'currentPage'>).currentPage,
+        };
+    },
+    
+    [CART_ACTION_TYPES.SET_HAS_MORE]: (state: globalState, action: Action) => {
+        return {
+            ...state,
+            hasMore: (action.payload as Pick<globalState, 'hasMore'>).hasMore,
+        };
     }
 
 }
