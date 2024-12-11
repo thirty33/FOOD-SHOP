@@ -4,13 +4,21 @@ import { CategoryItemPagination } from "../types/categories";
 import { useInifiniteScroll } from "./useInifiniteScroll";
 import { useSnackbar } from "notistack";
 import { useParams } from "react-router-dom";
-import { CART_ACTION_TYPES } from "../config/constant";
 
 const categoryService = new CategoryHttpService();
 
 export function useCategories() {
 
-    const { currentPage, isLoading, categories, dispatch } = useInifiniteScroll();
+    const { 
+        currentPage, 
+        isLoading, 
+        categories,
+        setIsLoading,
+        setHasMore,
+        setCategories,
+        setMenus,
+        setCurrenPage
+     } = useInifiniteScroll();
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -18,23 +26,31 @@ export function useCategories() {
     
     const fetchCategories = useCallback(async () => {
         try {
-            dispatch({ type: CART_ACTION_TYPES.APP_IS_LOADING, payload: { isLoading: true } });
+
+            setIsLoading(true);
 
             const { last_page, current_page, data } = await categoryService.list(menuId!, { page: currentPage }) as CategoryItemPagination;
 
-            dispatch({ type: CART_ACTION_TYPES.SET_HAS_MORE, payload: { hasMore: current_page < last_page}})
+            setHasMore(current_page, last_page);
 
-            dispatch({ type: CART_ACTION_TYPES.SET_CATEGORIES, payload: { categories: [...categories, ...data] } });
+            setCategories([...categories, ...data]);
+            console.log('set categories', categories);
 
-            dispatch({ type: CART_ACTION_TYPES.APP_IS_LOADING, payload: { isLoading: false } });
+            setIsLoading(false);
             
         } catch (error) {
-            dispatch({ type: 'APP_IS_LOADING', payload: { isLoading: false } });
+            setIsLoading(false);
             enqueueSnackbar((error as Error).message, { variant: 'error' });
             throw error;
         }
     }, [categories, currentPage, menuId, enqueueSnackbar]);
 
+    useEffect(() => {
+        setMenus([]);
+        setCurrenPage(1);
+        setHasMore(2,1);
+    }, [])
+    
     useEffect(() => {
         fetchCategories();
     }, [currentPage]);

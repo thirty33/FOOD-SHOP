@@ -3,19 +3,21 @@ import { useMenus } from "../../hooks/useMenus";
 import { SpinnerLoading } from "../SpinnerLoading";
 import { ROUTES } from "../../config/routes";
 import MenuImage from "../../assets/images/menuImage.webp";
+import { MenuItem } from "../../types/menus";
 
 const MenuCard: React.FC<{
   title: string;
   description: string;
   imageUrl: string;
   menuId: string | number;
-}> = ({ title, menuId }) => {
+  setSelectedMenu: (id: string | number) => void;
+
+}> = ({ title, menuId, setSelectedMenu }) => {
 
   const navigate = useNavigate();
 
   const handleClick = () => {
-    // Scroll to the top of the page before navigating
-    // window.scrollTo(0, 0);
+    setSelectedMenu(menuId);
     navigate(ROUTES.GET_CATEGORY_ROUTE(menuId));
   };
 
@@ -24,7 +26,6 @@ const MenuCard: React.FC<{
       onClick={handleClick}
       className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
       >
-      {/* onClick={() => { window.scrollTo(0, 0); }} */}
       <img
         className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
         src={MenuImage}
@@ -43,32 +44,42 @@ const MenuCard: React.FC<{
 };
 
 export const Menus = (): JSX.Element => {
-  const { menuItems, isLoading } = useMenus();
+
+  const { menuItems, isLoading, setSelectedMenu } = useMenus();
+
+  const handleSelected = (id: number | string) => {
+    const menuSelected = menuItems.find((item) => item.id === id);
+    if(menuSelected) setSelectedMenu(menuSelected)
+  }
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {menuItems.map((item, index) => (
-          <MenuCard
-            key={index}
-            title={item.title}
-            description={item.description}
-            imageUrl={item.imageUrl}
-            menuId={item.id}
-          />
-        ))}
-      </div>
-      {menuItems.length === 0 && !isLoading && (
-        <div
-          className="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
-          role="alert"
-        >
-          <span className="font-medium">No hay Menús disponibles!</span> para el
-          día de hoy.
+      <div className="">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {menuItems.map((item) => (
+            <MenuCard
+              key={item.id}
+              title={item.title}
+              description={item.description}
+              imageUrl={item.imageUrl}
+              menuId={item.id}
+              setSelectedMenu={handleSelected}
+            />
+          ))}
         </div>
-      )}
-      <div className="flex justify-center m-4">
-        <SpinnerLoading show={isLoading} size={8} />
+        {menuItems.length === 0 && !isLoading && (
+          <div
+            className="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+            role="alert"
+          >
+            <span className="font-medium">No hay Menús disponibles!</span> para el
+            día de hoy.
+          </div>
+        )}
+        <div className="flex justify-center m-4">
+          <SpinnerLoading show={isLoading} size={8} />
+        </div>
+        
       </div>
     </>
   );

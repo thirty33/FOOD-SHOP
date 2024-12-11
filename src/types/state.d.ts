@@ -9,9 +9,20 @@ export interface state {
     showHeader: boolean;
     setShowHeader: (value: boolean) => void;
     isLoading: boolean;
-    setIsLoading: (isLoading: boolean) => void,
+    setIsLoading: (isLoading: boolean) => void;
     token: string | null;
-    setToken: (token: string | null) => void,
+    setToken: (token: string | null) => void;
+    menuItems: MenuItem[];
+    currentPage: number;
+    hasMore: boolean;
+    categories: Category[];
+    selectedMenu: MenuItem | null;
+    setMenus: (menuItems: MenuItem[]) => void;
+    setCategories: (categories: Category[]) => void;
+    setHasMore: (currentPage: number, lastPage: number) => void;
+    loadMoreShorts: () => void;
+    setSelectedMenu: (selectedMenu: MenuItem | null) => void;
+    setCurrenPage: (page: number) => void;
 }   
 
 export interface GlobalProviderProps {
@@ -27,6 +38,7 @@ export interface globalState {
     products: Product[];
     currentPage: number;
     hasMore: boolean;
+    selectedMenu: MenuItem | null;
 }
 
 export type Action = 
@@ -38,3 +50,4 @@ export type Action =
     | { type: typeof CART_ACTION_TYPES.SET_PRODUCTS, payload: Pick<globalState, 'products'> }
     | { type: typeof CART_ACTION_TYPES.SET_CURRENT_PAGE, payload: Pick<globalState, 'currentPage'> }
     | { type: typeof CART_ACTION_TYPES.SET_HAS_MORE, payload: Pick<globalState, 'hasMore'>}
+    | { type: typeof CART_ACTION_TYPES.SET_SELECTED_MENU, payload: Pick<globalState, 'selectedMenu'>}

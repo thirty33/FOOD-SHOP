@@ -42,6 +42,25 @@ const UPDATE_STATE_BY_ACTION = {
             ...state,
             hasMore: (action.payload as Pick<globalState, 'hasMore'>).hasMore,
         };
+    },
+    [CART_ACTION_TYPES.SHOW_HEADER]: (state: globalState, action: Action) => {
+        return {
+            ...state,
+            showHeader: (action.payload as Pick<globalState, 'showHeader'>).showHeader,
+        };
+    },
+
+    [CART_ACTION_TYPES.SET_TOKEN]: (state: globalState, action: Action) => {
+        return {
+            ...state,
+            token: (action.payload as Pick<globalState, 'token'>).token,
+        };
+    },
+    [CART_ACTION_TYPES.SET_SELECTED_MENU]: (state: globalState, action: Action) => {
+        return {
+            ...state,
+            selectedMenu: (action.payload as Pick<globalState, 'selectedMenu'>).selectedMenu,
+        };
     }
 
 }

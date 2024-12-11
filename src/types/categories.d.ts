@@ -1,5 +1,9 @@
 import { Pagination, SuccessResponse, UnauthorizedResponse, RateLimitResponse } from './responses.d.ts';
 
+export type Ingredients = {
+    descriptive_text: string
+}
+
 type PriceListLine = {
     id: number | string;
     unit_price: string;
@@ -20,6 +24,7 @@ type Product = {
     weight: string;
     allow_sales_without_stock: number;
     price_list_lines: PriceListLine[];
+    ingredients: Ingredients[];
 };
 
 type CategoryDetail = {

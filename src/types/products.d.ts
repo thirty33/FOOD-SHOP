@@ -11,6 +11,7 @@ export interface Product {
     reviews: number;
     price: string;
     tags: string[];
+    ingredients: Ingredients[];
 }
 
 export interface ProductData {
@@ -27,6 +28,7 @@ export interface ProductData {
     stock: number;
     weight: string;
     allow_sales_without_stock: number;
+    ingredients: Ingredients[];
 }
 
 export type ProductApiResponse = SuccessResponse<Pagination<ProductData>> | UnauthorizedResponse | RateLimitResponse;

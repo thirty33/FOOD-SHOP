@@ -1,15 +1,16 @@
-
+import { BreadCrumbsNavigation } from "../BreadCrumbsNavigation";
 import { Header } from "../Header";
 
 interface Props {
-    children?: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export const Layout = ({ children }: Props): JSX.Element => {
-    return (
-        <>
-        <Header />
-        {children}
-        </>
-    );
-}
+  return (
+    <div className="px-4 lg:px-6 py-2.5">
+      <Header />
+      <BreadCrumbsNavigation />
+      {children}
+    </div>
+  );
+};

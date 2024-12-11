@@ -74,11 +74,11 @@ export const LoginForm = () => {
           className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
         >
           <img
-            className="w-8 h-8 mr-2"
-            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
+            className="w-64 h-auto mr-2"
+            src="https://deliciusfood.cl/wp-content/uploads/2022/09/logo-delicius.svg"
             alt="logo"
           />
-          Flowbite
+          {/* Flowbite */}
         </a>
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">

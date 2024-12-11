@@ -1,9 +1,11 @@
 import { createContext, useReducer } from "react";
 import { CART_ACTION_TYPES } from "../config/constant";
 import { type state, type GlobalProviderProps } from "../types/state";
-import { globalReducer } from "../store/reducers/globalReducer";
 import { InitialState } from "../store/state/initialState";
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { menuReducer } from "../store/reducers/menuReducer";
+import { MenuItem } from "../types/menus";
+import { Category } from "../types/categories";
 
 export const GlobalContext = createContext<state>({
   showHeader: false,
@@ -11,14 +13,33 @@ export const GlobalContext = createContext<state>({
   setIsLoading: () => {},
   isLoading: false,
   token: null,
-  setToken: () => {}
+  setToken: () => {},
+  menuItems: [],
+  currentPage: 1,
+  hasMore: false,
+  categories: [],
+  selectedMenu: null,
+  setMenus: () => {},
+  setCategories: () => {},
+  setHasMore: () => {},
+  loadMoreShorts: () => {},
+  setSelectedMenu: () => {},
+  setCurrenPage: () => {}
 });
 
 export function GlobalProvider({ children }: GlobalProviderProps) {
 
-  const [state, dispatch] = useReducer(globalReducer, InitialState);
+  const [state, dispatch] = useReducer(menuReducer, InitialState);
 
-  const { showHeader, isLoading } = state;
+  const { 
+    showHeader, 
+    isLoading, 
+    menuItems,
+    currentPage, 
+    hasMore, 
+    categories,
+    // selectedMenu
+  } = state;
 
   const { getValue: getToken, setValue: setTokenOnLocalStorage } = useLocalStorage('');
 
@@ -61,6 +82,43 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
 
   };
 
+  const loadMoreShorts = () => {
+    dispatch({ type: CART_ACTION_TYPES.SET_CURRENT_PAGE, payload: { currentPage: currentPage + 1 }})
+  };
+
+  const setCurrenPage = (page: number) => {
+    dispatch({ type: CART_ACTION_TYPES.SET_CURRENT_PAGE, payload: { currentPage: page }})
+  }
+
+  const setHasMore = (currentPage: number, lastPage: number) => {
+    dispatch({ type: CART_ACTION_TYPES.SET_HAS_MORE, payload: { hasMore: currentPage < lastPage}})
+  }
+
+  const setMenus = (menuItems: MenuItem[]) => {
+    dispatch({ type: CART_ACTION_TYPES.SET_MENUS, payload: { menuItems } });
+  }
+
+  const setCategories = (categories: Category[]) => {
+    dispatch({ type: CART_ACTION_TYPES.SET_CATEGORIES, payload: { categories } });
+  }
+
+  const setSelectedMenu = (selectedMenu: MenuItem | null) => {
+    localStorage.setItem('selectedMenu', JSON.stringify(selectedMenu));
+    dispatch({ type: CART_ACTION_TYPES.SET_SELECTED_MENU, payload: { selectedMenu } });
+  }
+
+  const getSelectedMenu = () => {
+
+    let selectedMenu = null;
+    
+    if(localStorage.getItem('selectedMenu')) {
+      selectedMenu = JSON.parse(localStorage.getItem('selectedMenu')!);
+    }
+
+    return selectedMenu;
+
+  }
+
   return (
     <GlobalContext.Provider
       value={{
@@ -69,7 +127,18 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
         setIsLoading,
         isLoading,
         token: storedToken(),
-        setToken
+        setToken,
+        menuItems,
+        currentPage, 
+        hasMore, 
+        categories,
+        loadMoreShorts,
+        setHasMore,
+        setMenus,
+        setCategories,
+        setSelectedMenu,
+        selectedMenu: getSelectedMenu(),
+        setCurrenPage
       }}
     >
       {children}

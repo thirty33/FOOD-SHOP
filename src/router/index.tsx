@@ -1,9 +1,8 @@
 import { LoginForm } from "../components/LoginForm";
 import { Menus } from "../components/Menus";
-import { useRoutes, useNavigate, useLocation } from "react-router-dom";
+import { useRoutes } from "react-router-dom";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import { ROUTES } from "../config/routes";
-import { Categories } from "../components/Categories";
 import { Products } from "../components/Products";
 import { ProductDetail } from "../components/ProductDetail";
 import { Cart } from "../components/Cart";
