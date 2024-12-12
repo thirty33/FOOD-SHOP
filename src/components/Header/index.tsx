@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNotification } from "../../hooks/useNotification";
 import { NavLink, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../config/routes";
+import { configuration } from "../../config/config";
 
 export const Header = () => {
   const { logOut, setToken } = useAuth();
@@ -31,13 +32,10 @@ export const Header = () => {
           <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
             <a href="https://flowbite.com" className="flex items-center">
               <img
-                src="https://deliciusfood.cl/wp-content/uploads/2022/09/logo-delicius.svg"
+                src={configuration.company.logo}
                 className="mr-3 w-auto h-20"
-                alt="Flowbite Logo"
+                alt={configuration.company.name}
               />
-              {/* <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-                Flowbite
-              </span> */}
             </a>
             <div className="flex items-center lg:order-2">
               <a

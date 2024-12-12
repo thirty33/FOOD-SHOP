@@ -7,6 +7,7 @@ import { ActionButton } from "../ActionButton";
 import { useNotification } from "../../hooks/useNotification";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../config/routes";
+import { configuration } from "../../config/config";
 
 const schema = yup
   .object({
@@ -67,7 +68,7 @@ export const LoginForm = () => {
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900">
+    <section className="bg-white dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
           href="#"
@@ -75,10 +76,9 @@ export const LoginForm = () => {
         >
           <img
             className="w-64 h-auto mr-2"
-            src="https://deliciusfood.cl/wp-content/uploads/2022/09/logo-delicius.svg"
-            alt="logo"
+            src={configuration.company.logo}
+            alt={configuration.company.name}
           />
-          {/* Flowbite */}
         </a>
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
