@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../config/routes";
 import { useContext } from "react";
 import { GlobalContext } from "../../context/globalContext";

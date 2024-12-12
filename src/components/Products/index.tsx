@@ -110,6 +110,7 @@ export const Products = (): JSX.Element => {
                 imageDark={item.imageLight}
                 price={item.price}
                 title={item.title}
+                ingredients={item.ingredients}
               />
             ))}
           </div>

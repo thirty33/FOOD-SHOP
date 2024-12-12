@@ -42,6 +42,7 @@ export class ProductHttpService extends HttpClient implements ProductService {
                     reviews: 0,
                     price: product.price,
                     tags: ['test'],
+                    ingredients: product.ingredients
                 };
             });
 

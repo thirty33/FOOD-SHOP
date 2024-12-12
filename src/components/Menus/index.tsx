@@ -3,7 +3,6 @@ import { useMenus } from "../../hooks/useMenus";
 import { SpinnerLoading } from "../SpinnerLoading";
 import { ROUTES } from "../../config/routes";
 import MenuImage from "../../assets/images/menuImage.webp";
-import { MenuItem } from "../../types/menus";
 
 const MenuCard: React.FC<{
   title: string;
@@ -35,9 +34,6 @@ const MenuCard: React.FC<{
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
           {title}
         </h5>
-        {/* <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-          {description}
-        </p> */}
       </div>
     </div>
   );

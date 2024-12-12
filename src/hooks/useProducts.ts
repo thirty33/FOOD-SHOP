@@ -22,7 +22,7 @@ export function useProducts() {
 
         const { last_page, current_page, data } = await productsService.list({ page: currentPage }) as ProductItemPagination;
 
-        setHasMore(current_page < last_page);
+        setHasMore(current_page, last_page);
 
         dispatch({ type: CART_ACTION_TYPES.SET_PRODUCTS, payload: { products: [...products, ...data] } });
 
