@@ -1,4 +1,4 @@
-import { type globalState, type Action } from '../../types/state';
+import { type globalState, type Action, signOutState } from '../../types/state';
 import { CART_ACTION_TYPES } from '../../config/constant';
 
 const UPDATE_STATE_BY_ACTION = {
@@ -60,6 +60,14 @@ const UPDATE_STATE_BY_ACTION = {
         return {
             ...state,
             selectedMenu: (action.payload as Pick<globalState, 'selectedMenu'>).selectedMenu,
+        };
+    },
+    [CART_ACTION_TYPES.SIGN_OUT]: (state: globalState, action: Action) => {
+
+        const payload = (action.payload as signOutState);
+        return {
+            ...state,
+            ...payload,
         };
     }
 

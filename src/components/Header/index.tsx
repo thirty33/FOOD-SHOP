@@ -6,7 +6,7 @@ import { ROUTES } from "../../config/routes";
 import { configuration } from "../../config/config";
 
 export const Header = () => {
-  const { logOut, setToken } = useAuth();
+  const { logOut, setToken, signOut } = useAuth();
   const { enqueueSnackbar } = useNotification();
   const navigate = useNavigate();
 
@@ -18,6 +18,7 @@ export const Header = () => {
     try {
       await logOut();
       setToken(null);
+      signOut();
       navigate(ROUTES.LOGIN);
     } catch (error) {
       enqueueSnackbar((error as Error).message, { variant: "error" });

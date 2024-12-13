@@ -13,7 +13,8 @@ export function useAuth() {
         setIsLoading, 
         isLoading,
         token,
-        setToken
+        setToken,
+        signOut
      } = useContext(GlobalContext);
 
     const authUser = async ({ email, password, device_name = 'app' }: UserInputs) => {
@@ -47,6 +48,7 @@ export function useAuth() {
         isLoading,
         token,
         setToken,
-        logOut
+        logOut,
+        signOut
     }
 }

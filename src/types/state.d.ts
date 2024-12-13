@@ -23,6 +23,7 @@ export interface state {
     loadMoreShorts: () => void;
     setSelectedMenu: (selectedMenu: MenuItem | null) => void;
     setCurrenPage: (page: number) => void;
+    signOut: () => void;
 }   
 
 export interface GlobalProviderProps {
@@ -41,6 +42,10 @@ export interface globalState {
     selectedMenu: MenuItem | null;
 }
 
+export type signOutState = Pick<globalState, 
+    'token' | 'menuItems' | 'categories' | 'currentPage' | 'hasMore' | 'selectedMenu'
+>
+
 export type Action = 
     | { type: typeof CART_ACTION_TYPES.SHOW_HEADER, payload: Pick<globalState, 'showHeader'> }
     | { type: typeof CART_ACTION_TYPES.APP_IS_LOADING, payload: Pick<globalState, 'isLoading'> }
@@ -51,3 +56,4 @@ export type Action =
     | { type: typeof CART_ACTION_TYPES.SET_CURRENT_PAGE, payload: Pick<globalState, 'currentPage'> }
     | { type: typeof CART_ACTION_TYPES.SET_HAS_MORE, payload: Pick<globalState, 'hasMore'>}
     | { type: typeof CART_ACTION_TYPES.SET_SELECTED_MENU, payload: Pick<globalState, 'selectedMenu'>}
+    | { type: typeof CART_ACTION_TYPES.SIGN_OUT, payload: signOutState }

@@ -24,7 +24,8 @@ export const GlobalContext = createContext<state>({
   setHasMore: () => {},
   loadMoreShorts: () => {},
   setSelectedMenu: () => {},
-  setCurrenPage: () => {}
+  setCurrenPage: () => {},
+  signOut: () => {}
 });
 
 export function GlobalProvider({ children }: GlobalProviderProps) {
@@ -119,6 +120,20 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
 
   }
 
+  const signOut = () => {
+    dispatch({
+      type: CART_ACTION_TYPES.SIGN_OUT,
+      payload: {
+        token: null,
+        menuItems: [],
+        categories: [],
+        currentPage: 1,
+        hasMore: false,
+        selectedMenu: null
+      }
+    });
+  }
+
   return (
     <GlobalContext.Provider
       value={{
@@ -138,7 +153,8 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
         setCategories,
         setSelectedMenu,
         selectedMenu: getSelectedMenu(),
-        setCurrenPage
+        setCurrenPage,
+        signOut
       }}
     >
       {children}
