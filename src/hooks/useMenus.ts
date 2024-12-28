@@ -1,9 +1,7 @@
 import { useEffect } from "react";
-import { MenuHttpService } from "../services/menu";
+import { menuService } from "../services/menu";
 import { MenuItemPagination } from "../types/menus";
 import { useInifiniteScroll } from "./useInifiniteScroll";
-
-const menuService = new MenuHttpService();
 
 export function useMenus() {
 
