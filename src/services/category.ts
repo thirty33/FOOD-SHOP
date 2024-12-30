@@ -17,32 +17,35 @@ export interface CategoryService {
     list(id: string | number, params?: { [key: string]: string | number }): Promise<CategoryItemPagination> | CategoryItemPagination;
 }
 
-export class CategoryHttpService extends HttpClient implements CategoryService {
-
-    constructor() {
-        super(API_ROUTES.categories.base);
-    }
+export const categoryService = new (
+    class CategoryHttpService extends HttpClient implements CategoryService {
     
-    async list(id: string | number, params?: { [key: string]: string | number }): Promise<CategoryItemPagination> {
-        try {
-            const { data, status } = await this.http.get(`${API_ROUTES.categories.paths.list}/${id}`, { params: params });
-
-            const success = this.handleResponse<MenuApiResponse>(status, data) as SuccessResponse<Pagination<Category>>;
-            
-            const list: CategoryItemPagination = {
-                ...success.data
-            }
-
-            return list
-
-        } catch (error: unknown) {
-            if (axios.isAxiosError(error)) {
-                console.error('Axios error:', error.response?.data || error.message);
-            } else {
-                console.error('Error:', error);
-            }
-            throw error;
+        constructor() {
+            super(API_ROUTES.categories.base);
         }
+        
+        async list(id: string | number, params?: { [key: string]: string | number }): Promise<CategoryItemPagination> {
+            try {
+                const { data, status } = await this.http.get(`${API_ROUTES.categories.paths.list}/${id}`, { params: params });
+    
+                const success = this.handleResponse<MenuApiResponse>(status, data) as SuccessResponse<Pagination<Category>>;
+                
+                const list: CategoryItemPagination = {
+                    ...success.data
+                }
+    
+                return list
+    
+            } catch (error: unknown) {
+                if (axios.isAxiosError(error)) {
+                    console.error('Axios error:', error.response?.data || error.message);
+                } else {
+                    console.error('Error:', error);
+                }
+                throw error;
+            }
+        }
+    
     }
 
-}
+)();

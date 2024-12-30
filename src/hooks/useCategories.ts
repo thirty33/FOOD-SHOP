@@ -1,11 +1,9 @@
 import { useCallback, useEffect } from "react";
-import { CategoryHttpService } from "../services/category";
+import { categoryService } from "../services/category";
 import { CategoryItemPagination } from "../types/categories";
 import { useInifiniteScroll } from "./useInifiniteScroll";
 import { useSnackbar } from "notistack";
 import { useParams } from "react-router-dom";
-
-const categoryService = new CategoryHttpService();
 
 export function useCategories() {
 
@@ -29,6 +27,7 @@ export function useCategories() {
 
             setIsLoading(true);
 
+            // throw new Error('API error');
             const { last_page, current_page, data } = await categoryService.list(menuId!, { page: currentPage }) as CategoryItemPagination;
 
             setHasMore(current_page, last_page);
@@ -41,7 +40,6 @@ export function useCategories() {
         } catch (error) {
             setIsLoading(false);
             enqueueSnackbar((error as Error).message, { variant: 'error' });
-            throw error;
         }
     }, [categories, currentPage, menuId, enqueueSnackbar]);
 
