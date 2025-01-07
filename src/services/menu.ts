@@ -38,7 +38,8 @@ export const menuService = new (
                         title: `${formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1)}`,
                         description: menu.description,
                         id: menu.id,
-                        imageUrl: "https://files.oaiusercontent.com/file-XVrt61x76iiAo9PaA8LtZ5?se=2024-11-26T18%3A08%3A11Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3De93c25da-fe71-4e77-bf37-52703ccf837a.webp&sig=duKe9SeI7p%2B6sd0j9gprBMg4VQdxnKV2B5ypKguk2zA%3D"
+                        imageUrl: "https://files.oaiusercontent.com/file-XVrt61x76iiAo9PaA8LtZ5?se=2024-11-26T18%3A08%3A11Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3De93c25da-fe71-4e77-bf37-52703ccf837a.webp&sig=duKe9SeI7p%2B6sd0j9gprBMg4VQdxnKV2B5ypKguk2zA%3D",
+                        publication_date: menu.publication_date
                     };
                 });
     

@@ -23,7 +23,7 @@ export function useMenus() {
 
             const { last_page, current_page, data } = await menuService.list({ page: currentPage }) as MenuItemPagination;
 
-            setHasMore(current_page, last_page);
+            setHasMore(current_page < last_page);
 
             setMenus([...menuItems, ...data]);
 
@@ -38,7 +38,7 @@ export function useMenus() {
     useEffect(() => {
         setCategories([]);
         setCurrenPage(1);
-        setHasMore(2,1);
+        setHasMore(2 < 1);
     }, [])
 
     useEffect(() => {

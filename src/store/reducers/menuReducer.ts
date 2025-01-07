@@ -69,8 +69,13 @@ const UPDATE_STATE_BY_ACTION = {
             ...state,
             ...payload,
         };
+    },
+    [CART_ACTION_TYPES.SET_CURRENT_ORDER]: (state: globalState, action: Action) => {
+        return {
+            ...state,
+            currentOrder: (action.payload as Pick<globalState, 'currentOrder'>).currentOrder,
+        };
     }
-
 }
 
 export const menuReducer = (state: globalState, action: Action & { type: keyof typeof UPDATE_STATE_BY_ACTION }): globalState => {

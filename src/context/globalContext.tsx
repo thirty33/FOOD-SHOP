@@ -25,7 +25,8 @@ export const GlobalContext = createContext<state>({
   loadMoreShorts: () => {},
   setSelectedMenu: () => {},
   setCurrenPage: () => {},
-  signOut: () => {}
+  signOut: () => {},
+  currentOrder: null
 });
 
 export function GlobalProvider({ children }: GlobalProviderProps) {
@@ -40,6 +41,7 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
     hasMore, 
     categories,
     // selectedMenu
+    currentOrder
   } = state;
 
   const { getValue: getToken, setValue: setTokenOnLocalStorage } = useLocalStorage('');
@@ -154,7 +156,8 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
         setSelectedMenu,
         selectedMenu: getSelectedMenu(),
         setCurrenPage,
-        signOut
+        signOut,
+        currentOrder
       }}
     >
       {children}

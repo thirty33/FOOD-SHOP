@@ -1,0 +1,5 @@
+.checkout-side-menu {
+  width: 460px;
+  height: calc(100vh - 110px);
+  top: 110px;
+}

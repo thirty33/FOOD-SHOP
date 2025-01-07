@@ -9,5 +9,6 @@ export const InitialState: globalState = {
     products: [],
     currentPage: 1,
     hasMore: false,
-    selectedMenu: null
+    selectedMenu: null,
+    currentOrder: null
 };

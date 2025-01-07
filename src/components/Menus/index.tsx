@@ -10,14 +10,15 @@ const MenuCard: React.FC<{
   imageUrl: string;
   menuId: string | number;
   setSelectedMenu: (id: string | number) => void;
+  date: string;
 
-}> = ({ title, menuId, setSelectedMenu }) => {
+}> = ({ title, menuId, setSelectedMenu, date }) => {
 
   const navigate = useNavigate();
 
   const handleClick = () => {
     setSelectedMenu(menuId);
-    navigate(ROUTES.GET_CATEGORY_ROUTE(menuId));
+    navigate(`${ROUTES.GET_CATEGORY_ROUTE(menuId)}?date=${date}`);
   };
 
   return (
@@ -60,6 +61,7 @@ export const Menus = (): JSX.Element => {
               imageUrl={item.imageUrl}
               menuId={item.id}
               setSelectedMenu={handleSelected}
+              date={item.publication_date}
             />
           ))}
         </div>

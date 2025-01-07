@@ -4,6 +4,7 @@ import { CART_ACTION_TYPES } from "../config/constant";
 import { MenuItem } from "./menus";
 import { Category } from "./categories";
 import { Product } from "./products";
+import { OrderData } from "./order";
 
 export interface state {
     showHeader: boolean;
@@ -24,6 +25,7 @@ export interface state {
     setSelectedMenu: (selectedMenu: MenuItem | null) => void;
     setCurrenPage: (page: number) => void;
     signOut: () => void;
+    currentOrder: OrderData | null;
 }   
 
 export interface GlobalProviderProps {
@@ -40,6 +42,7 @@ export interface globalState {
     currentPage: number;
     hasMore: boolean;
     selectedMenu: MenuItem | null;
+    currentOrder: OrderData | null;
 }
 
 export type signOutState = Pick<globalState, 
@@ -57,3 +60,4 @@ export type Action =
     | { type: typeof CART_ACTION_TYPES.SET_HAS_MORE, payload: Pick<globalState, 'hasMore'>}
     | { type: typeof CART_ACTION_TYPES.SET_SELECTED_MENU, payload: Pick<globalState, 'selectedMenu'>}
     | { type: typeof CART_ACTION_TYPES.SIGN_OUT, payload: signOutState }
+    | { type: typeof CART_ACTION_TYPES.SET_CURRENT_ORDER, payload: Pick<globalState, 'currentOrder'> }

@@ -41,5 +41,11 @@ export const API_ROUTES = {
         paths: {
             list: '',
         }
-    }
+    },
+    orders: {
+        base: 'orders',
+        paths: {
+            getItem: 'get-order',
+        }
+    },
 }

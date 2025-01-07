@@ -22,18 +22,16 @@ export function useCategories() {
 
     const { menuId } = useParams<{ menuId: string }>();
     
-    const fetchCategories = useCallback(async () => {
+    const fetchCategories = async () => {
         try {
 
             setIsLoading(true);
 
-            // throw new Error('API error');
             const { last_page, current_page, data } = await categoryService.list(menuId!, { page: currentPage }) as CategoryItemPagination;
 
-            setHasMore(current_page, last_page);
+            setHasMore(current_page < last_page);
 
             setCategories([...categories, ...data]);
-            console.log('set categories', categories);
 
             setIsLoading(false);
             
@@ -41,13 +39,14 @@ export function useCategories() {
             setIsLoading(false);
             enqueueSnackbar((error as Error).message, { variant: 'error' });
         }
-    }, [categories, currentPage, menuId, enqueueSnackbar]);
+    }
 
     useEffect(() => {
         setMenus([]);
+        setCategories([]);
         setCurrenPage(1);
-        setHasMore(2,1);
-    }, [])
+        setHasMore(2 < 1);
+    }, [menuId])
     
     useEffect(() => {
         fetchCategories();

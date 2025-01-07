@@ -1,26 +1,27 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../context/globalContext";
 
 export function useInifiniteScroll() {
     
+    const [ currentPage, setCurrenPage] = useState(1);
+    const [ hasMore, setHasMore] = useState(false);
+
     const { 
         isLoading, 
-        currentPage, 
-        hasMore, 
         categories,
         menuItems,
-        loadMoreShorts,
         setIsLoading,
-        setHasMore,
         setMenus,
         setCategories,
         setSelectedMenu,
-        setCurrenPage
     } = useContext(GlobalContext);
+
+    const loadMoreShorts = () => {
+        setCurrenPage(prev => prev  + 1)
+    };
     
     useEffect(() => {
         const handleScroll = () => {
-
             if (isLoading || !hasMore) return;
             
             const scrollHeight = document.documentElement.scrollHeight;
@@ -36,7 +37,7 @@ export function useInifiniteScroll() {
         return () => {
             window.removeEventListener('scroll', handleScroll)
         };
-    }, [isLoading, hasMore]);
+    }, [hasMore]);
 
     return {
         currentPage,

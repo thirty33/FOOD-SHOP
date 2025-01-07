@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-import { ROUTES } from "../../config/routes";
+import { useState } from "react";
 
 export interface CartItemProps {
   image: string;
@@ -12,138 +11,98 @@ export const CartItem = ({
   image,
   name,
   price,
-  quantity
+  quantity: initialQuantity,
 }: CartItemProps): JSX.Element => {
+
+  const [quantity, setQuantity] = useState(initialQuantity);
+
+  const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuantity = parseInt(event.target.value, 10);
+    if (!isNaN(newQuantity) && newQuantity >= 0) {
+      setQuantity(newQuantity);
+    }
+  };
+
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
-      <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
-        <a href="#" className="shrink-0 md:order-1">
-          <img
-            className="h-20 w-20"
-            src={image}
-            alt="imac image"
-          />
-        </a>
-        <label htmlFor="cProounter-input" className="sr-only">
-          Choose quantity:
-        </label>
-        <div className="flex items-center justify-between md:order-3 md:justify-end">
-          <div className="flex items-center">
-            <button
-              type="button"
-              id="decrement-button"
-              data-input-counter-decrement="counter-input"
-              className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
-            >
-              <svg
-                className="h-2.5 w-2.5 text-gray-900 dark:text-white"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 18 2"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M1 1h16"
-                />
-              </svg>
-            </button>
-            <input
-              type="text"
-              id="counter-input"
-              data-input-counter=""
-              className="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-white"
-              placeholder=""
-              defaultValue={quantity}
-              required={false}
-            />
-            <button
-              type="button"
-              id="increment-button"
-              data-input-counter-increment="counter-input"
-              className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
-            >
-              <svg
-                className="h-2.5 w-2.5 text-gray-900 dark:text-white"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 18 18"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 1v16M1 9h16"
-                />
-              </svg>
-            </button>
-          </div>
-          <div className="text-end md:order-4 md:w-32">
-            <p className="text-base font-bold text-gray-900 dark:text-white">
-              ${price}
-            </p>
-          </div>
-        </div>
-        <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
-          <a
-            href="#"
-            className="text-base font-medium text-gray-900 hover:underline dark:text-white"
-          >
+    <div className="flex items-center gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+      {/* Product Image */}
+      <div className="h-20 w-20 flex-shrink-0">
+        <img
+          className="h-full w-full rounded-md object-cover"
+          src={image}
+          alt={name}
+        />
+      </div>
+
+      {/* Product Details */}
+      <div className="flex flex-1 flex-col space-y-2">
+        <div className="flex flex-col gap-y-2 items-start justify-between">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white">
             {name}
-          </a>
-          <div className="flex items-center gap-4">
+          </h3>
+          <p className="text-lg font-bold text-gray-900 dark:text-white">
+            {price}
+          </p>
+        </div>
+
+        {/* Quantity Controls and Remove Button */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
             <button
               type="button"
-              className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 hover:underline dark:text-gray-400 dark:hover:text-white"
+              className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400"
             >
+              <span className="sr-only">Decrease quantity</span>
               <svg
-                className="me-1.5 h-5 w-5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width={24}
-                height={24}
+                className="h-3 w-3"
                 fill="none"
                 viewBox="0 0 24 24"
+                stroke="currentColor"
               >
                 <path
-                  stroke="currentColor"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z"
+                  d="M20 12H4"
                 />
               </svg>
-              Add to Favorites
             </button>
+
+            <input
+              type="number"
+              className="w-12 text-center text-sm text-gray-600 dark:text-gray-400 bg-transparent border border-gray-300 rounded-md p-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              value={quantity}
+              onChange={handleQuantityChange}
+              min="0"
+            />
+
             <button
               type="button"
-              className="inline-flex items-center text-sm font-medium text-red-600 hover:underline dark:text-red-500"
+              className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400"
             >
+              <span className="sr-only">Increase quantity</span>
               <svg
-                className="me-1.5 h-5 w-5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width={24}
-                height={24}
+                className="h-3 w-3"
                 fill="none"
                 viewBox="0 0 24 24"
+                stroke="currentColor"
               >
                 <path
-                  stroke="currentColor"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M6 18 17.94 6M18 18 6.06 6"
+                  d="M12 4v16m8-8H4"
                 />
               </svg>
-              Remove
             </button>
           </div>
+
+          <button
+            type="button"
+            className="text-sm text-red-600 hover:text-red-800 dark:text-red-500 dark:hover:text-red-400"
+          >
+            Eliminar
+          </button>
         </div>
       </div>
     </div>
@@ -573,3 +532,6 @@ export const Cart = (): JSX.Element => {
     </section>
   );
 };
+
+
+export default CartItem;

@@ -6,6 +6,7 @@ export interface MenuItem {
     description: string;
     imageUrl: string;
     id: string | number;
+    publication_date: string;
 }
 
 //Api object
