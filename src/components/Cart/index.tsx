@@ -1,17 +1,23 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { ROUTES } from "../../config/routes";
 
 export interface CartItemProps {
+  id: number | number;
   image: string;
   name: string;
   price: string;
   quantity: number;
+  deleteItemFromCart: (id: number | number, quantity: number | number) => void;
 }
 
 export const CartItem = ({
+  id,
   image,
   name,
   price,
   quantity: initialQuantity,
+  deleteItemFromCart
 }: CartItemProps): JSX.Element => {
 
   const [quantity, setQuantity] = useState(initialQuantity);
@@ -98,6 +104,7 @@ export const CartItem = ({
           </div>
 
           <button
+            onClick={() => deleteItemFromCart(id, 1)}
             type="button"
             className="text-sm text-red-600 hover:text-red-800 dark:text-red-500 dark:hover:text-red-400"
           >

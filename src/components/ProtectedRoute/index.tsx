@@ -1,6 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { Layout } from "../Layout";
+import { OrderProvider } from "../../context/orderContext";
 
 export const ProtectedRoute = ({
   children,
@@ -15,7 +16,9 @@ export const ProtectedRoute = ({
 
   return (
     <>
-      <Layout>{children}</Layout>
+      <OrderProvider>
+        <Layout>{children}</Layout>
+      </OrderProvider>
     </>
   );
 };

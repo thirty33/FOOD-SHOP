@@ -2,23 +2,28 @@ import { useCategories } from "../../hooks/useCategories";
 import { ProductItem } from "../Products";
 import { Product, Category } from "../../types/categories";
 import { SpinnerLoading } from "../SpinnerLoading";
+import { useOrder } from "../../hooks/useCurrentOrder";
 
 // Componente para la lista de productos de una categoría
-const ProductList = ({ products }: { products: Product[] }) => (
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {products.map((product) => (
-      <ProductItem
-        key={product.id}
-        id={product.id}
-        imageLight={product.image}
-        imageDark={product.image}
-        price={product.price_list_lines[0].unit_price}
-        title={product.name}
-        ingredients={product.ingredients}
-      />
-    ))}
-  </div>
-);
+const ProductList = ({ products }: { products: Product[] }) => {
+  const { addProductToCart } = useOrder();
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {products.map((product) => (
+        <ProductItem
+          key={product.id}
+          id={product.id}
+          imageLight={product.image}
+          imageDark={product.image}
+          price={product.price_list_lines[0].unit_price}
+          title={product.name}
+          ingredients={product.ingredients}
+          addProductToCart={addProductToCart}
+        />
+      ))}
+    </div>
+  );
+}
 
 // Componente para una categoría
 const CategorySection = ({ category }: { category: Category }): JSX.Element => {

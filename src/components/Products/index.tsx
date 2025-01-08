@@ -1,8 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
 import { useProducts } from "../../hooks/useProducts";
 import { SpinnerLoading } from "../SpinnerLoading";
-import { ROUTES } from "../../config/routes";
 import { Ingredients } from "../../types/categories";
+import { useOrder } from "../../hooks/useCurrentOrder";
 
 interface ProductItemProps {
   id: string | number;
@@ -11,6 +10,7 @@ interface ProductItemProps {
   title: string;
   price: string | number;
   ingredients: Ingredients[];
+  addProductToCart: (id: string | number, quantity: number) => void;
 }
 
 export const ProductItem = ({
@@ -19,30 +19,26 @@ export const ProductItem = ({
   imageDark,
   title,
   price,
-  ingredients
+  ingredients,
+  addProductToCart,
 }: ProductItemProps): JSX.Element => {
-  const navigate = useNavigate();
-
   return (
     <div
       key={id}
       className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
     >
       <div className="h-56 w-full">
-        <Link to={`/${ROUTES.GET_PRODUCT_DETAIL_ROUTE(id)}`}>
+        <div onClick={() => addProductToCart(id, 1)}>
           <img className="mx-auto h-full dark:hidden" src={imageLight} alt="" />
           <img
             className="mx-auto hidden h-full dark:block"
             src={imageDark}
             alt=""
           />
-        </Link>
+        </div>
       </div>
       <div className="pt-6">
-
-        <div
-          className="text-3xl font-semibold leading-tight text-gray-900 hover:underline dark:text-white py-4"
-        >
+        <div className="text-3xl font-semibold leading-tight text-gray-900 hover:underline dark:text-white py-4">
           {title}
         </div>
 
@@ -67,7 +63,7 @@ export const ProductItem = ({
           <button
             type="button"
             className="inline-flex products-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-            onClick={() => navigate(`/${ROUTES.CART_ROUTE}`)}
+            onClick={() => addProductToCart(id, 1)}
           >
             <svg
               className="-ms-2 me-2 h-5 w-5"
@@ -95,6 +91,7 @@ export const ProductItem = ({
 };
 
 export const Products = (): JSX.Element => {
+  const { addProductToCart } = useOrder();
   const { products, isLoading } = useProducts();
 
   return (
@@ -111,6 +108,7 @@ export const Products = (): JSX.Element => {
                 price={item.price}
                 title={item.title}
                 ingredients={item.ingredients}
+                addProductToCart={addProductToCart}
               />
             ))}
           </div>

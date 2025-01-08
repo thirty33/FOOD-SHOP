@@ -26,6 +26,8 @@ export interface state {
     setCurrenPage: (page: number) => void;
     signOut: () => void;
     currentOrder: OrderData | null;
+    addProductToCart: (id: string | number, quantity: number) => void;
+    deleteItemFromCart: (id: string | number, quantity: number) => void;
 }   
 
 export interface GlobalProviderProps {

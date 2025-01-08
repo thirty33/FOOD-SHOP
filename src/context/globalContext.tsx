@@ -2,12 +2,35 @@ import { createContext, useReducer } from "react";
 import { CART_ACTION_TYPES } from "../config/constant";
 import { type state, type GlobalProviderProps } from "../types/state";
 import { InitialState } from "../store/state/initialState";
-import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useLocalStorage } from "../hooks/useLocalStorage";
 import { menuReducer } from "../store/reducers/menuReducer";
 import { MenuItem } from "../types/menus";
 import { Category } from "../types/categories";
 
-export const GlobalContext = createContext<state>({
+type globalContextState = Pick<
+  state,
+  | "showHeader"
+  | "isLoading"
+  | "token"
+  | "menuItems"
+  | "currentPage"
+  | "hasMore"
+  | "categories"
+  | "selectedMenu"
+  | "currentOrder"
+  | "setShowHeader"
+  | "setIsLoading"
+  | "setToken"
+  | "setMenus"
+  | "setCategories"
+  | "setHasMore"
+  | "loadMoreShorts"
+  | "setSelectedMenu"
+  | "setCurrenPage"
+  | "signOut"
+>;
+
+export const GlobalContext = createContext<globalContextState>({
   showHeader: false,
   setShowHeader: () => {},
   setIsLoading: () => {},
@@ -26,33 +49,31 @@ export const GlobalContext = createContext<state>({
   setSelectedMenu: () => {},
   setCurrenPage: () => {},
   signOut: () => {},
-  currentOrder: null
+  currentOrder: null,
 });
 
 export function GlobalProvider({ children }: GlobalProviderProps) {
-
   const [state, dispatch] = useReducer(menuReducer, InitialState);
 
-  const { 
-    showHeader, 
-    isLoading, 
+  const {
+    showHeader,
+    isLoading,
     menuItems,
-    currentPage, 
-    hasMore, 
+    currentPage,
+    hasMore,
     categories,
     // selectedMenu
-    currentOrder
+    currentOrder,
   } = state;
 
-  const { getValue: getToken, setValue: setTokenOnLocalStorage } = useLocalStorage('');
+  const { getValue: getToken, setValue: setTokenOnLocalStorage } =
+    useLocalStorage("");
 
   const setShowHeader = (showHeader: boolean) => {
-
     dispatch({
       type: CART_ACTION_TYPES.SHOW_HEADER,
       payload: { showHeader },
     });
-
   };
 
   const setIsLoading = (isLoading: boolean) => {
@@ -60,67 +81,76 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
       type: CART_ACTION_TYPES.APP_IS_LOADING,
       payload: { isLoading },
     });
-  }
+  };
 
   const setToken = (token: string | null) => {
-
     dispatch({
       type: CART_ACTION_TYPES.SET_TOKEN,
       payload: { token },
     });
 
-    if(token) {
-      setTokenOnLocalStorage('token', token);
+    if (token) {
+      setTokenOnLocalStorage("token", token);
     }
-
-  }
+  };
 
   const storedToken = (): string | null => {
-
-    if(getToken('token')) {
-      return getToken('token');
+    if (getToken("token")) {
+      return getToken("token");
     }
 
     return null;
-
   };
 
   const loadMoreShorts = () => {
-    dispatch({ type: CART_ACTION_TYPES.SET_CURRENT_PAGE, payload: { currentPage: currentPage + 1 }})
+    dispatch({
+      type: CART_ACTION_TYPES.SET_CURRENT_PAGE,
+      payload: { currentPage: currentPage + 1 },
+    });
   };
 
   const setCurrenPage = (page: number) => {
-    dispatch({ type: CART_ACTION_TYPES.SET_CURRENT_PAGE, payload: { currentPage: page }})
-  }
+    dispatch({
+      type: CART_ACTION_TYPES.SET_CURRENT_PAGE,
+      payload: { currentPage: page },
+    });
+  };
 
   const setHasMore = (currentPage: number, lastPage: number) => {
-    dispatch({ type: CART_ACTION_TYPES.SET_HAS_MORE, payload: { hasMore: currentPage < lastPage}})
-  }
+    dispatch({
+      type: CART_ACTION_TYPES.SET_HAS_MORE,
+      payload: { hasMore: currentPage < lastPage },
+    });
+  };
 
   const setMenus = (menuItems: MenuItem[]) => {
     dispatch({ type: CART_ACTION_TYPES.SET_MENUS, payload: { menuItems } });
-  }
+  };
 
   const setCategories = (categories: Category[]) => {
-    dispatch({ type: CART_ACTION_TYPES.SET_CATEGORIES, payload: { categories } });
-  }
+    dispatch({
+      type: CART_ACTION_TYPES.SET_CATEGORIES,
+      payload: { categories },
+    });
+  };
 
   const setSelectedMenu = (selectedMenu: MenuItem | null) => {
-    localStorage.setItem('selectedMenu', JSON.stringify(selectedMenu));
-    dispatch({ type: CART_ACTION_TYPES.SET_SELECTED_MENU, payload: { selectedMenu } });
-  }
+    localStorage.setItem("selectedMenu", JSON.stringify(selectedMenu));
+    dispatch({
+      type: CART_ACTION_TYPES.SET_SELECTED_MENU,
+      payload: { selectedMenu },
+    });
+  };
 
   const getSelectedMenu = () => {
-
     let selectedMenu = null;
-    
-    if(localStorage.getItem('selectedMenu')) {
-      selectedMenu = JSON.parse(localStorage.getItem('selectedMenu')!);
+
+    if (localStorage.getItem("selectedMenu")) {
+      selectedMenu = JSON.parse(localStorage.getItem("selectedMenu")!);
     }
 
     return selectedMenu;
-
-  }
+  };
 
   const signOut = () => {
     dispatch({
@@ -131,10 +161,10 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
         categories: [],
         currentPage: 1,
         hasMore: false,
-        selectedMenu: null
-      }
+        selectedMenu: null,
+      },
     });
-  }
+  };
 
   return (
     <GlobalContext.Provider
@@ -146,8 +176,8 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
         token: storedToken(),
         setToken,
         menuItems,
-        currentPage, 
-        hasMore, 
+        currentPage,
+        hasMore,
         categories,
         loadMoreShorts,
         setHasMore,
@@ -157,7 +187,7 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
         selectedMenu: getSelectedMenu(),
         setCurrenPage,
         signOut,
-        currentOrder
+        currentOrder,
       }}
     >
       {children}

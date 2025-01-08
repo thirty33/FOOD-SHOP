@@ -6,18 +6,13 @@ import { useOrder } from "../../hooks/useCurrentOrder";
 import { SpinnerLoading } from "../SpinnerLoading";
 
 export const CheckoutSideMenu = () => {
-  const { cartProducts, currentOrder, isLoading } = useOrder();
+
+  const { currentOrder, isLoading, deleteItemFromCart } = useOrder();
 
   const handleDelete = (id: number) => {};
 
   const handleCheckout = () => {};
-
-  const totalPrice = (products: Array<{ [key: string]: any }>) => {
-    let sum = 0;
-    products.forEach((product) => (sum += product.price));
-    return sum;
-  };
-
+  
   return (
     <aside
       className={`${
@@ -42,6 +37,8 @@ export const CheckoutSideMenu = () => {
               price={line.total_price}
               quantity={line.quantity}
               image={line.product.image}
+              id={line.product.id}
+              deleteItemFromCart={deleteItemFromCart}
             />
           ))}
       </div>
@@ -64,7 +61,7 @@ export const CheckoutSideMenu = () => {
         <p className="flex justify-between items-center mb-2 p-4">
           <span className="font-bold text-2xl">Total:</span>
           <span className="font-medium text-2xl">
-            ${totalPrice(cartProducts)}
+            {currentOrder ? currentOrder?.total : '$0'}
           </span>
         </p>
         <Link to="/">

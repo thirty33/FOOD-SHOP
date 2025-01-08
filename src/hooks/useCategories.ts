@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { categoryService } from "../services/category";
 import { CategoryItemPagination } from "../types/categories";
 import { useInifiniteScroll } from "./useInifiniteScroll";

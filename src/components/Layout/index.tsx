@@ -1,7 +1,6 @@
 import { BreadCrumbsNavigation } from "../BreadCrumbsNavigation";
 import { CheckoutSideMenu } from "../CheckoutSideMenu";
 import { Header } from "../Header";
-
 interface Props {
   children?: React.ReactNode;
 }
