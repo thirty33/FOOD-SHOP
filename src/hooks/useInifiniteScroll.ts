@@ -4,6 +4,7 @@ import { GlobalContext } from "../context/globalContext";
 export function useInifiniteScroll() {
     
     const [ currentPage, setCurrenPage] = useState(1);
+    const [ lastPage, setLastPage] = useState(1);
     const [ hasMore, setHasMore] = useState(false);
 
     const { 
@@ -50,6 +51,8 @@ export function useInifiniteScroll() {
         setMenus,
         setCategories,
         setSelectedMenu,
-        setCurrenPage
+        setCurrenPage,
+        setLastPage,
+        lastPage
     }
 }

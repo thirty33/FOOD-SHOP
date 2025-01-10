@@ -13,17 +13,20 @@ export function useMenus() {
         setHasMore,
         setMenus,
         setSelectedMenu,
-        setCurrenPage,
-        setCategories
+        lastPage,
+        setLastPage
     } = useInifiniteScroll();
 
     const fetchMenus = async () => {
         try {
             setIsLoading(true);
 
+            if(currentPage > lastPage) return;
+
             const { last_page, current_page, data } = await menuService.list({ page: currentPage }) as MenuItemPagination;
 
             setHasMore(current_page < last_page);
+            setLastPage(last_page);
 
             setMenus([...menuItems, ...data]);
 
@@ -34,13 +37,7 @@ export function useMenus() {
             throw error;
         }
     }
-
-    useEffect(() => {
-        setCategories([]);
-        setCurrenPage(1);
-        setHasMore(2 < 1);
-    }, [])
-
+    
     useEffect(() => {
         fetchMenus();
     }, [currentPage]);
