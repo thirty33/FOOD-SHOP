@@ -3,8 +3,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { Menus } from ".";
 import * as menuHooks from "../../hooks/useMenus";
-import { menuService } from "../../services/menu";
-import { MenuApiResponse, MenuData } from "../../types/menus";
+import { MenuData } from "../../types/menus";
 import { SuccessResponse, Pagination } from "../../types/responses";
 import { formatDate } from "../../helpers/dates";
 
@@ -36,12 +35,14 @@ describe("Menus Component", () => {
         title: "Monday Menu",
         description: "Special menu for Monday",
         imageUrl: "test-image-url",
+        publication_date: "2024-10-28",
       },
       {
         id: 2,
         title: "Tuesday Menu",
         description: "Special menu for Tuesday",
         imageUrl: "test-image-url",
+        publication_date: "2024-10-28",
       },
     ];
 
@@ -116,6 +117,7 @@ describe("Menus Component", () => {
       title: formatDate(menu.publication_date),
       description: menu.description,
       imageUrl: "test-image-url",
+      publication_date: menu.publication_date,
     }));
 
     // Mock the useMenus hook to return the transformed data

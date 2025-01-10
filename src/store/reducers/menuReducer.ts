@@ -75,6 +75,18 @@ const UPDATE_STATE_BY_ACTION = {
             ...state,
             currentOrder: (action.payload as Pick<globalState, 'currentOrder'>).currentOrder,
         };
+    },
+    [CART_ACTION_TYPES.SET_SHOW_CART]: (state: globalState, action: Action) => {
+        return {
+            ...state,
+            showSideCart: (action.payload as Pick<globalState, 'showSideCart'>).showSideCart,
+        };
+    },
+    [CART_ACTION_TYPES.SET_USER_INFO]: (state: globalState, action: Action) => {
+        return {
+            ...state,
+            user: (action.payload as Pick<globalState, 'user'>).user,
+        };
     }
 }
 

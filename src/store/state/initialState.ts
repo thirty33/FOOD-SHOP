@@ -10,5 +10,10 @@ export const InitialState: globalState = {
     currentPage: 1,
     hasMore: false,
     selectedMenu: null,
-    currentOrder: null
+    currentOrder: null,
+    showSideCart: false,
+    user: {
+        role: null,
+        permission: null
+    }
 };

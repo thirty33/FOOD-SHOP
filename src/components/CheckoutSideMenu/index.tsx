@@ -4,19 +4,26 @@ import "./styles.css";
 import { CartItem } from "../Cart";
 import { useOrder } from "../../hooks/useCurrentOrder";
 import { SpinnerLoading } from "../SpinnerLoading";
+import { useAuth } from "../../hooks/useAuth";
 
 export const CheckoutSideMenu = () => {
-
-  const { currentOrder, isLoading, deleteItemFromCart } = useOrder();
-
-  const handleDelete = (id: number) => {};
-
-  const handleCheckout = () => {};
   
+  const {
+    currentOrder,
+    isLoading,
+    deleteItemFromCart,
+    showSideCart,
+    setShowSideCart
+  } = useOrder();
+
+  const { showQuantitySelector } = useAuth();
+  
+  const handleCheckout = () => {};
+
   return (
     <aside
       className={`${
-        true ? "flex" : "hidden"
+        showSideCart ? "flex" : "hidden"
       } checkout-side-menu flex-col fixed right-0 border border-black rounded-lg bg-white z-50`}
     >
       <div className="flex justify-between items-center p-6">
@@ -24,7 +31,7 @@ export const CheckoutSideMenu = () => {
         <div>
           <XMarkIcon
             className="h-6 w-6 text-black cursor-pointer"
-            onClick={() => {}}
+            onClick={() => setShowSideCart(!showSideCart)}
           ></XMarkIcon>
         </div>
       </div>
@@ -39,10 +46,12 @@ export const CheckoutSideMenu = () => {
               image={line.product.image}
               id={line.product.id}
               deleteItemFromCart={deleteItemFromCart}
+              showQuantitySelector={showQuantitySelector}
             />
           ))}
       </div>
-      {(!currentOrder || currentOrder.order_lines.length === 0) && !isLoading ? (
+      {(!currentOrder || currentOrder.order_lines.length === 0) &&
+      !isLoading ? (
         <div
           className="p-4 m-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
           role="alert"
@@ -61,7 +70,7 @@ export const CheckoutSideMenu = () => {
         <p className="flex justify-between items-center mb-2 p-4">
           <span className="font-bold text-2xl">Total:</span>
           <span className="font-medium text-2xl">
-            {currentOrder ? currentOrder?.total : '$0'}
+            {currentOrder ? currentOrder?.total : "$0"}
           </span>
         </p>
         <Link to="/">

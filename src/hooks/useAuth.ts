@@ -1,26 +1,29 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { GlobalContext } from "../context/globalContext";
-import { UserInputs, ApiResponse, SignOutResponse } from "../types/user";
+import { UserInputs, SignOutResponse, SuccessResponse } from "../types/user";
 import { AuthHttpService } from "../services/user";
+import { PERMISSION_TYPES, ROLES_TYPES } from "../config/constant";
 
 const authService = new AuthHttpService();
 
 export function useAuth() {
 
-    const { 
-        showHeader, 
-        setShowHeader, 
-        setIsLoading, 
+    const {
+        showHeader,
+        setShowHeader,
+        setIsLoading,
         isLoading,
         token,
         setToken,
-        signOut
-     } = useContext(GlobalContext);
+        signOut,
+        setUser,
+        user
+    } = useContext(GlobalContext);
 
     const authUser = async ({ email, password, device_name = 'app' }: UserInputs) => {
         try {
             setIsLoading(true);
-            const response: ApiResponse = await authService.login({ email, password, device_name });
+            const response = await authService.login({ email, password, device_name }) as SuccessResponse;
             setIsLoading(false);
             return response;
         } catch (error) {
@@ -41,6 +44,12 @@ export function useAuth() {
         }
     }
 
+    const showQuantitySelector = useMemo(() => {
+        return user.role === ROLES_TYPES.ADMIN ||
+            user.role === ROLES_TYPES.CAFE ||
+            (user.role === ROLES_TYPES.CONVENIO && user.permission === PERMISSION_TYPES.CONSOLIDADO)
+    }, [user])
+
     return {
         showHeader,
         setShowHeader,
@@ -49,6 +58,9 @@ export function useAuth() {
         token,
         setToken,
         logOut,
-        signOut
+        signOut,
+        setUser,
+        user,
+        showQuantitySelector
     }
 }

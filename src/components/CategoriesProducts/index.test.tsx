@@ -1,10 +1,5 @@
 import { describe, it, expect, vi, Mock, afterEach, beforeEach } from "vitest";
-import {
-  render,
-  screen,
-  act,
-  waitFor,
-} from "@testing-library/react";
+import { render, screen, act, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { GlobalProvider } from "../../context/globalContext.tsx";
 import { CategoriesProducts } from "./index.tsx";
@@ -88,8 +83,13 @@ describe("<CategoriesProducts />", () => {
 
   it("should handle successful API response", async () => {
     const mockResponse: Pagination<Category> = {
-      status: "success",
-      message: "Categories retrieved successfully",
+      links: [
+        {
+          url: "http://dev.backoffice.deliciusfood-test.ai/api/v1/categories/65?page=1",
+          label: "&laquo; Previous",
+          active: false,
+        },
+      ],
       current_page: 1,
       data: [
         {
@@ -114,6 +114,7 @@ describe("<CategoriesProducts />", () => {
           products: [
             {
               id: 141,
+              image: "",
               name: "Seafood Product 1",
               description: "Description for Seafood Product 1",
               price: "$38,63",

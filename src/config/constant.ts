@@ -10,4 +10,19 @@ export const CART_ACTION_TYPES = {
     SET_SELECTED_MENU: 'SET_SELECTED_MENU',
     SIGN_OUT: 'SIGN_OUT',
     SET_CURRENT_ORDER: 'SET_CURRENT_ORDER',
+    SET_SHOW_CART: 'SET_SHOW_CART',
+    SET_USER_INFO: 'SET_USER_INFO',
+} as const
+
+export const ROLES_TYPES = {
+    ADMIN: 'Admin',
+    CAFE: 'Café',
+    CONVENIO: 'Convenio',
+    NONE: null
+} as const
+
+export const PERMISSION_TYPES = {
+    CONSOLIDADO: 'Consolidado',
+    INDIVIDUAL: 'Individual',
+    NONE: null
 } as const

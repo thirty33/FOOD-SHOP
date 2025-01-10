@@ -37,7 +37,7 @@ const schema = yup
 
 export const LoginForm = () => {
 
-  const { setShowHeader, authUser, isLoading, setToken } = useAuth();
+  const { setShowHeader, authUser, isLoading, setToken, setUser } = useAuth();
   const { enqueueSnackbar } = useNotification();
   const navigate = useNavigate();
 
@@ -57,6 +57,7 @@ export const LoginForm = () => {
       const response = await authUser({ ...data, device_name: "app" });
       setShowHeader(true);
       setToken((response as SuccessResponse).data.token);
+      setUser(response.data.role, response.data.permission);
       navigate(ROUTES.MENUS);
     } catch (error) {
       setError("email", {

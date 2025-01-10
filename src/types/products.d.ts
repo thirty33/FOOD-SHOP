@@ -1,18 +1,6 @@
 import { Pagination, SuccessResponse, UnauthorizedResponse, RateLimitResponse } from './responses.d.ts';
-
+import { Product } from './categories';
 //Component Object
-export interface Product {
-    id: number;
-    imageLight: string;
-    imageDark: string;
-    discount: string;
-    title: string;
-    rating: number;
-    reviews: number;
-    price: string;
-    tags: string[];
-    ingredients: Ingredients[];
-}
 
 export interface ProductData {
     id: number;

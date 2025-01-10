@@ -1,7 +1,4 @@
-import { useProducts } from "../../hooks/useProducts";
-import { SpinnerLoading } from "../SpinnerLoading";
 import { Ingredients } from "../../types/categories";
-import { useOrder } from "../../hooks/useCurrentOrder";
 
 interface ProductItemProps {
   id: string | number;
@@ -90,42 +87,3 @@ export const ProductItem = ({
   );
 };
 
-export const Products = (): JSX.Element => {
-  const { addProductToCart } = useOrder();
-  const { products, isLoading } = useProducts();
-
-  return (
-    <>
-      <section className=" py-8 antialiased dark:bg-gray-900 md:py-12">
-        <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
-          <div className="mb-4 grid gap-4 sm:grid-cols-2 md:mb-8 lg:grid-cols-3 xl:grid-cols-3">
-            {products.map((item) => (
-              <ProductItem
-                key={item.id}
-                id={item.id}
-                imageLight={item.imageLight}
-                imageDark={item.imageLight}
-                price={item.price}
-                title={item.title}
-                ingredients={item.ingredients}
-                addProductToCart={addProductToCart}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-      {products.length === 0 && !isLoading && (
-        <div
-          className="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
-          role="alert"
-        >
-          <span className="font-medium">No hay productos disponibles!</span>{" "}
-          para el día de hoy.
-        </div>
-      )}
-      <div className="flex justify-center m-4">
-        <SpinnerLoading show={isLoading} size={8} />
-      </div>
-    </>
-  );
-};

@@ -9,7 +9,7 @@ type PriceListLine = {
     unit_price: string;
 };
 
-type Product = {
+export type Product = {
     id: number;
     name: string;
     description: string;

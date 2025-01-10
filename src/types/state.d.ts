@@ -5,6 +5,7 @@ import { MenuItem } from "./menus";
 import { Category } from "./categories";
 import { Product } from "./products";
 import { OrderData } from "./order";
+import { Permission, Role } from "./user";
 
 export interface state {
     showHeader: boolean;
@@ -26,8 +27,17 @@ export interface state {
     setCurrenPage: (page: number) => void;
     signOut: () => void;
     currentOrder: OrderData | null;
-    addProductToCart: (id: string | number, quantity: number) => void;
+    addProductToCart: (orderLines: Array<{id: string | number, quantity: number | string}>) => void;
     deleteItemFromCart: (id: string | number, quantity: number) => void;
+    showSideCart: boolean;
+    setShowSideCart: (value: boolean) => void;
+    cartItemsCount: number;
+    user: {
+        role: Role;
+        permission: Permission
+    };
+    setUser: (role: Role, permission: Permission) => void;
+    updateCurrentOrder: (orderLines: Array<{id: string | number, quantity: number | string}>) => void;
 }   
 
 export interface GlobalProviderProps {
@@ -45,6 +55,11 @@ export interface globalState {
     hasMore: boolean;
     selectedMenu: MenuItem | null;
     currentOrder: OrderData | null;
+    showSideCart: boolean;
+    user: {
+        role: Role;
+        permission: Permission
+    }
 }
 
 export type signOutState = Pick<globalState, 
@@ -63,3 +78,5 @@ export type Action =
     | { type: typeof CART_ACTION_TYPES.SET_SELECTED_MENU, payload: Pick<globalState, 'selectedMenu'>}
     | { type: typeof CART_ACTION_TYPES.SIGN_OUT, payload: signOutState }
     | { type: typeof CART_ACTION_TYPES.SET_CURRENT_ORDER, payload: Pick<globalState, 'currentOrder'> }
+    | { type: typeof CART_ACTION_TYPES.SET_SHOW_CART, payload: Pick<globalState, 'showSideCart'> }
+    | { type: typeof CART_ACTION_TYPES.SET_USER_INFO, payload: Pick<globalState, 'user'> }

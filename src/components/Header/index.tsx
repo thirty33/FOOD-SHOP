@@ -5,9 +5,11 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../config/routes";
 import { configuration } from "../../config/config";
 import { ShoppingCartIcon } from "@heroicons/react/24/solid";
+import { useOrder } from "../../hooks/useCurrentOrder";
 
 export const Header = () => {
   const { logOut, setToken, signOut } = useAuth();
+  const { setShowSideCart, showSideCart, cartItemsCount } = useOrder();
   const { enqueueSnackbar } = useNotification();
   const navigate = useNavigate();
 
@@ -29,7 +31,7 @@ export const Header = () => {
 
   return (
     <>
-      <header>
+      <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 pb-4">
         <nav className="bg-white border-gray-200 dark:bg-gray-800">
           <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
             <a href="https://flowbite.com" className="flex items-center">
@@ -40,7 +42,19 @@ export const Header = () => {
               />
             </a>
             <div className="flex items-center lg:order-2">
-              <ShoppingCartIcon className="w-8 h-8 cursor-pointer" />
+              <button
+                type="button"
+                className="relative inline-flex items-center p-3 text-sm font-medium text-center"
+              >
+                <ShoppingCartIcon
+                  onClick={() => setShowSideCart(!showSideCart)}
+                  className="w-8 h-8 cursor-pointer"
+                />
+                <span className="sr-only">Notifications</span>
+                <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
+                  {cartItemsCount}
+                </div>
+              </button>
               <a
                 href="#"
                 className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"

@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react";
+import { createContext, useMemo, useReducer } from "react";
 import { CART_ACTION_TYPES } from "../config/constant";
 import { type state, type GlobalProviderProps } from "../types/state";
 import { InitialState } from "../store/state/initialState";
@@ -6,6 +6,7 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import { menuReducer } from "../store/reducers/menuReducer";
 import { MenuItem } from "../types/menus";
 import { Category } from "../types/categories";
+import { Permission, Role } from "../types/user";
 
 type globalContextState = Pick<
   state,
@@ -28,6 +29,8 @@ type globalContextState = Pick<
   | "setSelectedMenu"
   | "setCurrenPage"
   | "signOut"
+  | "user"
+  | "setUser"
 >;
 
 export const GlobalContext = createContext<globalContextState>({
@@ -50,6 +53,11 @@ export const GlobalContext = createContext<globalContextState>({
   setCurrenPage: () => {},
   signOut: () => {},
   currentOrder: null,
+  setUser: () => {},
+  user: {
+    role: null,
+    permission: null,
+  },
 });
 
 export function GlobalProvider({ children }: GlobalProviderProps) {
@@ -64,7 +72,29 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
     categories,
     // selectedMenu
     currentOrder,
+    user,
   } = state;
+
+  const setUser = (role: Role, permission: Permission) => {
+
+    const user =  {
+      role,
+      permission,
+    };
+
+    dispatch({
+      type: CART_ACTION_TYPES.SET_USER_INFO,
+      payload: { user },
+    });
+
+    localStorage.setItem('user', JSON.stringify(user))
+
+  };
+
+  const getUser = useMemo(() => {
+    const currentUser = localStorage.getItem('user');
+    return currentUser ? JSON.parse(currentUser) : user;
+  }, [user]);
 
   const { getValue: getToken, setValue: setTokenOnLocalStorage } =
     useLocalStorage("");
@@ -188,6 +218,8 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
         setCurrenPage,
         signOut,
         currentOrder,
+        user: getUser,
+        setUser,
       }}
     >
       {children}
