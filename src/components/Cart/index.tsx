@@ -22,12 +22,8 @@ export const CartItem = ({
   deleteItemFromCart,
   showQuantitySelector = false,
 }: CartItemProps): JSX.Element => {
-
-  const {
-    handleQuantityChange,
-    addOneItem,
-    restOneItem,
-  } = useQuantityChange();
+  const { handleQuantityChange, addOneItem, restOneItem, showPrices } =
+    useQuantityChange();
 
   return (
     <div className="flex items-center gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
@@ -46,9 +42,11 @@ export const CartItem = ({
           <h3 className="text-lg font-bold text-gray-900 dark:text-white">
             {name}
           </h3>
-          <p className="text-lg font-bold text-gray-900 dark:text-white">
-            {price}
-          </p>
+          {showPrices && (
+            <p className="text-lg font-bold text-gray-900 dark:text-white">
+              {price}
+            </p>
+          )}
         </div>
 
         {/* Quantity Controls and Remove Button */}

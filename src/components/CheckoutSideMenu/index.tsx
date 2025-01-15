@@ -13,7 +13,7 @@ export const CheckoutSideMenu = () => {
     isLoading,
     deleteItemFromCart,
     showSideCart,
-    setShowSideCart
+    setShowSideCart,
   } = useOrder();
 
   const { showQuantitySelector } = useAuth();
@@ -39,7 +39,7 @@ export const CheckoutSideMenu = () => {
         {currentOrder &&
           currentOrder.order_lines.map((line) => (
             <CartItem
-              key={line.id}
+              key={`${currentOrder.id}-${line.id}-${line.product.id}`}
               name={line.product.name}
               price={line.total_price}
               quantity={line.quantity}

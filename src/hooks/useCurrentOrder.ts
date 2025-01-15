@@ -1,12 +1,13 @@
 import { useContext } from "react";
 import { OrderContext } from "../context/orderContext";
-// import { useAuth } from "./useAuth";
-// import { PERMISSION_TYPES, ROLES_TYPES } from "../config/constant";
+import { useAuth } from "./useAuth";
+import { ROLES_TYPES } from "../config/constant";
+import { useMemo } from 'react';
 
 export function useOrder() {
 
-    // const { user } = useAuth();
-
+    const { user } = useAuth();
+    
     const {
         currentOrder,
         isLoading,
@@ -25,6 +26,10 @@ export function useOrder() {
     const updateOrderLineItem = async (id: string | number, quantity: number | string) => {
         updateCurrentOrder([{ id, quantity }])
     }
+    
+    const showPrices = useMemo(() => {
+        return user.role && (user.role === ROLES_TYPES.ADMIN || user.role === ROLES_TYPES.CAFE)
+    }, [user])
 
     return {
         currentOrder,
@@ -35,6 +40,8 @@ export function useOrder() {
         setShowSideCart,
         cartItemsCount,
         updateCurrentOrder,
-        updateOrderLineItem
+        updateOrderLineItem,
+        user,
+        showPrices
     }
 }

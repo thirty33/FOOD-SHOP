@@ -12,7 +12,7 @@ import { menuReducer } from "../store/reducers/menuReducer";
 import { InitialState } from "../store/state/initialState";
 import { CART_ACTION_TYPES } from "../config/constant";
 import { orderService } from "../services/order";
-import { OrderData, OrderLine, SuccessResponse } from "../types/order";
+import { OrderData, SuccessResponse } from "../types/order";
 import { GlobalProviderProps, type state } from "../types/state";
 import debounce from "just-debounce-it";
 
@@ -42,6 +42,7 @@ export const OrderContext = createContext<orderState>({
 
 // Create provider component
 export function OrderProvider({ children }: GlobalProviderProps) {
+
   const [reloadCart, setReloandCart] = useState(true);
 
   const prevDateRef = useRef<string | null>(null);
@@ -83,43 +84,43 @@ export function OrderProvider({ children }: GlobalProviderProps) {
     }
   };
 
-  const getDate = () => {
-    const queryParams = new URLSearchParams(location.search);
+  const getDate = (search: string) => {
+    const queryParams = new URLSearchParams(search);
     const date = queryParams.get("date");
     return date;
-  };
+  }
 
   const updateCurrentOrder = async (
     orderLines: Array<{ id: string | number; quantity: number | string }>
   ) => {
-    
-    let newOrderLines: OrderLine[] | undefined;
-    let productToUpdate: OrderLine | undefined;
 
-    orderLines.map((line) => {
-      productToUpdate = currentOrder?.order_lines.find(
+    if (!currentOrder) return;
+
+    const updatedOrderLines = [...currentOrder.order_lines];
+  
+    orderLines.forEach((line) => {
+      const productToUpdate = updatedOrderLines.find(
         (orderLine) => line.id === orderLine.product.id
       );
-      productToUpdate!.quantity = line.quantity;
-      newOrderLines = currentOrder?.order_lines.filter(
-        (orderLine) => line.id !== orderLine.product.id
-      );
+      if (productToUpdate) {
+        productToUpdate.quantity = line.quantity;
+      }
     });
-
-    let newOrder: OrderData = {
-      ...currentOrder!,
-      order_lines: [...newOrderLines!, productToUpdate!],
+  
+    const newOrder: OrderData = {
+      ...currentOrder,
+      order_lines: updatedOrderLines,
     };
-
+  
     dispatch({
       type: CART_ACTION_TYPES.SET_CURRENT_ORDER,
       payload: { currentOrder: newOrder },
     });
-
-    debouncedGetMovies(orderLines);
+  
+    debouncedGetOrder(orderLines);
   };
 
-  const debouncedGetMovies = useCallback(
+  const debouncedGetOrder = useCallback(
     debounce(
       (
         orderLines: Array<{ id: string | number; quantity: number | string }>
@@ -128,7 +129,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
       },
       500
     ),
-    []
+    [location.search]
   );
 
   const addProductToCart = async (
@@ -143,8 +144,9 @@ export function OrderProvider({ children }: GlobalProviderProps) {
         type: CART_ACTION_TYPES.APP_IS_LOADING,
         payload: { isLoading: true },
       });
+      
       (await orderService.createOrUpdate(
-        getDate()!,
+        getDate(location.search)!,
         filterOrderLines
       )) as SuccessResponse;
       setReloandCart(true);
@@ -165,9 +167,9 @@ export function OrderProvider({ children }: GlobalProviderProps) {
         type: CART_ACTION_TYPES.APP_IS_LOADING,
         payload: { isLoading: true },
       });
-
+      
       (await orderService.deleteOrderLine(
-        getDate()!,
+        getDate(location.search)!,
         orderLines
       )) as SuccessResponse;
       setReloandCart(true);
@@ -183,12 +185,15 @@ export function OrderProvider({ children }: GlobalProviderProps) {
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const date = queryParams.get("date");
-
+    
     if (date && (date !== prevDateRef.current || reloadCart)) {
+
       fetchOrder(date);
 
       prevDateRef.current = date;
+
       setReloandCart(false);
+
     }
   }, [location.search, reloadCart]);
 
