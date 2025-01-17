@@ -47,4 +47,11 @@ export interface ErrorResponse {
 	message: string;
 }
 
-export type OrderResponse = SuccessResponse | ErrorResponse;
+export interface ValidationErrorResponse {
+	message: string;
+	errors: {
+			[key: string]: string[];
+	};
+}
+
+export type OrderResponse = SuccessResponse | ErrorResponse | ValidationErrorResponse;

@@ -1,5 +1,4 @@
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import { Link } from "react-router-dom";
 import "./styles.css";
 import { CartItem } from "../Cart";
 import { useOrder } from "../../hooks/useCurrentOrder";
@@ -7,18 +6,21 @@ import { SpinnerLoading } from "../SpinnerLoading";
 import { useAuth } from "../../hooks/useAuth";
 
 export const CheckoutSideMenu = () => {
-  
   const {
     currentOrder,
     isLoading,
     deleteItemFromCart,
     showSideCart,
     setShowSideCart,
+    updateOrderStatus,
+    showPrices,
   } = useOrder();
 
   const { showQuantitySelector } = useAuth();
-  
-  const handleCheckout = () => {};
+
+  const handleCheckout = () => {
+    updateOrderStatus("PROCESSED");
+  };
 
   return (
     <aside
@@ -67,20 +69,20 @@ export const CheckoutSideMenu = () => {
         <SpinnerLoading show={isLoading} size={8} />
       </div>
       <div className="px-6 mb-6">
-        <p className="flex justify-between items-center mb-2 p-4">
-          <span className="font-bold text-2xl">Total:</span>
-          <span className="font-medium text-2xl">
-            {currentOrder ? currentOrder?.total : "$0"}
-          </span>
-        </p>
-        <Link to="/">
-          <button
-            className="bg-black py-3 text-white w-full rounded-lg"
-            onClick={() => handleCheckout()}
-          >
-            Ir a carrito
-          </button>
-        </Link>
+        {showPrices && (
+          <p className="flex justify-between items-center mb-2 p-4">
+            <span className="font-bold text-2xl">Total:</span>
+            <span className="font-medium text-2xl">
+              {currentOrder ? currentOrder?.total : "$0"}
+            </span>
+          </p>
+        )}
+        <button
+          className="bg-black py-3 text-white w-full rounded-lg"
+          onClick={() => handleCheckout()}
+        >
+          Completar Orden
+        </button>
       </div>
     </aside>
   );

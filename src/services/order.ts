@@ -10,6 +10,7 @@ export interface OrderService {
 	get(date: string): Promise<OrderResponse> | OrderResponse;
 	createOrUpdate(date: string, orderLines: { id: number; quantity: number }[]): Promise<OrderResponse> | OrderResponse;
 	deleteOrderLine(date: string, orderLines: { id: number; quantity: number }[]): Promise<OrderResponse> | OrderResponse;
+	updateOrderStatus(date: string, statusOrder: string): Promise<OrderResponse> | OrderResponse;
 }
 
 export const orderService = new (
@@ -80,5 +81,28 @@ export const orderService = new (
 				throw error;
 			}
 		}
+
+		async updateOrderStatus(date: string, statusOrder: string) {
+
+			try {
+
+				const { data, status } = await this.http.post(`${API_ROUTES.orders.paths.updateOrderStatus}/${date}`, {
+					status: statusOrder
+				});
+
+				const response = this.handleResponse<OrderResponse>(status, data);
+
+				return response;
+
+			} catch (error: unknown) {
+				if (axios.isAxiosError(error)) {
+					console.error('Axios error:', error.response?.data || error.message);
+				} else {
+					console.error('Error:', error);
+				}
+				throw error;
+			}
+		}
+
 	}
 )();

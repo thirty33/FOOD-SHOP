@@ -15,6 +15,7 @@ import { orderService } from "../services/order";
 import { OrderData, SuccessResponse } from "../types/order";
 import { GlobalProviderProps, type state } from "../types/state";
 import debounce from "just-debounce-it";
+import { useNotification } from "../hooks/useNotification";
 
 type orderState = Pick<
   state,
@@ -26,6 +27,7 @@ type orderState = Pick<
   | "setShowSideCart"
   | "cartItemsCount"
   | "updateCurrentOrder"
+  | "updateOrderStatus"
 >;
 
 // Create context
@@ -38,12 +40,14 @@ export const OrderContext = createContext<orderState>({
   setShowSideCart: () => {},
   cartItemsCount: 0,
   updateCurrentOrder: () => {},
+  updateOrderStatus: () => {},
 });
 
 // Create provider component
 export function OrderProvider({ children }: GlobalProviderProps) {
 
   const [reloadCart, setReloandCart] = useState(true);
+  const { enqueueSnackbar } = useNotification();
 
   const prevDateRef = useRef<string | null>(null);
   const location = useLocation();
@@ -88,16 +92,15 @@ export function OrderProvider({ children }: GlobalProviderProps) {
     const queryParams = new URLSearchParams(search);
     const date = queryParams.get("date");
     return date;
-  }
+  };
 
   const updateCurrentOrder = async (
     orderLines: Array<{ id: string | number; quantity: number | string }>
   ) => {
-
     if (!currentOrder) return;
 
     const updatedOrderLines = [...currentOrder.order_lines];
-  
+
     orderLines.forEach((line) => {
       const productToUpdate = updatedOrderLines.find(
         (orderLine) => line.id === orderLine.product.id
@@ -106,17 +109,17 @@ export function OrderProvider({ children }: GlobalProviderProps) {
         productToUpdate.quantity = line.quantity;
       }
     });
-  
+
     const newOrder: OrderData = {
       ...currentOrder,
       order_lines: updatedOrderLines,
     };
-  
+
     dispatch({
       type: CART_ACTION_TYPES.SET_CURRENT_ORDER,
       payload: { currentOrder: newOrder },
     });
-  
+
     debouncedGetOrder(orderLines);
   };
 
@@ -144,7 +147,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
         type: CART_ACTION_TYPES.APP_IS_LOADING,
         payload: { isLoading: true },
       });
-      
+
       (await orderService.createOrUpdate(
         getDate(location.search)!,
         filterOrderLines
@@ -167,7 +170,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
         type: CART_ACTION_TYPES.APP_IS_LOADING,
         payload: { isLoading: true },
       });
-      
+
       (await orderService.deleteOrderLine(
         getDate(location.search)!,
         orderLines
@@ -182,18 +185,40 @@ export function OrderProvider({ children }: GlobalProviderProps) {
     }
   };
 
+  const updateOrderStatus = async (status: string) => {
+    console.log("here");
+    try {
+      dispatch({
+        type: CART_ACTION_TYPES.APP_IS_LOADING,
+        payload: { isLoading: true },
+      });
+
+      (await orderService.updateOrderStatus(
+        getDate(location.search)!,
+        status
+      )) as SuccessResponse;
+      setReloandCart(true);
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar((error as Error).message, { variant: 'error' });
+    } finally {
+      dispatch({
+        type: CART_ACTION_TYPES.APP_IS_LOADING,
+        payload: { isLoading: false },
+      });
+    }
+  };
+
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const date = queryParams.get("date");
-    
-    if (date && (date !== prevDateRef.current || reloadCart)) {
 
+    if (date && (date !== prevDateRef.current || reloadCart)) {
       fetchOrder(date);
 
       prevDateRef.current = date;
 
       setReloandCart(false);
-
     }
   }, [location.search, reloadCart]);
 
@@ -210,6 +235,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
     setShowSideCart,
     cartItemsCount,
     updateCurrentOrder,
+    updateOrderStatus,
   };
 
   return (
