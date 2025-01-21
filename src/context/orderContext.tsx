@@ -200,7 +200,10 @@ export function OrderProvider({ children }: GlobalProviderProps) {
       setReloandCart(true);
     } catch (error) {
       console.error(error);
-      enqueueSnackbar((error as Error).message, { variant: 'error' });
+      enqueueSnackbar((error as Error).message, { 
+        variant: 'error',
+        autoHideDuration: 5000
+      });
     } finally {
       dispatch({
         type: CART_ACTION_TYPES.APP_IS_LOADING,
