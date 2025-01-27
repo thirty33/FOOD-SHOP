@@ -23,7 +23,7 @@ const ProductList = ({ products }: { products: Product[] }) => {
       ))}
     </div>
   );
-}
+};
 
 // Componente para una categoría
 const CategorySection = ({ category }: { category: Category }): JSX.Element => {
@@ -33,16 +33,33 @@ const CategorySection = ({ category }: { category: Category }): JSX.Element => {
     ? category.products
     : category?.category?.products;
 
+  // Get the maximum_order_time from the first category_lines entry, or "Not available" if empty
+  const maximumOrderTime =
+    category?.category?.category_lines?.[0]?.maximum_order_time ||
+    "No disponible";
+
+  // Get subcategories, if any
+  const subcategories = category?.category?.subcategories || [];
+
   return (
     <div className="mb-12">
-      <div className="flex justify-start">
-        <h2 className="text-3xl font-bold mb-6 text-gray-800">
-          {category?.category?.name}
-        </h2>
+      <div className="flex flex-col justify-start items-center mb-2 md:flex-row md:justify-start">
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">{category?.category?.name}</h2>
+        <p className="text-gray-600 ml-2">{maximumOrderTime}</p>
       </div>
+
+      {/* Display subcategories if they exist */}
+      {subcategories.length > 0 && (
+        <div className="mb-6 flex justify-center md:justify-start">
+          <p className="text-gray-600">
+            <strong>Categorías:</strong> {subcategories.map((subcategory) => subcategory.name).join(", ")}
+          </p>
+        </div>
+      )}
+
       {products && <ProductList products={products} />}
     </div>
-  );
+  )
 };
 
 export const CategoriesProducts = () => {

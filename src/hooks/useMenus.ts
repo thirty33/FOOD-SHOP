@@ -14,7 +14,8 @@ export function useMenus() {
         setMenus,
         setSelectedMenu,
         lastPage,
-        setLastPage
+        setLastPage,
+        setCurrenPage,
     } = useInifiniteScroll();
 
     const fetchMenus = async () => {
@@ -37,10 +38,25 @@ export function useMenus() {
             throw error;
         }
     }
+
+    useEffect(() => {
+        setMenus([]);
+        setCurrenPage(1); 
+        setLastPage(1); 
+        setHasMore(false); 
+    }, []);
     
     useEffect(() => {
-        fetchMenus();
+        if(currentPage > 1) {
+            fetchMenus();
+        }
     }, [currentPage]);
+
+    useEffect(() => {
+        if(menuItems.length === 0 && currentPage === 1) {
+            fetchMenus();
+        }
+    }, [menuItems, currentPage])
 
     return {
         menuItems,

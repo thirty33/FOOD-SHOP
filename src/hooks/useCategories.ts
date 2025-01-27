@@ -14,7 +14,8 @@ export function useCategories() {
         setIsLoading,
         setHasMore,
         setCategories,
-        setMenus,
+        lastPage,
+        setLastPage,
         setCurrenPage
      } = useInifiniteScroll();
 
@@ -24,12 +25,16 @@ export function useCategories() {
     
     const fetchCategories = async () => {
         try {
-
             setIsLoading(true);
+
+            if (currentPage > lastPage) {
+                return;
+            }
 
             const { last_page, current_page, data } = await categoryService.list(menuId!, { page: currentPage }) as CategoryItemPagination;
 
             setHasMore(current_page < last_page);
+            setLastPage(last_page);
 
             setCategories([...categories, ...data]);
 
@@ -42,15 +47,22 @@ export function useCategories() {
     }
 
     useEffect(() => {
-        setMenus([]);
         setCategories([]);
         setCurrenPage(1);
-        setHasMore(2 < 1);
-    }, [menuId])
+        setLastPage(1);
+        setHasMore(false);
+    }, [menuId]);
     
     useEffect(() => {
         fetchCategories();
-    }, [currentPage]);
+    }, [currentPage, menuId]);
+
+    // Fetch categories only after categories have been reset
+    useEffect(() => {
+        if (categories.length === 0 && currentPage === 1) {
+            fetchCategories();
+        }
+    }, [categories, currentPage]);
 
     return {
         categories,

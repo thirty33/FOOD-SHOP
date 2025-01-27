@@ -27,11 +27,28 @@ export type Product = {
     ingredients: Ingredients[];
 };
 
+export interface CategoryLine {
+    id: number
+    category_id: number
+    weekday: string
+    preparation_days: number
+    maximum_order_time: string
+    active: boolean
+}
+
+export interface Subcategory {
+    id: number
+    name: string
+}
+
+
 type CategoryDetail = {
     id: number;
     name: string;
     description: string;
     products: Product[];
+    category_lines: CategoryLine[];
+    subcategories: Subcategory[];
 };
 
 type Menu = {

@@ -1,3 +1,17 @@
+export interface Category {
+  id: number
+  name: string
+  description: string
+  products: any[]
+  subcategories: Subcategory[]
+}
+
+export interface Subcategory {
+  id: number
+  name: string
+}
+
+
 interface Product {
 	id: number;
 	name: string;
@@ -12,6 +26,7 @@ interface Product {
 	stock: number;
 	weight: string;
 	allow_sales_without_stock: number;
+	category: Category;
 }
 
 interface OrderLine {
