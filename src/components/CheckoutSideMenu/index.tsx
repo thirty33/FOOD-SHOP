@@ -49,7 +49,6 @@ export const CheckoutSideMenu = () => {
               id={line.product.id}
               deleteItemFromCart={deleteItemFromCart}
               showQuantitySelector={showQuantitySelector}
-              subcategories={line.product.category.subcategories}
             />
           ))}
       </div>

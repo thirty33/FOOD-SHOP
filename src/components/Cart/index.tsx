@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { ROUTES } from "../../config/routes";
 import { QuantitySelector } from "../QuantitySelector";
 import { useQuantityChange } from "../../hooks/useQuantityChange";
-import { Subcategory } from "../../types/order";
 
 export interface CartItemProps {
   id: number | number;
@@ -12,7 +11,6 @@ export interface CartItemProps {
   quantity: number | string;
   deleteItemFromCart: (id: number | number, quantity: number | number) => void;
   showQuantitySelector: boolean;
-  subcategories: Subcategory[];
 }
 
 export const CartItem = ({
@@ -23,7 +21,6 @@ export const CartItem = ({
   quantity: initialQuantity,
   deleteItemFromCart,
   showQuantitySelector = false,
-  subcategories,
 }: CartItemProps): JSX.Element => {
   const { handleQuantityChange, addOneItem, restOneItem, showPrices } =
     useQuantityChange();

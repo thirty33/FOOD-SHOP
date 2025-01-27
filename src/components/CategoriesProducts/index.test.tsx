@@ -64,6 +64,7 @@ describe("<CategoriesProducts />", () => {
       setCategories: mockSetCategories,
       setMenus: vi.fn(),
       setCurrenPage: vi.fn(),
+      setLastPage: vi.fn(),
     });
 
     await act(async () => {
@@ -103,6 +104,8 @@ describe("<CategoriesProducts />", () => {
             name: "Seafood",
             description: "Fresh and tasty seafood",
             products: [],
+            category_lines: [],
+            subcategories: [],
           },
           menu: {
             id: 65,
@@ -171,6 +174,7 @@ describe("<CategoriesProducts />", () => {
       setCategories: mockSetCategories,
       setMenus: vi.fn(),
       setCurrenPage: vi.fn(),
+      setLastPage: vi.fn(),
     });
 
     await act(async () => {

@@ -52,6 +52,7 @@ describe("<Login />", () => {
         }),
         isLoading: false,
         setToken: vi.fn(),
+        setUser: vi.fn(),
       }),
     }));
 
