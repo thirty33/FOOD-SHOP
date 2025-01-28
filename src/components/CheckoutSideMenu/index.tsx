@@ -4,6 +4,12 @@ import { CartItem } from "../Cart";
 import { useOrder } from "../../hooks/useCurrentOrder";
 import { SpinnerLoading } from "../SpinnerLoading";
 import { useAuth } from "../../hooks/useAuth";
+import {
+  ORDER_STATUS,
+  ORDER_STATUS_COLOR,
+  ORDER_STATUS_TEXT,
+} from "../../config/constant";
+import { isAdminOrCafe } from "../../helpers/permissions";
 
 export const CheckoutSideMenu = () => {
   const {
@@ -14,13 +20,20 @@ export const CheckoutSideMenu = () => {
     setShowSideCart,
     updateOrderStatus,
     showPrices,
+    partiallyScheduleOrder,
+    user
   } = useOrder();
 
   const { showQuantitySelector } = useAuth();
 
   const handleCheckout = () => {
-    updateOrderStatus("PROCESSED");
+    updateOrderStatus(ORDER_STATUS.PROCESSED);
   };
+
+  const handlePartiallyScheduled = () => {
+    console.log("handlePartiallyScheduled");
+    partiallyScheduleOrder(ORDER_STATUS.PARTIALLY_SCHEDULED);
+  }
 
   return (
     <aside
@@ -28,14 +41,28 @@ export const CheckoutSideMenu = () => {
         showSideCart ? "flex" : "hidden"
       } checkout-side-menu flex-col fixed right-0 border border-black rounded-lg bg-white z-50`}
     >
-      <div className="flex justify-between items-center p-6">
-        <h2 className="font-bold text-2xl">Mi Orden</h2>
-        <div>
+      <div className="flex flex-col">
+        <div className="flex flex-row justify-between items-center px-4 pt-4 pb-2">
+          <h2 className="font-bold text-2xl">Mi Orden.</h2>
           <XMarkIcon
             className="h-6 w-6 text-black cursor-pointer"
             onClick={() => setShowSideCart(!showSideCart)}
           ></XMarkIcon>
         </div>
+        {currentOrder && (
+          <div className="flex flex-row justify-between items-center px-4 pb-2">
+            <h3>
+              Estado:{" "}
+              <span
+                className={`${
+                  ORDER_STATUS_COLOR[currentOrder?.status]
+                } text-white px-2 py-1 rounded`}
+              >
+                {currentOrder ? ORDER_STATUS_TEXT[currentOrder.status] : "N/A"}
+              </span>
+            </h3>
+          </div>
+        )}
       </div>
       <div className="px-6 overflow-y-scroll flex flex-col gap-y-4 ">
         {currentOrder &&
@@ -77,12 +104,24 @@ export const CheckoutSideMenu = () => {
             </span>
           </p>
         )}
-        <button
-          className="bg-black py-3 text-white w-full rounded-lg"
-          onClick={() => handleCheckout()}
-        >
-          Completar Orden
-        </button>
+        {user && isAdminOrCafe(user) && currentOrder && currentOrder.order_lines.length > 0 && (
+          <button
+            className="bg-black py-3 text-white w-full rounded-lg mb-4 disabled:bg-gray-300"
+            onClick={() => handlePartiallyScheduled()}
+            disabled={currentOrder.status === ORDER_STATUS.PARTIALLY_SCHEDULED}
+          >
+            Agendar Parcialmente
+          </button>
+        )}
+        {currentOrder && currentOrder.order_lines.length > 0 && (
+          <button
+            className="bg-black py-3 text-white w-full rounded-lg disabled:bg-gray-300"
+            onClick={() => handleCheckout()}
+            disabled={currentOrder.status === ORDER_STATUS.PROCESSED}
+          >
+            Completar Orden
+          </button>
+        )}
       </div>
     </aside>
   );

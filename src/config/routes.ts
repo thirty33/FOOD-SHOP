@@ -48,7 +48,8 @@ export const API_ROUTES = {
             getItem: 'get-order',
             createOrUpdateOrder: 'create-or-update-order',
             deleteOrderLine: 'delete-order-items',
-            updateOrderStatus: 'update-order-status'
+            updateOrderStatus: 'update-order-status',
+            partiallyScheduleOrder: 'partially-schedule-order',
         }
     },
 }

@@ -17,7 +17,8 @@ export function useOrder() {
         setShowSideCart,
         cartItemsCount,
         updateCurrentOrder,
-        updateOrderStatus
+        updateOrderStatus,
+        partiallyScheduleOrder
     } = useContext(OrderContext);
 
     const modifyOrder = async (id: string | number, quantity: number | string) => {
@@ -44,6 +45,7 @@ export function useOrder() {
         updateOrderLineItem,
         user,
         showPrices,
-        updateOrderStatus
+        updateOrderStatus,
+        partiallyScheduleOrder
     }
 }

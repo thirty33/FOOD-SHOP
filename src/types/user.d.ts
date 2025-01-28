@@ -8,6 +8,12 @@ export type UserInputs = {
 // typeof TODO_FILTERS[keyof typeof TODO_FILTERS]
 export type Role = typeof ROLES_TYPES[keyof typeof ROLES_TYPES];
 export type Permission = typeof PERMISSION_TYPES[keyof typeof PERMISSION_TYPES];
+
+export interface User {
+    role: Role;
+    permission: Permission;
+}
+
 export interface SuccessResponse {
     status: 'success';
     message: string;

@@ -39,6 +39,7 @@ export interface state {
     setUser: (role: Role, permission: Permission) => void;
     updateCurrentOrder: (orderLines: Array<{id: string | number, quantity: number | string}>) => void;
     updateOrderStatus: (status: string) => void;
+    partiallyScheduleOrder: (status: string) => void;
 }   
 
 export interface GlobalProviderProps {

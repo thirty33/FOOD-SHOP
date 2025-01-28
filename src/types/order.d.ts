@@ -1,3 +1,5 @@
+import { ORDER_STATUS } from "../config/constant"
+
 export interface Category {
   id: number
   name: string
@@ -42,7 +44,7 @@ interface OrderLine {
 export interface OrderData {
 	id: number;
 	total: number;
-	status: string;
+	status: typeof ORDER_STATUS[keyof typeof ORDER_STATUS];
 	user_id: number;
 	price_list_min: number;
 	branch_id: number;

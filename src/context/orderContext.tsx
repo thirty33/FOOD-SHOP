@@ -28,6 +28,7 @@ type orderState = Pick<
   | "cartItemsCount"
   | "updateCurrentOrder"
   | "updateOrderStatus"
+  | "partiallyScheduleOrder"
 >;
 
 // Create context
@@ -41,6 +42,7 @@ export const OrderContext = createContext<orderState>({
   cartItemsCount: 0,
   updateCurrentOrder: () => {},
   updateOrderStatus: () => {},
+  partiallyScheduleOrder: () => {},
 });
 
 // Create provider component
@@ -177,6 +179,10 @@ export function OrderProvider({ children }: GlobalProviderProps) {
       )) as SuccessResponse;
       setReloandCart(true);
     } catch (error) {
+      enqueueSnackbar((error as Error).message, { 
+        variant: 'error',
+        autoHideDuration: 5000
+      });
     } finally {
       dispatch({
         type: CART_ACTION_TYPES.APP_IS_LOADING,
@@ -186,7 +192,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
   };
 
   const updateOrderStatus = async (status: string) => {
-    console.log("here");
+
     try {
       dispatch({
         type: CART_ACTION_TYPES.APP_IS_LOADING,
@@ -194,6 +200,33 @@ export function OrderProvider({ children }: GlobalProviderProps) {
       });
 
       (await orderService.updateOrderStatus(
+        getDate(location.search)!,
+        status
+      )) as SuccessResponse;
+      setReloandCart(true);
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar((error as Error).message, { 
+        variant: 'error',
+        autoHideDuration: 5000
+      });
+    } finally {
+      dispatch({
+        type: CART_ACTION_TYPES.APP_IS_LOADING,
+        payload: { isLoading: false },
+      });
+    }
+  };
+
+  const partiallyScheduleOrder = async (status: string) => {
+
+    try {
+      dispatch({
+        type: CART_ACTION_TYPES.APP_IS_LOADING,
+        payload: { isLoading: true },
+      });
+
+      (await orderService.partiallyScheduleOrder(
         getDate(location.search)!,
         status
       )) as SuccessResponse;
@@ -239,6 +272,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
     cartItemsCount,
     updateCurrentOrder,
     updateOrderStatus,
+    partiallyScheduleOrder
   };
 
   return (

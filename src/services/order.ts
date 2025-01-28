@@ -11,6 +11,7 @@ export interface OrderService {
 	createOrUpdate(date: string, orderLines: { id: number; quantity: number }[]): Promise<OrderResponse> | OrderResponse;
 	deleteOrderLine(date: string, orderLines: { id: number; quantity: number }[]): Promise<OrderResponse> | OrderResponse;
 	updateOrderStatus(date: string, statusOrder: string): Promise<OrderResponse> | OrderResponse;
+	partiallyScheduleOrder(date: string, statusOrder: string): Promise<OrderResponse> | OrderResponse;
 }
 
 export const orderService = new (
@@ -87,6 +88,28 @@ export const orderService = new (
 			try {
 
 				const { data, status } = await this.http.post(`${API_ROUTES.orders.paths.updateOrderStatus}/${date}`, {
+					status: statusOrder
+				});
+
+				const response = this.handleResponse<OrderResponse>(status, data);
+
+				return response;
+
+			} catch (error: unknown) {
+				if (axios.isAxiosError(error)) {
+					console.error('Axios error:', error.response?.data || error.message);
+				} else {
+					console.error('Error:', error);
+				}
+				throw error;
+			}
+		}
+
+		async partiallyScheduleOrder(date: string, statusOrder: string) {
+
+			try {
+
+				const { data, status } = await this.http.post(`${API_ROUTES.orders.paths.partiallyScheduleOrder}/${date}`, {
 					status: statusOrder
 				});
 

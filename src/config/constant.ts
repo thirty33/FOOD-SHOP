@@ -26,3 +26,24 @@ export const PERMISSION_TYPES = {
     INDIVIDUAL: 'Individual',
     NONE: null
 } as const
+
+export const ORDER_STATUS = {
+    PENDING: 'PENDING',
+    PROCESSED: 'PROCESSED',
+    CANCELLED: 'CANCELLED',
+    PARTIALLY_SCHEDULED: 'PARTIALLY_SCHEDULED',
+} as const
+
+export const ORDER_STATUS_TEXT = {
+    PENDING: 'Pendiente',
+    PROCESSED: 'Procesada',
+    CANCELLED: 'Cancelada',
+    PARTIALLY_SCHEDULED: 'Parcialmente agendada',
+} as const
+
+export const ORDER_STATUS_COLOR = {
+    PENDING: 'bg-yellow-500',
+    PROCESSED: 'bg-green-500',
+    CANCELLED: 'bg-red-500',
+    PARTIALLY_SCHEDULED: 'bg-blue-500',
+} as const
