@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useQuantityChange } from "../../hooks/useQuantityChange";
 import { Ingredients } from "../../types/categories";
 import { QuantitySelector } from "../QuantitySelector";
@@ -30,10 +31,20 @@ export const ProductItem = ({
     showPrices,
   } = useQuantityChange();
 
-  const currentQuantity =
-    currentOrder?.order_lines.find((line) => line.product.id === id)
-      ?.quantity ?? 0;
+  const currentQuantity = useMemo(() => {
+    return (
+      currentOrder?.order_lines.find((line) => line.product.id === id)
+        ?.quantity ?? 0
+    );
+  }, [currentOrder]);
 
+  const partiallyScheduled = useMemo(() => {
+    return (
+      currentOrder?.order_lines.find((line) => line.product.id === id)
+      ?.partially_scheduled ?? false
+    );
+  }, [currentOrder]);
+  
   return (
     <div
       key={id}
@@ -105,9 +116,15 @@ export const ProductItem = ({
               currentQuantity === "") && (
               <QuantitySelector
                 quantity={currentQuantity}
-                handleQuantityChange={(ev) => handleQuantityChange(ev, id)}
-                addOneItem={() => addOneItem(id, currentQuantity)}
-                restOneItem={() => restOneItem(id, currentQuantity)}
+                handleQuantityChange={(ev) =>
+                  handleQuantityChange(ev, id, partiallyScheduled)
+                }
+                addOneItem={() =>
+                  addOneItem(id, currentQuantity, partiallyScheduled)
+                }
+                restOneItem={() =>
+                  restOneItem(id, currentQuantity, partiallyScheduled)
+                }
               />
             )}
         </div>

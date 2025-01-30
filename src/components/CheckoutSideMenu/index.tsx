@@ -21,7 +21,7 @@ export const CheckoutSideMenu = () => {
     updateOrderStatus,
     showPrices,
     partiallyScheduleOrder,
-    user
+    user,
   } = useOrder();
 
   const { showQuantitySelector } = useAuth();
@@ -33,7 +33,7 @@ export const CheckoutSideMenu = () => {
   const handlePartiallyScheduled = () => {
     console.log("handlePartiallyScheduled");
     partiallyScheduleOrder(ORDER_STATUS.PARTIALLY_SCHEDULED);
-  }
+  };
 
   return (
     <aside
@@ -76,6 +76,8 @@ export const CheckoutSideMenu = () => {
               id={line.product.id}
               deleteItemFromCart={deleteItemFromCart}
               showQuantitySelector={showQuantitySelector}
+              showPartialiSheduledTag={line.partially_scheduled}
+              canSchedulePartially={isAdminOrCafe(user)}
             />
           ))}
       </div>
@@ -104,15 +106,20 @@ export const CheckoutSideMenu = () => {
             </span>
           </p>
         )}
-        {user && isAdminOrCafe(user) && currentOrder && currentOrder.order_lines.length > 0 && (
-          <button
-            className="bg-black py-3 text-white w-full rounded-lg mb-4 disabled:bg-gray-300"
-            onClick={() => handlePartiallyScheduled()}
-            disabled={currentOrder.status === ORDER_STATUS.PARTIALLY_SCHEDULED}
-          >
-            Agendar Parcialmente
-          </button>
-        )}
+        {/* {user &&
+          isAdminOrCafe(user) &&
+          currentOrder &&
+          currentOrder.order_lines.length > 0 && (
+            <button
+              className="bg-black py-3 text-white w-full rounded-lg mb-4 disabled:bg-gray-300"
+              onClick={() => handlePartiallyScheduled()}
+              disabled={
+                currentOrder.status === ORDER_STATUS.PARTIALLY_SCHEDULED
+              }
+            >
+              Agendar Parcialmente
+            </button>
+          )} */}
         {currentOrder && currentOrder.order_lines.length > 0 && (
           <button
             className="bg-black py-3 text-white w-full rounded-lg disabled:bg-gray-300"

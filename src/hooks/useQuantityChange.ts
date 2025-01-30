@@ -12,21 +12,25 @@ export function useQuantityChange() {
 		showPrices
 	} = useOrder()
 
-	const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>, id: string | number) => {
+	const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>, id: string | number, partiallyScheduled?: boolean) => {
 		if (!event.target.value) {
-			updateOrderLineItem(id, "")
+			updateOrderLineItem(id, "", partiallyScheduled || false)
 			return
 		}
 		const newQuantity = parseInt(event.target.value, 10);
-		updateOrderLineItem(id, newQuantity)
+		updateOrderLineItem(id, newQuantity, partiallyScheduled || false)
 	};
 
-	const addOneItem = (id: string | number, quantity: number | string) => {
-		updateOrderLineItem(id, Number(quantity) + 1)
+	const addOneItem = (id: string | number, quantity: number | string, partiallyScheduled?: boolean) => {
+		updateOrderLineItem(id, Number(quantity) + 1, partiallyScheduled || false)
 	}
 
-	const restOneItem = (id: string | number, quantity: number | string) => {
-		updateOrderLineItem(id, Number(quantity) - 1)
+	const handlePartiallyScheduled = (id: string | number, quantity: number | string, partiallyScheduled: boolean) => {
+		updateOrderLineItem(id, Number(quantity), partiallyScheduled)
+	}
+
+	const restOneItem = (id: string | number, quantity: number | string, partiallyScheduled?: boolean) => {
+		updateOrderLineItem(id, Number(quantity) - 1, partiallyScheduled || false)
 	}
 
 	const showQuantityInput = useMemo(() => {
@@ -41,6 +45,7 @@ export function useQuantityChange() {
 		restOneItem,
 		currentOrder,
 		showQuantityInput,
-		showPrices
+		showPrices,
+		handlePartiallyScheduled
 	}
 }

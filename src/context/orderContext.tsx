@@ -47,7 +47,6 @@ export const OrderContext = createContext<orderState>({
 
 // Create provider component
 export function OrderProvider({ children }: GlobalProviderProps) {
-
   const [reloadCart, setReloandCart] = useState(true);
   const { enqueueSnackbar } = useNotification();
 
@@ -97,10 +96,15 @@ export function OrderProvider({ children }: GlobalProviderProps) {
   };
 
   const updateCurrentOrder = async (
-    orderLines: Array<{ id: string | number; quantity: number | string }>
+    orderLines: Array<{
+      id: string | number;
+      quantity: number | string;
+      partiallyScheduled?: boolean;
+    }>
   ) => {
-    if (!currentOrder) return;
 
+    if (!currentOrder) return;
+    
     const updatedOrderLines = [...currentOrder.order_lines];
 
     orderLines.forEach((line) => {
@@ -109,6 +113,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
       );
       if (productToUpdate) {
         productToUpdate.quantity = line.quantity;
+        productToUpdate.partially_scheduled = line.partiallyScheduled || false;
       }
     });
 
@@ -128,7 +133,11 @@ export function OrderProvider({ children }: GlobalProviderProps) {
   const debouncedGetOrder = useCallback(
     debounce(
       (
-        orderLines: Array<{ id: string | number; quantity: number | string }>
+        orderLines: Array<{
+          id: string | number;
+          quantity: number | string;
+          partiallyScheduled?: boolean;
+        }>
       ) => {
         addProductToCart(orderLines);
       },
@@ -138,11 +147,19 @@ export function OrderProvider({ children }: GlobalProviderProps) {
   );
 
   const addProductToCart = async (
-    orderLines: Array<{ id: string | number; quantity: number | string }>
+    orderLines: Array<{
+      id: string | number;
+      quantity: number | string;
+      partiallyScheduled?: boolean;
+    }>
   ) => {
     const filterOrderLines = orderLines
       .filter((line) => typeof line.quantity === "number")
-      .map((line) => ({ ...line, quantity: Number(line.quantity) }));
+      .map((line) => ({
+        ...line,
+        quantity: Number(line.quantity),
+        partially_scheduled: line.partiallyScheduled || false,
+      }));
 
     try {
       dispatch({
@@ -154,13 +171,24 @@ export function OrderProvider({ children }: GlobalProviderProps) {
         getDate(location.search)!,
         filterOrderLines
       )) as SuccessResponse;
-      setReloandCart(true);
+
+
     } catch (error) {
+
+      enqueueSnackbar((error as Error).message, {
+        variant: "error",
+        autoHideDuration: 5000,
+      });
+      
     } finally {
+
       dispatch({
         type: CART_ACTION_TYPES.APP_IS_LOADING,
         payload: { isLoading: false },
       });
+
+      setReloandCart(true);
+
     }
   };
 
@@ -179,9 +207,9 @@ export function OrderProvider({ children }: GlobalProviderProps) {
       )) as SuccessResponse;
       setReloandCart(true);
     } catch (error) {
-      enqueueSnackbar((error as Error).message, { 
-        variant: 'error',
-        autoHideDuration: 5000
+      enqueueSnackbar((error as Error).message, {
+        variant: "error",
+        autoHideDuration: 5000,
       });
     } finally {
       dispatch({
@@ -192,7 +220,6 @@ export function OrderProvider({ children }: GlobalProviderProps) {
   };
 
   const updateOrderStatus = async (status: string) => {
-
     try {
       dispatch({
         type: CART_ACTION_TYPES.APP_IS_LOADING,
@@ -206,9 +233,9 @@ export function OrderProvider({ children }: GlobalProviderProps) {
       setReloandCart(true);
     } catch (error) {
       console.error(error);
-      enqueueSnackbar((error as Error).message, { 
-        variant: 'error',
-        autoHideDuration: 5000
+      enqueueSnackbar((error as Error).message, {
+        variant: "error",
+        autoHideDuration: 5000,
       });
     } finally {
       dispatch({
@@ -219,7 +246,6 @@ export function OrderProvider({ children }: GlobalProviderProps) {
   };
 
   const partiallyScheduleOrder = async (status: string) => {
-
     try {
       dispatch({
         type: CART_ACTION_TYPES.APP_IS_LOADING,
@@ -233,9 +259,9 @@ export function OrderProvider({ children }: GlobalProviderProps) {
       setReloandCart(true);
     } catch (error) {
       console.error(error);
-      enqueueSnackbar((error as Error).message, { 
-        variant: 'error',
-        autoHideDuration: 5000
+      enqueueSnackbar((error as Error).message, {
+        variant: "error",
+        autoHideDuration: 5000,
       });
     } finally {
       dispatch({
@@ -272,7 +298,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
     cartItemsCount,
     updateCurrentOrder,
     updateOrderStatus,
-    partiallyScheduleOrder
+    partiallyScheduleOrder,
   };
 
   return (

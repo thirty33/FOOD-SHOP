@@ -25,8 +25,12 @@ export function useOrder() {
         addProductToCart([{ id, quantity }])
     }
 
-    const updateOrderLineItem = async (id: string | number, quantity: number | string) => {
-        updateCurrentOrder([{ id, quantity }])
+    const updateOrderLineItem = async (id: string | number, quantity: number | string, partiallyScheduled: boolean = false) => {
+        updateCurrentOrder([{ 
+            id, 
+            quantity,
+            partiallyScheduled
+         }])
     }
     
     const showPrices = useMemo(() => {

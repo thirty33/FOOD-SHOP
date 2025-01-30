@@ -39,6 +39,7 @@ interface OrderLine {
 	product_id: number;
 	total_price: string;
 	product: Product;
+	partially_scheduled: boolean;
 }
 
 export interface OrderData {

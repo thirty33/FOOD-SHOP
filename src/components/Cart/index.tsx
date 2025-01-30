@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { ROUTES } from "../../config/routes";
 import { QuantitySelector } from "../QuantitySelector";
 import { useQuantityChange } from "../../hooks/useQuantityChange";
+import { ORDER_STATUS, ORDER_STATUS_TEXT } from "../../config/constant";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 
 export interface CartItemProps {
   id: number | number;
@@ -11,6 +13,8 @@ export interface CartItemProps {
   quantity: number | string;
   deleteItemFromCart: (id: number | number, quantity: number | number) => void;
   showQuantitySelector: boolean;
+  showPartialiSheduledTag: boolean;
+  canSchedulePartially: boolean;
 }
 
 export const CartItem = ({
@@ -21,9 +25,16 @@ export const CartItem = ({
   quantity: initialQuantity,
   deleteItemFromCart,
   showQuantitySelector = false,
+  showPartialiSheduledTag = false,
+  canSchedulePartially = false
 }: CartItemProps): JSX.Element => {
-  const { handleQuantityChange, addOneItem, restOneItem, showPrices } =
-    useQuantityChange();
+  const {
+    handleQuantityChange,
+    addOneItem,
+    restOneItem,
+    showPrices,
+    handlePartiallyScheduled,
+  } = useQuantityChange();
 
   return (
     <div className="flex items-center gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
@@ -47,6 +58,41 @@ export const CartItem = ({
               {price}
             </p>
           )}
+          {canSchedulePartially && !showPartialiSheduledTag && (
+            <button
+              type="button"
+              onClick={() =>
+                handlePartiallyScheduled(
+                  id,
+                  initialQuantity,
+                  !showPartialiSheduledTag
+                )
+              }
+              className="bg-blue-600 text-white text-xs font-semibold px-2.5 py-0.5 rounded-sm hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <span>Agendar parcialmente</span>
+            </button>
+          )}
+
+          {canSchedulePartially && showPartialiSheduledTag && (
+            <div className="flex items-center justify-between text-start">
+              <div className="flex items-center gap-2">
+                <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-sm dark:bg-blue-200 dark:text-blue-800">
+                  {ORDER_STATUS_TEXT[ORDER_STATUS.PARTIALLY_SCHEDULED]}
+                </span>
+              </div>
+              <XMarkIcon
+                className="w-4 h-4 text-gray-500 hover:text-gray-700 cursor-pointer"
+                onClick={() =>
+                  handlePartiallyScheduled(
+                    id,
+                    initialQuantity,
+                    !showPartialiSheduledTag
+                  )
+                }
+              />
+            </div>
+          )}
         </div>
 
         {/* Quantity Controls and Remove Button */}
@@ -54,9 +100,15 @@ export const CartItem = ({
           {showQuantitySelector && (
             <QuantitySelector
               quantity={initialQuantity}
-              handleQuantityChange={(ev) => handleQuantityChange(ev, id)}
-              addOneItem={() => addOneItem(id, initialQuantity)}
-              restOneItem={() => restOneItem(id, initialQuantity)}
+              handleQuantityChange={(ev) =>
+                handleQuantityChange(ev, id, showPartialiSheduledTag)
+              }
+              addOneItem={() =>
+                addOneItem(id, initialQuantity, showPartialiSheduledTag)
+              }
+              restOneItem={() =>
+                restOneItem(id, initialQuantity, showPartialiSheduledTag)
+              }
             />
           )}
 

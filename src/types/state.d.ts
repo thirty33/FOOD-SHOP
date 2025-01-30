@@ -37,7 +37,7 @@ export interface state {
         permission: Permission
     };
     setUser: (role: Role, permission: Permission) => void;
-    updateCurrentOrder: (orderLines: Array<{id: string | number, quantity: number | string}>) => void;
+    updateCurrentOrder: (orderLines: Array<{id: string | number, quantity: number | string, partiallyScheduled?: boolean }>) => void;
     updateOrderStatus: (status: string) => void;
     partiallyScheduleOrder: (status: string) => void;
 }   
