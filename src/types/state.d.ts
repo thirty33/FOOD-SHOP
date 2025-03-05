@@ -40,6 +40,8 @@ export interface state {
     updateCurrentOrder: (orderLines: Array<{id: string | number, quantity: number | string, partiallyScheduled?: boolean }>) => void;
     updateOrderStatus: (status: string) => void;
     partiallyScheduleOrder: (status: string) => void;
+    setCurrentOrder: (order: OrderData | null) => void;
+    getOrders: () => void;
 }   
 
 export interface GlobalProviderProps {
@@ -62,6 +64,7 @@ export interface globalState {
         role: Role;
         permission: Permission
     }
+    orders: OrderData[] | null;
 }
 
 export type signOutState = Pick<globalState, 
@@ -82,3 +85,4 @@ export type Action =
     | { type: typeof CART_ACTION_TYPES.SET_CURRENT_ORDER, payload: Pick<globalState, 'currentOrder'> }
     | { type: typeof CART_ACTION_TYPES.SET_SHOW_CART, payload: Pick<globalState, 'showSideCart'> }
     | { type: typeof CART_ACTION_TYPES.SET_USER_INFO, payload: Pick<globalState, 'user'> }
+    | { type: typeof CART_ACTION_TYPES.SET_ORDERS, payload: Pick<globalState, 'orders'> }

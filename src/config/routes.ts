@@ -50,6 +50,7 @@ export const API_ROUTES = {
             deleteOrderLine: 'delete-order-items',
             updateOrderStatus: 'update-order-status',
             partiallyScheduleOrder: 'partially-schedule-order',
+            getOrders: 'get-orders',
         }
     },
 }

@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { menuService } from "../services/menu";
 import { MenuItemPagination } from "../types/menus";
 import { useInifiniteScroll } from "./useInifiniteScroll";
+import { useOrder } from "./useCurrentOrder";
 
 export function useMenus() {
 
@@ -17,6 +18,10 @@ export function useMenus() {
         setLastPage,
         setCurrenPage,
     } = useInifiniteScroll();
+
+    const {
+        // setCurrentOrder
+    } = useOrder();
 
     const fetchMenus = async () => {
         try {
@@ -43,7 +48,8 @@ export function useMenus() {
         setMenus([]);
         setCurrenPage(1); 
         setLastPage(1); 
-        setHasMore(false); 
+        setHasMore(false);
+        // setCurrentOrder(null);
     }, []);
     
     useEffect(() => {
@@ -52,9 +58,11 @@ export function useMenus() {
         }
     }, [currentPage]);
 
+    const hasFetched = useRef(false);
     useEffect(() => {
-        if(menuItems.length === 0 && currentPage === 1) {
+        if(!hasFetched.current && menuItems.length === 0 && currentPage === 1) {
             fetchMenus();
+            hasFetched.current = true;
         }
     }, [menuItems, currentPage])
 

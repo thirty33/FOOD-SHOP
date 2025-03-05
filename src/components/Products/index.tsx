@@ -33,14 +33,14 @@ export const ProductItem = ({
 
   const currentQuantity = useMemo(() => {
     return (
-      currentOrder?.order_lines.find((line) => line.product.id === id)
+      currentOrder?.order_lines.find((line) => line.product && line.product.id === id)
         ?.quantity ?? 0
     );
   }, [currentOrder]);
 
   const partiallyScheduled = useMemo(() => {
     return (
-      currentOrder?.order_lines.find((line) => line.product.id === id)
+      currentOrder?.order_lines.find((line) => line.product && line.product.id === id)
       ?.partially_scheduled ?? false
     );
   }, [currentOrder]);

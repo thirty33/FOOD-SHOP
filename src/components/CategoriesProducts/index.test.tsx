@@ -106,6 +106,7 @@ describe("<CategoriesProducts />", () => {
             products: [],
             category_lines: [],
             subcategories: [],
+            category_user_lines: [],
           },
           menu: {
             id: 65,

@@ -48,6 +48,7 @@ type CategoryDetail = {
     description: string;
     products: Product[];
     category_lines: CategoryLine[];
+    category_user_lines: CategoryLine[];
     subcategories: Subcategory[];
 };
 

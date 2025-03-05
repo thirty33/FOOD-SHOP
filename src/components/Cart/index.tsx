@@ -26,7 +26,7 @@ export const CartItem = ({
   deleteItemFromCart,
   showQuantitySelector = false,
   showPartialiSheduledTag = false,
-  canSchedulePartially = false
+  canSchedulePartially = false,
 }: CartItemProps): JSX.Element => {
   const {
     handleQuantityChange,
@@ -135,7 +135,7 @@ export const Cart = (): JSX.Element => {
         <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
           <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
             <div className="space-y-6">
-              <CartItem
+              {/* <CartItem
                 image="https://www.elmejornido.com/sites/g/files/jgfbjl316/files/styles/facebook_share/public/recipe-thumbnail/116753-cc72869fabfc2bdfa036fd1fe0e2bad8_creamy_alfredo_pasta_long_left.jpg?itok=vtPFA3DF"
                 name="Pasta Alfredo Cremosa"
                 price="299"
@@ -169,8 +169,9 @@ export const Cart = (): JSX.Element => {
                 quantity={4}
                 deleteItemFromCart={() => {}}
                 id={1}
-                showQuantitySelector={true}
+                showQuantitySelector={true} 
               />
+              */}
             </div>
             <div className="hidden xl:mt-8 xl:block">
               <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">

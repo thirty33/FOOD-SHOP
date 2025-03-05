@@ -87,7 +87,13 @@ const UPDATE_STATE_BY_ACTION = {
             ...state,
             user: (action.payload as Pick<globalState, 'user'>).user,
         };
-    }
+    },
+    [CART_ACTION_TYPES.SET_ORDERS]:  (state: globalState, action: Action) => {
+        return {
+            ...state,
+            orders: (action.payload as Pick<globalState, 'orders'>).orders,
+        };
+    },
 }
 
 export const menuReducer = (state: globalState, action: Action & { type: keyof typeof UPDATE_STATE_BY_ACTION }): globalState => {

@@ -9,7 +9,7 @@ import { useOrder } from "../../hooks/useCurrentOrder";
 
 export const Header = () => {
   const { logOut, setToken, signOut } = useAuth();
-  const { setShowSideCart, showSideCart, cartItemsCount } = useOrder();
+  const { setShowSideCart, showSideCart, cartItemsCount, isAtCategoriesRoute } = useOrder();
   const { enqueueSnackbar } = useNotification();
   const navigate = useNavigate();
 
@@ -42,19 +42,21 @@ export const Header = () => {
               />
             </a>
             <div className="flex items-center lg:order-2">
-              <button
-                type="button"
-                className="relative inline-flex items-center p-3 text-sm font-medium text-center"
-              >
-                <ShoppingCartIcon
-                  onClick={() => setShowSideCart(!showSideCart)}
-                  className="w-8 h-8 cursor-pointer"
-                />
-                <span className="sr-only">Notifications</span>
-                <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
-                  {cartItemsCount}
-                </div>
-              </button>
+              {isAtCategoriesRoute() && (
+                <button
+                  type="button"
+                  className="relative inline-flex items-center p-3 text-sm font-medium text-center"
+                >
+                  <ShoppingCartIcon
+                    onClick={() => setShowSideCart(!showSideCart)}
+                    className="w-8 h-8 cursor-pointer"
+                  />
+                  <span className="sr-only">Notifications</span>
+                  <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
+                    {cartItemsCount}
+                  </div>
+                </button>
+              )}
               <a
                 href="#"
                 className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"

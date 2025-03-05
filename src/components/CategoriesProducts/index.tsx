@@ -3,6 +3,9 @@ import { ProductItem } from "../Products";
 import { Product, Category } from "../../types/categories";
 import { SpinnerLoading } from "../SpinnerLoading";
 import { useOrder } from "../../hooks/useCurrentOrder";
+import { isAgreementIndividual } from "../../helpers/permissions";
+import { useAuth } from "../../hooks/useAuth";
+import { User } from "../../types/user";
 
 // Componente para la lista de productos de una categoría
 const ProductList = ({ products }: { products: Product[] }) => {
@@ -26,7 +29,7 @@ const ProductList = ({ products }: { products: Product[] }) => {
 };
 
 // Componente para una categoría
-const CategorySection = ({ category }: { category: Category }): JSX.Element => {
+const CategorySection = ({ category, user }: { category: Category, user: User }): JSX.Element => {
   const completeCategory = category.show_all_products;
 
   const products = !completeCategory
@@ -35,6 +38,7 @@ const CategorySection = ({ category }: { category: Category }): JSX.Element => {
 
   // Get the maximum_order_time from the first category_lines entry, or "Not available" if empty
   const maximumOrderTime =
+    category?.category?.category_user_lines?.[0]?.maximum_order_time ||
     category?.category?.category_lines?.[0]?.maximum_order_time ||
     "No disponible";
 
@@ -44,25 +48,30 @@ const CategorySection = ({ category }: { category: Category }): JSX.Element => {
   return (
     <div className="mb-12">
       <div className="flex flex-col justify-start items-center mb-2 md:flex-row md:justify-start">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">{category?.category?.name}</h2>
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">
+          {category?.category?.name}
+        </h2>
         <p className="text-gray-600 ml-2">{maximumOrderTime}</p>
       </div>
 
       {/* Display subcategories if they exist */}
-      {subcategories.length > 0 && (
+      {isAgreementIndividual(user) && subcategories.length > 0 && (
         <div className="mb-6 flex justify-center md:justify-start">
           <p className="text-gray-600">
-            <strong>Categorías:</strong> {subcategories.map((subcategory) => subcategory.name).join(", ")}
+            <strong>Categorías:</strong>{" "}
+            {subcategories.map((subcategory) => subcategory.name).join(", ")}
           </p>
         </div>
       )}
 
       {products && <ProductList products={products} />}
     </div>
-  )
+  );
 };
 
 export const CategoriesProducts = () => {
+
+  const { user } = useAuth();
   const { categories, isLoading } = useCategories();
 
   const allCategoriesNull = categories.every(
@@ -75,7 +84,7 @@ export const CategoriesProducts = () => {
         <div className="container mx-auto px-4 py-8">
           {!allCategoriesNull &&
             categories.map((category) => (
-              <CategorySection key={category.id} category={category} />
+              <CategorySection key={category.id} category={category} user={user} />
             ))}
         </div>
         {(categories.length === 0 || allCategoriesNull) && !isLoading && (

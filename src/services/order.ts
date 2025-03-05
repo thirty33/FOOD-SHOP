@@ -3,8 +3,10 @@ import { HttpClient } from "../classes/HttpClient";
 import { API_ROUTES } from "../config/routes";
 
 import {
+	OrderData,
 	OrderResponse
 } from "../types/order"
+import { Pagination, SuccessResponse } from "../types/responses";
 
 export interface OrderService {
 	get(date: string): Promise<OrderResponse> | OrderResponse;
@@ -12,6 +14,7 @@ export interface OrderService {
 	deleteOrderLine(date: string, orderLines: { id: number; quantity: number }[]): Promise<OrderResponse> | OrderResponse;
 	updateOrderStatus(date: string, statusOrder: string): Promise<OrderResponse> | OrderResponse;
 	partiallyScheduleOrder(date: string, statusOrder: string): Promise<OrderResponse> | OrderResponse;
+	getOrders(params?: { [key: string]: string | number }): Promise<Pagination<OrderData>> | Pagination<OrderData>;
 }
 
 export const orderService = new (
@@ -19,6 +22,24 @@ export const orderService = new (
 
 		constructor() {
 			super(API_ROUTES.orders.base);
+		}
+
+		async getOrders(params?: { [key: string]: string | number }) {
+			try {
+				const { data, status } = await this.http.get(API_ROUTES.orders.paths.getOrders, { params: params });
+
+				const response = this.handleResponse<SuccessResponse<Pagination<OrderData>>>(status, data).data;
+
+				return response;
+
+			} catch (error: unknown) {
+				if (axios.isAxiosError(error)) {
+					console.error('Axios error:', error.response?.data || error.message);
+				} else {
+					console.error('Error:', error);
+				}
+				throw error;
+			}
 		}
 
 		async get(date: string) {

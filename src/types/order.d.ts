@@ -1,4 +1,6 @@
 import { ORDER_STATUS } from "../config/constant"
+import { MenuData } from "./menus";
+import { Pagination, SuccessResponse, UnauthorizedResponse, RateLimitResponse } from './responses.d.ts';
 
 export interface Category {
   id: number
@@ -31,27 +33,29 @@ interface Product {
 	category: Category;
 }
 
-interface OrderLine {
+export interface OrderLine {
 	id: number;
 	quantity: number | string;
 	unit_price: string;
 	order_id: number;
 	product_id: number;
 	total_price: string;
-	product: Product;
+	product?: Product;
 	partially_scheduled: boolean;
 }
 
 export interface OrderData {
 	id: number;
-	total: number;
+	total: number | string;
 	status: typeof ORDER_STATUS[keyof typeof ORDER_STATUS];
 	user_id: number;
 	price_list_min: number;
-	branch_id: number;
+	branch_id: number | null;
 	dispatch_date: string;
+	created_date: string;
 	alternative_address: string | null;
 	order_lines: OrderLine[];
+	menu?: MenuData;
 }
 
 export interface SuccessResponse {
@@ -73,3 +77,5 @@ export interface ValidationErrorResponse {
 }
 
 export type OrderResponse = SuccessResponse | ErrorResponse | ValidationErrorResponse;
+
+export type PaginateResponse = SuccessResponse<Pagination<OrderData>> | UnauthorizedResponse | RateLimitResponse;

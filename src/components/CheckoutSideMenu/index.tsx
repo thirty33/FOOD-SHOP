@@ -20,8 +20,8 @@ export const CheckoutSideMenu = () => {
     setShowSideCart,
     updateOrderStatus,
     showPrices,
-    partiallyScheduleOrder,
     user,
+    isAtCategoriesRoute
   } = useOrder();
 
   const { showQuantitySelector } = useAuth();
@@ -29,16 +29,11 @@ export const CheckoutSideMenu = () => {
   const handleCheckout = () => {
     updateOrderStatus(ORDER_STATUS.PROCESSED);
   };
-
-  const handlePartiallyScheduled = () => {
-    console.log("handlePartiallyScheduled");
-    partiallyScheduleOrder(ORDER_STATUS.PARTIALLY_SCHEDULED);
-  };
-
+  
   return (
     <aside
       className={`${
-        showSideCart ? "flex" : "hidden"
+        showSideCart && isAtCategoriesRoute() ? "flex" : "hidden"
       } checkout-side-menu flex-col fixed right-0 border border-black rounded-lg bg-white z-50`}
     >
       <div className="flex flex-col">
@@ -66,20 +61,23 @@ export const CheckoutSideMenu = () => {
       </div>
       <div className="px-6 overflow-y-scroll flex flex-col gap-y-4 ">
         {currentOrder &&
-          currentOrder.order_lines.map((line) => (
-            <CartItem
-              key={`${currentOrder.id}-${line.id}-${line.product.id}`}
-              name={line.product.name}
-              price={line.total_price}
-              quantity={line.quantity}
-              image={line.product.image}
-              id={line.product.id}
-              deleteItemFromCart={deleteItemFromCart}
-              showQuantitySelector={showQuantitySelector}
-              showPartialiSheduledTag={line.partially_scheduled}
-              canSchedulePartially={isAdminOrCafe(user)}
-            />
-          ))}
+          currentOrder.order_lines.map((line) => {
+            if (!line.product) return null;
+            return (
+              <CartItem
+                key={`${currentOrder.id}-${line.id}-${line.product.id}`}
+                name={line.product.name}
+                price={line.total_price}
+                quantity={line.quantity}
+                image={line.product.image}
+                id={line.product.id}
+                deleteItemFromCart={deleteItemFromCart}
+                showQuantitySelector={showQuantitySelector}
+                showPartialiSheduledTag={line.partially_scheduled}
+                canSchedulePartially={isAdminOrCafe(user)}
+              />
+            );
+          })}
       </div>
       {(!currentOrder || currentOrder.order_lines.length === 0) &&
       !isLoading ? (

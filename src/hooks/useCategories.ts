@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { categoryService } from "../services/category";
 import { CategoryItemPagination } from "../types/categories";
 import { useInifiniteScroll } from "./useInifiniteScroll";
@@ -7,9 +7,9 @@ import { useParams } from "react-router-dom";
 
 export function useCategories() {
 
-    const { 
-        currentPage, 
-        isLoading, 
+    const {
+        currentPage,
+        isLoading,
         categories,
         setIsLoading,
         setHasMore,
@@ -17,12 +17,12 @@ export function useCategories() {
         lastPage,
         setLastPage,
         setCurrenPage
-     } = useInifiniteScroll();
+    } = useInifiniteScroll();
 
     const { enqueueSnackbar } = useSnackbar();
 
     const { menuId } = useParams<{ menuId: string }>();
-    
+
     const fetchCategories = async () => {
         try {
             setIsLoading(true);
@@ -39,7 +39,7 @@ export function useCategories() {
             setCategories([...categories, ...data]);
 
             setIsLoading(false);
-            
+
         } catch (error) {
             setIsLoading(false);
             enqueueSnackbar((error as Error).message, { variant: 'error' });
@@ -52,15 +52,19 @@ export function useCategories() {
         setLastPage(1);
         setHasMore(false);
     }, [menuId]);
-    
+
     useEffect(() => {
-        fetchCategories();
+        if (currentPage > 1) {
+            fetchCategories();
+        }
     }, [currentPage, menuId]);
 
+    const hasFetched = useRef(false);
     // Fetch categories only after categories have been reset
     useEffect(() => {
-        if (categories.length === 0 && currentPage === 1) {
+        if (!hasFetched.current && categories.length === 0 && currentPage === 1) {
             fetchCategories();
+            hasFetched.current = true;
         }
     }, [categories, currentPage]);
 

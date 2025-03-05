@@ -29,6 +29,8 @@ type orderState = Pick<
   | "updateCurrentOrder"
   | "updateOrderStatus"
   | "partiallyScheduleOrder"
+  | "setCurrentOrder"
+  | "getOrders"
 >;
 
 // Create context
@@ -43,6 +45,8 @@ export const OrderContext = createContext<orderState>({
   updateCurrentOrder: () => {},
   updateOrderStatus: () => {},
   partiallyScheduleOrder: () => {},
+  setCurrentOrder: () => {},
+  getOrders: () => {}
 });
 
 // Create provider component
@@ -109,7 +113,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
 
     orderLines.forEach((line) => {
       const productToUpdate = updatedOrderLines.find(
-        (orderLine) => line.id === orderLine.product.id
+        (orderLine) => orderLine.product && line.id === orderLine.product.id
       );
       if (productToUpdate) {
         productToUpdate.quantity = line.quantity;
@@ -288,6 +292,41 @@ export function OrderProvider({ children }: GlobalProviderProps) {
     return currentOrder?.order_lines.length || 0;
   }, [currentOrder]);
 
+  const setCurrentOrder = (order: OrderData | null) => {
+    dispatch({
+      type: CART_ACTION_TYPES.SET_CURRENT_ORDER,
+      payload: { currentOrder: order },
+    });
+  }
+
+  const getOrders = async () => {
+
+    try {
+      dispatch({
+        type: CART_ACTION_TYPES.APP_IS_LOADING,
+        payload: { isLoading: true },
+      });
+
+      const { data } = (await orderService.getOrders());
+
+      dispatch({
+        type: CART_ACTION_TYPES.SET_ORDERS,
+        payload: { orders: data },
+      });
+
+    } catch (error) {
+      enqueueSnackbar((error as Error).message, {
+        variant: "error",
+        autoHideDuration: 5000,
+      });
+    } finally {
+      dispatch({
+        type: CART_ACTION_TYPES.APP_IS_LOADING,
+        payload: { isLoading: false },
+      });
+    }
+  }
+
   const value = {
     currentOrder,
     isLoading,
@@ -299,6 +338,8 @@ export function OrderProvider({ children }: GlobalProviderProps) {
     updateCurrentOrder,
     updateOrderStatus,
     partiallyScheduleOrder,
+    setCurrentOrder,
+    getOrders
   };
 
   return (
