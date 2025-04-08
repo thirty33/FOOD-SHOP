@@ -1,3 +1,5 @@
+import { isAdminOrCafe } from "../../helpers/permissions";
+import { useAuth } from "../../hooks/useAuth";
 import { useCurrentList } from "../../hooks/useCurrentList";
 import { OrderLines } from "./OrderLines";
 import { OrdersFilters } from "./OrdersFilters";
@@ -5,6 +7,7 @@ import { OrdersFilters } from "./OrdersFilters";
 export const Orders = () => {
 
   const { orders, isLoading, changeFilter } = useCurrentList();
+  const { user } = useAuth();
 
   return (
     <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
@@ -14,6 +17,7 @@ export const Orders = () => {
             changeFilter={changeFilter}
           />
           <OrderLines
+            showTotalPrice={isAdminOrCafe(user)}
             orders={orders}
             isLoading={isLoading}
           />

@@ -37,9 +37,11 @@ export interface OrderLine {
 	id: number;
 	quantity: number | string;
 	unit_price: string;
+	unit_price_with_tax: string;
 	order_id: number;
 	product_id: number;
 	total_price: string;
+	total_price_with_tax: string;
 	product?: Product;
 	partially_scheduled: boolean;
 }
@@ -47,6 +49,7 @@ export interface OrderLine {
 export interface OrderData {
 	id: number;
 	total: number | string;
+	total_with_tax: number | string;
 	status: typeof ORDER_STATUS[keyof typeof ORDER_STATUS];
 	user_id: number;
 	price_list_min: number;

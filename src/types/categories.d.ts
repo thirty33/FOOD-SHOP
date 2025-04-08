@@ -7,6 +7,7 @@ export type Ingredients = {
 type PriceListLine = {
     id: number | string;
     unit_price: string;
+    unit_price_with_tax: string;
 };
 
 export type Product = {

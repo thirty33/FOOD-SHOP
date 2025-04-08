@@ -19,6 +19,7 @@ const ProductList = ({ products }: { products: Product[] }) => {
           imageLight={product.image}
           imageDark={product.image}
           price={product.price_list_lines[0].unit_price}
+          priceWithTax={product.price_list_lines[0].unit_price_with_tax}
           title={product.name}
           ingredients={product.ingredients}
           addProductToCart={addProductToCart}

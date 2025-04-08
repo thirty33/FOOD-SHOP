@@ -13,8 +13,7 @@ const schema = yup
   .object({
     email: yup
       .string()
-      .required("El correo electrónico es obligatorio")
-      .email("El correo electrónico debe ser válido"),
+      .required("El correo electrónico es obligatorio"),
     password: yup
       .string()
       .required("La contraseña es obligatoria")
@@ -95,10 +94,10 @@ export const LoginForm = () => {
                   htmlFor="email"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Tu correo electrónico
+                  Tu correo electrónico o usuario
                 </label>
                 <input
-                  type="email"
+                  type="text"
                   id="email"
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="nombre@empresa.com"

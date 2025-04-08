@@ -67,7 +67,7 @@ export const CheckoutSideMenu = () => {
               <CartItem
                 key={`${currentOrder.id}-${line.id}-${line.product.id}`}
                 name={line.product.name}
-                price={line.total_price}
+                price={line.total_price_with_tax}
                 quantity={line.quantity}
                 image={line.product.image}
                 id={line.product.id}
@@ -100,7 +100,7 @@ export const CheckoutSideMenu = () => {
           <p className="flex justify-between items-center mb-2 p-4">
             <span className="font-bold text-2xl">Total:</span>
             <span className="font-medium text-2xl">
-              {currentOrder ? currentOrder?.total : "$0"}
+              {currentOrder ? currentOrder?.total_with_tax : "$0"}
             </span>
           </p>
         )}
