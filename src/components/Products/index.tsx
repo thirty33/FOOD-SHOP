@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useQuantityChange } from "../../hooks/useQuantityChange";
 import { Ingredients } from "../../types/categories";
 import { QuantitySelector } from "../QuantitySelector";
+import { configuration } from "../../config/config";
 
 interface ProductItemProps {
   id: string | number;
@@ -52,12 +53,12 @@ export const ProductItem = ({
       key={id}
       className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
     >
-      <div className="h-56 w-full">
+      <div className="">
         <div onClick={() => addProductToCart(id, 1)}>
-          <img className="mx-auto h-full dark:hidden" src={imageLight} alt="" />
+          <img className="mx-auto h-64 w-64 dark:hidden" src={imageLight ?? configuration.product.image} alt="" />
           <img
-            className="mx-auto hidden h-full dark:block"
-            src={imageDark}
+            className="mx-auto h-64 w-64 hidden dark:block"
+            src={imageDark ?? configuration.product.image}
             alt=""
           />
         </div>

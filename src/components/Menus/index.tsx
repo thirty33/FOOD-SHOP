@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useMenus } from "../../hooks/useMenus";
 import { SpinnerLoading } from "../SpinnerLoading";
 import { ROUTES } from "../../config/routes";
-import MenuImage from "../../assets/images/menuImage.webp";
+import { configuration } from "../../config/config";
 
 const MenuCard: React.FC<{
   title: string;
@@ -28,7 +28,7 @@ const MenuCard: React.FC<{
       >
       <img
         className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
-        src={MenuImage}
+        src={configuration.menu.image}
         alt=""
       />
       <div className="flex flex-col justify-between p-4 leading-normal">

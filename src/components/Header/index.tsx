@@ -1,7 +1,7 @@
 import { useAuth } from "../../hooks/useAuth";
 import { useState } from "react";
 import { useNotification } from "../../hooks/useNotification";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../config/routes";
 import { configuration } from "../../config/config";
 import { ShoppingCartIcon } from "@heroicons/react/24/solid";
@@ -34,13 +34,13 @@ export const Header = () => {
       <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 pb-4">
         <nav className="bg-white border-gray-200 dark:bg-gray-800">
           <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-            <a href="https://flowbite.com" className="flex items-center">
+            <Link to={'/'} className="flex items-center">
               <img
                 src={configuration.company.logo}
                 className="mr-3 w-auto h-20"
                 alt={configuration.company.name}
               />
-            </a>
+            </Link>
             <div className="flex items-center lg:order-2">
               {isAtCategoriesRoute() && (
                 <button

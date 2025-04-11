@@ -134,6 +134,7 @@ describe("<CategoriesProducts />", () => {
                 {
                   id: 29,
                   unit_price: "$92,80",
+                  unit_price_with_tax: "$92,80",
                 },
               ],
               ingredients: [
