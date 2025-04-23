@@ -46,6 +46,7 @@ export const API_ROUTES = {
         base: 'orders',
         paths: {
             getItem: 'get-order',
+            getItemById: 'get-order-by-id',
             createOrUpdateOrder: 'create-or-update-order',
             deleteOrderLine: 'delete-order-items',
             updateOrderStatus: 'update-order-status',

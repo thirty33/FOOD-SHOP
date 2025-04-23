@@ -57,6 +57,7 @@ export interface OrderData {
 	dispatch_date: string;
 	created_date: string;
 	alternative_address: string | null;
+	address: string | null;
 	order_lines: OrderLine[];
 	menu?: MenuData;
 }

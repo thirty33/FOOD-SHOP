@@ -31,21 +31,21 @@ export const PERMISSION_TYPES = {
 export const ORDER_STATUS = {
     PENDING: 'PENDING',
     PROCESSED: 'PROCESSED',
-    CANCELLED: 'CANCELLED',
+    CANCELED: 'CANCELED',
     PARTIALLY_SCHEDULED: 'PARTIALLY_SCHEDULED',
 } as const
 
 export const ORDER_STATUS_TEXT = {
     PENDING: 'Pendiente',
     PROCESSED: 'Procesada',
-    CANCELLED: 'Cancelada',
+    CANCELED: 'Cancelada',
     PARTIALLY_SCHEDULED: 'Parcialmente agendada',
 } as const
 
 export const ORDER_STATUS_COLOR = {
     PENDING: 'bg-yellow-500',
     PROCESSED: 'bg-green-500',
-    CANCELLED: 'bg-red-500',
+    CANCELED: 'bg-red-500',
     PARTIALLY_SCHEDULED: 'bg-blue-500',
 } as const
 

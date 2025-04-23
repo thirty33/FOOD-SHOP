@@ -14,7 +14,11 @@ interface OrderLinesProps {
   showTotalPrice: boolean;
 }
 
-export const OrderLines = ({ orders, isLoading, showTotalPrice }: OrderLinesProps) => {
+export const OrderLines = ({
+  orders,
+  isLoading,
+  showTotalPrice,
+}: OrderLinesProps) => {
   return (
     <>
       <div className="mt-6 flow-root sm:mt-8">
@@ -83,32 +87,39 @@ export const OrderLines = ({ orders, isLoading, showTotalPrice }: OrderLinesProp
                   </dd>
                 </dl>
                 <div className="w-full grid sm:grid-cols-2 lg:flex lg:w-64 lg:items-center lg:justify-end gap-4">
-                  {order.menu && (
-                    <>
-                      {order.status !== ORDER_STATUS.PROCESSED && (
-                        <Link
-                          to={{
-                            pathname: `/${ROUTES.GET_CATEGORY_ROUTE(
-                              order?.menu?.id
-                            )}`,
-                            search: `?date=${order?.menu?.publication_date}`,
-                          }}
-                          type="button"
-                          className="w-full rounded-lg bg-primary-700 px-3 py-2 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 lg:w-auto"
-                        >
-                          Retomar Orden
-                        </Link>
-                      )}
+                  <>
+                    {order.menu && [ORDER_STATUS.PARTIALLY_SCHEDULED, ORDER_STATUS.PENDING].includes(
+                      order.status as "PARTIALLY_SCHEDULED" | "PENDING"
+                    ) && (
                       <Link
                         to={{
-                          pathname: `/${ROUTES.GET_ORDER_SUMMARY_ROUTE(order.id)}`,
+                          pathname: `/${ROUTES.GET_CATEGORY_ROUTE(
+                            order?.menu?.id
+                          )}`,
+                          search: `?date=${order?.menu?.publication_date}`,
+                        }}
+                        type="button"
+                        className="w-full rounded-lg bg-primary-700 px-3 py-2 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 lg:w-auto"
+                      >
+                        Retomar Orden
+                      </Link>
+                    )}
+
+                    {[ORDER_STATUS.CANCELED, ORDER_STATUS.PROCESSED, ORDER_STATUS.PARTIALLY_SCHEDULED].includes(
+                      order.status as "CANCELED" | "PROCESSED" | "PARTIALLY_SCHEDULED"
+                    ) && (
+                      <Link
+                        to={{
+                          pathname: `/${ROUTES.GET_ORDER_SUMMARY_ROUTE(
+                            order.id
+                          )}`,
                         }}
                         className="w-full inline-flex justify-center rounded-lg  border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 lg:w-auto"
                       >
                         Ver Detalle
                       </Link>
-                    </>
-                  )}
+                    )}
+                  </>
                 </div>
               </div>
             ))}

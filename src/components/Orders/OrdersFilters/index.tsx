@@ -15,7 +15,7 @@ export const OrdersFilters = ({changeFilter}: OrdersFiltersProps) => {
   return (
     <div className="gap-4 sm:flex sm:items-center sm:justify-between">
       <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
-        Mis Ordenes
+        Mis Pedidos
       </h2>
       <div className="mt-6 gap-4 space-y-4 sm:mt-0 sm:flex sm:items-center sm:justify-end sm:space-y-0">
         <div>
