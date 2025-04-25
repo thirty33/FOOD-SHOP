@@ -3,10 +3,14 @@ import { SpinnerLoading } from "../../components/SpinnerLoading";
 import { Link, useNavigate } from "react-router-dom";
 import { ORDER_STATUS_TEXT, ORDER_STATUS_COLOR } from "../../config/constant";
 import { configuration } from "../../config/config";
+import { isAdminOrCafe } from "../../helpers/permissions";
+import { useAuth } from "../../hooks/useAuth";
 
 export const OrderSummary = (): JSX.Element => {
   const { order, isLoading } = useGetOrderById();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const canViewPrices = isAdminOrCafe(user);
 
   if (isLoading) {
     return (
@@ -134,64 +138,68 @@ export const OrderSummary = (): JSX.Element => {
                         <td className="p-4 text-base font-normal text-gray-900 dark:text-white">
                           x{line.quantity}
                         </td>
-                        <td className="p-4 text-right text-base font-bold text-gray-900 dark:text-white">
-                          {line.total_price}
-                          <div className="text-xs text-gray-500">
-                            Con imp: {line.total_price_with_tax}
-                          </div>
-                        </td>
+                        {canViewPrices && (
+                          <td className="p-4 text-right text-base font-bold text-gray-900 dark:text-white">
+                            {line.total_price}
+                            <div className="text-xs text-gray-500">
+                              Con imp: {line.total_price_with_tax}
+                            </div>
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <div className="mt-4 space-y-6">
-                <h4 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Resumen del pedido
-                </h4>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <dl className="flex items-center justify-between gap-4">
-                      <dt className="text-gray-500 dark:text-gray-400">
+              {canViewPrices && (
+                <div className="mt-4 space-y-6">
+                  <h4 className="text-xl font-semibold text-gray-900 dark:text-white">
+                    Resumen del pedido
+                  </h4>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <dl className="flex items-center justify-between gap-4">
+                        <dt className="text-gray-500 dark:text-gray-400">
+                          Total
+                        </dt>
+                        <dd className="text-base font-medium text-gray-900 dark:text-white">
+                          {order.total}
+                        </dd>
+                      </dl>
+                      <dl className="flex items-center justify-between gap-4">
+                        <dt className="text-gray-500 dark:text-gray-400">
+                          Total con impuestos
+                        </dt>
+                        <dd className="text-base font-medium text-gray-900 dark:text-white">
+                          {order.total_with_tax}
+                        </dd>
+                      </dl>
+                    </div>
+                    <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
+                      <dt className="text-lg font-bold text-gray-900 dark:text-white">
                         Total
                       </dt>
-                      <dd className="text-base font-medium text-gray-900 dark:text-white">
-                        {order.total}
-                      </dd>
-                    </dl>
-                    <dl className="flex items-center justify-between gap-4">
-                      <dt className="text-gray-500 dark:text-gray-400">
-                        Total con impuestos
-                      </dt>
-                      <dd className="text-base font-medium text-gray-900 dark:text-white">
+                      <dd className="text-lg font-bold text-gray-900 dark:text-white">
                         {order.total_with_tax}
                       </dd>
                     </dl>
                   </div>
-                  <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
-                    <dt className="text-lg font-bold text-gray-900 dark:text-white">
-                      Total
-                    </dt>
-                    <dd className="text-lg font-bold text-gray-900 dark:text-white">
-                      {order.total_with_tax}
-                    </dd>
-                  </dl>
                 </div>
-                <div className="gap-4 sm:flex sm:items-center">
-                  <button
-                    type="button"
-                    onClick={() => navigate(-1)}
-                    className="w-full rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
-                  >
-                    Regresar a los pedidos
-                  </button>
-                  <Link
-                    to="/"
-                    className="mt-4 flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 sm:mt-0"
-                  >
-                    Ir al inicio
-                  </Link>
-                </div>
+              )}
+              <div className="gap-4 sm:flex sm:items-center mt-4">
+                <button
+                  type="button"
+                  onClick={() => navigate(-1)}
+                  className="w-full rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
+                >
+                  Regresar a los pedidos
+                </button>
+                <Link
+                  to="/"
+                  className="mt-4 flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 sm:mt-0"
+                >
+                  Ir al inicio
+                </Link>
               </div>
             </div>
           </div>
