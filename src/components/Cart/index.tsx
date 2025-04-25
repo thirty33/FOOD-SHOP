@@ -4,6 +4,7 @@ import { QuantitySelector } from "../QuantitySelector";
 import { useQuantityChange } from "../../hooks/useQuantityChange";
 import { ORDER_STATUS, ORDER_STATUS_TEXT } from "../../config/constant";
 import { XMarkIcon } from "@heroicons/react/24/solid";
+import { configuration } from "../../config/config";
 
 export interface CartItemProps {
   id: number | number;
@@ -42,7 +43,7 @@ export const CartItem = ({
       <div className="h-20 w-20 flex-shrink-0">
         <img
           className="h-full w-full rounded-md object-cover"
-          src={image}
+          src={image ?? configuration.product.image}
           alt={name}
         />
       </div>
