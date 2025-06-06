@@ -17,7 +17,7 @@ export const ActionButton = ({
     <button
       disabled={disable}
       type={type}
-      className="flex justify-center align-center w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+      className="h-8 md:h-16 flex justify-center items-center align-center w-full text-white font-cera-bold tracking-tighte text-xs md:text-xl bg-green-100 hover:bg-green-900 focus:ring-4 focus:outline-none font-medium rounded-lg md:rounded-2xl text-center"
     >
       {!isLoading && buttonText}
       <SpinnerLoading show={isLoading} />

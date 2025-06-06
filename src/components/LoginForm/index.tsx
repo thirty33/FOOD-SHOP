@@ -8,12 +8,11 @@ import { useNotification } from "../../hooks/useNotification";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../config/routes";
 import { configuration } from "../../config/config";
+import { useEffect } from "react";
 
 const schema = yup
   .object({
-    email: yup
-      .string()
-      .required("El correo electrónico es obligatorio"),
+    email: yup.string().required("El correo electrónico es obligatorio"),
     password: yup
       .string()
       .required("La contraseña es obligatoria")
@@ -35,7 +34,6 @@ const schema = yup
   .required();
 
 export const LoginForm = () => {
-
   const { setShowHeader, authUser, isLoading, setToken, setUser } = useAuth();
   const { enqueueSnackbar } = useNotification();
   const navigate = useNavigate();
@@ -63,116 +61,90 @@ export const LoginForm = () => {
         type: "manual",
         message: (error as Error).message,
       });
-      enqueueSnackbar((error as Error).message, { variant: 'error' });
+      enqueueSnackbar((error as Error).message, { variant: "error" });
     }
   };
 
+  useEffect(() => {
+    if (errors.email) {
+      enqueueSnackbar(errors.email.message, { variant: "error" });
+    }
+    if (errors.password) {
+      enqueueSnackbar(errors.password.message, { variant: "error" });
+    }
+  }, [errors, enqueueSnackbar]);
+
   return (
-    <section className="bg-white dark:bg-gray-900">
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <a
-          href="#"
-          className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
-        >
-          <img
-            className="w-64 h-auto mr-2"
-            src={configuration.company.logo}
-            alt={configuration.company.name}
-          />
-        </a>
-        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Inicia sesión en tu cuenta
-            </h1>
-            <form
-              className="space-y-4 md:space-y-6"
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Tu correo electrónico o usuario
-                </label>
-                <input
-                  type="text"
-                  id="email"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="nombre@empresa.com"
-                  {...register("email")}
-                  defaultValue=""
-                />
-                {errors.email && (
-                  <span className="text-red-600">{errors.email.message}</span>
-                )}
-              </div>
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Contraseña
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  placeholder="••••••••"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  {...register("password")}
-                  defaultValue=""
-                />
-                {errors.password && (
-                  <span className="text-red-600">
-                    {errors.password.message}
-                  </span>
-                )}
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-start">
-                  <div className="flex items-center h-5">
-                    <input
-                      id="remember"
-                      aria-describedby="remember"
-                      type="checkbox"
-                      className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                      required={false}
-                    />
-                  </div>
-                  <div className="ml-3 text-sm">
-                    <label
-                      htmlFor="remember"
-                      className="text-gray-500 dark:text-gray-300"
-                    >
-                      Recuérdame
-                    </label>
-                  </div>
-                </div>
-                {/* <a
-                  href="#"
-                  className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
-                >
-                  ¿Olvidaste tu contraseña?
-                </a> */}
-              </div>
+    <section className="min-h-screen bg-white flex items-center justify-center p-8 md:p-0">
+      <div className="w-full max-w-md">
+        <div className="bg-green-50 rounded-3xl shadow-lg overflow-hidden p-8">
+          {/* Logo */}
+          <div className="text-center mb-2">
+            <img
+              className="w-551 y-221 h-auto mx-auto"
+              src={configuration.company.logo}
+              alt={configuration.company.name}
+            />
+          </div>
+
+          {/* Title */}
+          <h1 className="text-white font-cera-bold text-[1.2rem] md:text-[32px] text-center tracking-tighter mb-2">
+            Inicia sesión en tu cuenta
+          </h1>
+
+          <form
+            className="space-y-2 md:space-y-4 px-4"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            {/* Email Input */}
+            <div>
+              <input
+                type="text"
+                id="email"
+                className="w-full h-8 md:h-16 py-4 md:py-0 px-3 md:px-6 bg-white border-0 rounded-lg md:rounded-2xl text-[#CCCCCC] placeholder-[#CCCCCC] focus:outline-none focus:ring-2 focus:ring-green-100 shadow-sm font-cera-regular text-xs md:text-xl tracking-tighter"
+                placeholder="Correo electrónico o usuario"
+                {...register("email")}
+                defaultValue=""
+              />
+            </div>
+
+            {/* Password Input */}
+            <div>
+              <input
+                type="password"
+                id="password"
+                placeholder="Contraseña"
+                className="w-full h-8 md:h-16 py-4 md:py-0 px-3 md:px-6 bg-white border-0 rounded-lg md:rounded-2xl text-[#CCCCCC] placeholder-[#CCCCCC] focus:outline-none focus:ring-2 focus:ring-green-100 shadow-sm font-cera-regular text-xs md:text-xl tracking-tighter"
+                {...register("password")}
+                defaultValue=""
+              />
+            </div>
+
+            {/* Remember Me Checkbox */}
+            <div className="flex items-center content-center justify-start text-start">
+              <input
+                id="remember"
+                type="checkbox"
+                className="w-4 h-4 md:w-5 md:h-5 text-green-100 bg-white border-gray-300 rounded focus:ring-green-100 default:ring-green-100 accent-green-100"
+              />
+              <label
+                htmlFor="remember"
+                className="ml-1 md:ml-2 text-xs md:text-lg font-cera-regular text-white"
+              >
+                Recuérdame
+              </label>
+            </div>
+
+            {/* Submit Button */}
+            <div className="">
               <ActionButton
                 isLoading={isLoading}
                 type="submit"
                 buttonText="Iniciar sesión"
                 disable={isLoading}
               />
-              {/* <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                ¿No tienes una cuenta?{" "}
-                <a
-                  href="#"
-                  className="font-medium text-primary-600 hover:underline dark:text-primary-500"
-                >
-                  Regístrate
-                </a>
-              </p> */}
-            </form>
-          </div>
+            </div>
+          </form>
         </div>
       </div>
     </section>

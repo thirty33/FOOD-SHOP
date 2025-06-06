@@ -1,0 +1,57 @@
+
+/* CERA Medium */
+@font-face {
+  font-family: 'CERA Black';
+  src: url('https://pedidos.deliciusfood.cl/public-assets/black.otf?Expires=2612640986&Signature=Ao0AhSaYmjs4ejGwQ1fl7kvUSMKGndH6qaJMw~gS5inlPyet9nCpuk6nE9bZZheKzJKQf7U5ABPa0yh~0E3gaK-y0Eahyhp0L~LmRa3HD2Q2kX-bQyzBJ4~c-o6R-Uid7~mkuxTRxwbGFX5F3QPKhRq3mESm2xK3LCF2UbcYLiFtCvzjjuAHcSq0I1IrJnW5tYyzBDqeW0CUG~Q0OUYHOSkQ41ivdgTxE~VGQG2WxP5ayN9u~-eYULY8BVqmXy4wAnZAFwIgfxkLtDdQ1uOSMVoFj7U6~fUHTV7vB5Aj3tLQeR-7r8ysfUht14YVlqE4d3Ajrz5434FMpcGVht-I6Q__&Key-Pair-Id=KQGAD8YX979YO') format('woff2'),
+       url('https://pedidos.deliciusfood.cl/public-assets/black.otf?Expires=2612640986&Signature=Ao0AhSaYmjs4ejGwQ1fl7kvUSMKGndH6qaJMw~gS5inlPyet9nCpuk6nE9bZZheKzJKQf7U5ABPa0yh~0E3gaK-y0Eahyhp0L~LmRa3HD2Q2kX-bQyzBJ4~c-o6R-Uid7~mkuxTRxwbGFX5F3QPKhRq3mESm2xK3LCF2UbcYLiFtCvzjjuAHcSq0I1IrJnW5tYyzBDqeW0CUG~Q0OUYHOSkQ41ivdgTxE~VGQG2WxP5ayN9u~-eYULY8BVqmXy4wAnZAFwIgfxkLtDdQ1uOSMVoFj7U6~fUHTV7vB5Aj3tLQeR-7r8ysfUht14YVlqE4d3Ajrz5434FMpcGVht-I6Q__&Key-Pair-Id=KQGAD8YX979YO') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* CERA Bold */
+@font-face {
+  font-family: 'CERA Thin';
+  src: url('https://pedidos.deliciusfood.cl/public-assets/thin.otf?Expires=2612641357&Signature=JlvIl8qot3TCD2-Aw19GKCDqe7iL2cMUrUQZvUYv6VgSE2Gn5aLM6j8xGi853TCJo6TvZVHnaiJfyX7KNyfWUSHfp71LyDeb3f5cMsmVfm4HCv3AYR69lj6Eq6ykRnLK~aYfizmmktl08paUsNLQIXHxkGDgj2qbZ7LuvUlO~-7z3ge2xlQyZdGkszg7nhaP5X7jxqY268QesD5-R8cVMqclEbWt7iu6UsoFRldiQx7r0hJtOV76MUzkbcNPYXB3DYlHLGOD9-rX3zjbLIDFesPnkq~oFIWN2pdLBq9aoCzqDCnfjV0sYmSYO22K9qNVw8YnPfBiAS4vQkIoDVpa-A__&Key-Pair-Id=KQGAD8YX979YO') format('woff2'),
+       url('https://pedidos.deliciusfood.cl/public-assets/thin.otf?Expires=2612641357&Signature=JlvIl8qot3TCD2-Aw19GKCDqe7iL2cMUrUQZvUYv6VgSE2Gn5aLM6j8xGi853TCJo6TvZVHnaiJfyX7KNyfWUSHfp71LyDeb3f5cMsmVfm4HCv3AYR69lj6Eq6ykRnLK~aYfizmmktl08paUsNLQIXHxkGDgj2qbZ7LuvUlO~-7z3ge2xlQyZdGkszg7nhaP5X7jxqY268QesD5-R8cVMqclEbWt7iu6UsoFRldiQx7r0hJtOV76MUzkbcNPYXB3DYlHLGOD9-rX3zjbLIDFesPnkq~oFIWN2pdLBq9aoCzqDCnfjV0sYmSYO22K9qNVw8YnPfBiAS4vQkIoDVpa-A__&Key-Pair-Id=KQGAD8YX979YO') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Nombres específicos para cada peso (opcional) */
+@font-face {
+  font-family: 'CERA Light';
+  src: url('https://pedidos.deliciusfood.cl/public-assets/light.otf?Expires=2612641387&Signature=Ov3kyO1Jz~MbwvcY7lQFc1sGMoo1tp5Fi3P-ULdReXlURpzi61Ir~Qi~Cglaj-XZ7HifBkztBz4dF5fw0X4qu44hA-RR8qm8n93zlaxQYs~1Tq4LyZInCshSTiNrf97vKJFXhafoCwYP2iPuAW92ZVSkqFnAnTwz6o3U4qoeYyHojtuOji2DWxoqBsLejVJV6RW~Fyw9yi0KxneJsSVDQJVOSt8HJJIMKAHoFDmWwyIsJwc9w9L4BTSUtezM~XHPFk3J8LyK7TR2qOChu4yQRFItFTfm2qfIkllZKZgAMUXCJVlKWQyi-6v1fLj9PFvUBY7gSLofYBYJ9js7xZKx5g__&Key-Pair-Id=KQGAD8YX979YO') format('woff2'),
+       url('https://pedidos.deliciusfood.cl/public-assets/light.otf?Expires=2612641387&Signature=Ov3kyO1Jz~MbwvcY7lQFc1sGMoo1tp5Fi3P-ULdReXlURpzi61Ir~Qi~Cglaj-XZ7HifBkztBz4dF5fw0X4qu44hA-RR8qm8n93zlaxQYs~1Tq4LyZInCshSTiNrf97vKJFXhafoCwYP2iPuAW92ZVSkqFnAnTwz6o3U4qoeYyHojtuOji2DWxoqBsLejVJV6RW~Fyw9yi0KxneJsSVDQJVOSt8HJJIMKAHoFDmWwyIsJwc9w9L4BTSUtezM~XHPFk3J8LyK7TR2qOChu4yQRFItFTfm2qfIkllZKZgAMUXCJVlKWQyi-6v1fLj9PFvUBY7gSLofYBYJ9js7xZKx5g__&Key-Pair-Id=KQGAD8YX979YO') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CERA Regular';
+  src: url('https://pedidos.deliciusfood.cl/public-assets/regular.otf?Expires=2612880125&Signature=bFgplJcgAQv4c3zejcEyuYdNwMpwjXrKbQTdFHX0Jz6LOiAs6Ilvr-jtfSOITgMdhyD7uR4nOY61~B4Upae5uZp2~tSC2p7XpH7tsfCMIFS6LCkw-mK4cNPfXwjmDLfxJJ6OevUD~0-SZoj-zjwjPpHnEcQiz~jLfAU91lOmln7InxEj3iA1ZEJD5vCHC0fEW9wFVkbDpnhbBRDNtMqlUAmcw80tkgP34mIa5ybKb-9XNltaJOtPgBxciKehPmrt75vkvLBkctdPtTMi15jrRN5MUHf0NazJsU2-QjVSVcDFf6InOkbQFGH1ayh~HpG19cXVXz2a-L620QzSC58Ljg__&Key-Pair-Id=KQGAD8YX979YO') format('woff2'),
+       url('https://pedidos.deliciusfood.cl/public-assets/regular.otf?Expires=2612880125&Signature=bFgplJcgAQv4c3zejcEyuYdNwMpwjXrKbQTdFHX0Jz6LOiAs6Ilvr-jtfSOITgMdhyD7uR4nOY61~B4Upae5uZp2~tSC2p7XpH7tsfCMIFS6LCkw-mK4cNPfXwjmDLfxJJ6OevUD~0-SZoj-zjwjPpHnEcQiz~jLfAU91lOmln7InxEj3iA1ZEJD5vCHC0fEW9wFVkbDpnhbBRDNtMqlUAmcw80tkgP34mIa5ybKb-9XNltaJOtPgBxciKehPmrt75vkvLBkctdPtTMi15jrRN5MUHf0NazJsU2-QjVSVcDFf6InOkbQFGH1ayh~HpG19cXVXz2a-L620QzSC58Ljg__&Key-Pair-Id=KQGAD8YX979YO') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CERA Medium';
+  src: url('https://pedidos.deliciusfood.cl/public-assets/medium.otf?Expires=2612641584&Signature=eeIedFbLXWt2gMAhDj5rR5D4N8umVOl82Q69bCmlXDx31mlRgpvN9GETP0mJCtuXbdaYqIOdDojS2wAjGGuAgNT22MR9-dFXll5S2ELElUAgYA38~0XheJzsOz-~rVmtJs-s4STRUBW09h-lRzMysbi0pjt3wiGfFhRjY8A~E~1reonwL5MB8I3mA~DgI1fgN4AdI5jehn55NrpQkRHeuHcYFIei5~UaKLbmuHJPfZEs~kKh8KkkdYwu-q~D21C6e1QkL39iXwd8aTXiAFJhovmkbh0N1YQ-fRE5ylFucm1SFmleBK6KdgLe1OsEWoSdA3smln2l3qZnG2Crw5OeIA__&Key-Pair-Id=KQGAD8YX979YO') format('woff2'),
+       url('https://pedidos.deliciusfood.cl/public-assets/medium.otf?Expires=2612641584&Signature=eeIedFbLXWt2gMAhDj5rR5D4N8umVOl82Q69bCmlXDx31mlRgpvN9GETP0mJCtuXbdaYqIOdDojS2wAjGGuAgNT22MR9-dFXll5S2ELElUAgYA38~0XheJzsOz-~rVmtJs-s4STRUBW09h-lRzMysbi0pjt3wiGfFhRjY8A~E~1reonwL5MB8I3mA~DgI1fgN4AdI5jehn55NrpQkRHeuHcYFIei5~UaKLbmuHJPfZEs~kKh8KkkdYwu-q~D21C6e1QkL39iXwd8aTXiAFJhovmkbh0N1YQ-fRE5ylFucm1SFmleBK6KdgLe1OsEWoSdA3smln2l3qZnG2Crw5OeIA__&Key-Pair-Id=KQGAD8YX979YO') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CERA Bold';
+  src: url('https://pedidos.deliciusfood.cl/public-assets/bold.otf?Expires=2612641631&Signature=aGOyOGqSbXf4GE-O9SD7bJUYzJKwEkQekyKLAfn4LXTRzhCRtQDq~6ZrZJoJF4MvISlMVNBNAR5eS6aCrupEQsdfSEFau3lb2NjcFO8NAO~Fe5TRwudSA-M4sRErubRX5r7MPapOSq37OEGiCH~Cg0CzJRBmM77hGCM4q7WievZw4zdxBMKox7RdlKQG6ZwAgUi0Ssr4BAJz9eV~gtc8Z6af27hXdfQvSl5gERaQK6zCFJIBD7cG6akSVBLQ2q-6Cb528IJFQaRS3putUUP9Neut46bIQma6Eh4XoOU2oVWwg-KDkpXZU1-m1g6eeOsZu-2n82ZCUxRMGV44RIO7oA__&Key-Pair-Id=KQGAD8YX979YO') format('woff2'),
+       url('https://pedidos.deliciusfood.cl/public-assets/bold.otf?Expires=2612641631&Signature=aGOyOGqSbXf4GE-O9SD7bJUYzJKwEkQekyKLAfn4LXTRzhCRtQDq~6ZrZJoJF4MvISlMVNBNAR5eS6aCrupEQsdfSEFau3lb2NjcFO8NAO~Fe5TRwudSA-M4sRErubRX5r7MPapOSq37OEGiCH~Cg0CzJRBmM77hGCM4q7WievZw4zdxBMKox7RdlKQG6ZwAgUi0Ssr4BAJz9eV~gtc8Z6af27hXdfQvSl5gERaQK6zCFJIBD7cG6akSVBLQ2q-6Cb528IJFQaRS3putUUP9Neut46bIQma6Eh4XoOU2oVWwg-KDkpXZU1-m1g6eeOsZu-2n82ZCUxRMGV44RIO7oA__&Key-Pair-Id=KQGAD8YX979YO') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

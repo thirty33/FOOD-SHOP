@@ -161,7 +161,7 @@ export const BreadCrumbsNavigation = () => {
   }, [isCartRoute]);
 
   return (
-    <section className="mt-8">
+    <section className="mt-8 lg:px-96">
       <nav className="flex pt-2.5 pb-5" aria-label="Breadcrumb">
         <div className="flex">
           <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">

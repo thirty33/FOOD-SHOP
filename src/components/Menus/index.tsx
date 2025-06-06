@@ -24,7 +24,7 @@ const MenuCard: React.FC<{
   return (
     <div
       onClick={handleClick}
-      className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+      className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100"
       >
       <img
         className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
@@ -51,7 +51,7 @@ export const Menus = (): JSX.Element => {
 
   return (
     <>
-      <div className="">
+      <div className="lg:px-96">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {menuItems.map((item) => (
             <MenuCard
@@ -67,7 +67,7 @@ export const Menus = (): JSX.Element => {
         </div>
         {menuItems.length === 0 && !isLoading && (
           <div
-            className="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+            className="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50"
             role="alert"
           >
             <span className="font-medium">No hay Menús disponibles!</span> para el

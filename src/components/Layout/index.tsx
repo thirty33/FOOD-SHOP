@@ -7,7 +7,7 @@ interface Props {
 
 export const Layout = ({ children }: Props): JSX.Element => {
   return (
-    <div className="px-4 lg:px-6 py-2.5">
+    <div className="">
       <Header />
       <BreadCrumbsNavigation />
       <CheckoutSideMenu />

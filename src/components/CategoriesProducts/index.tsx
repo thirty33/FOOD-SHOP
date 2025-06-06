@@ -81,7 +81,7 @@ export const CategoriesProducts = () => {
 
   return (
     <>
-      <div className="">
+      <div className="lg:px-96">
         <div className="container mx-auto px-4 py-8">
           {!allCategoriesNull &&
             categories.map((category) => (
