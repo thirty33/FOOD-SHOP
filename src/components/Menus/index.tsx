@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { useMenus } from "../../hooks/useMenus";
 import { SpinnerLoading } from "../SpinnerLoading";
 import { ROUTES } from "../../config/routes";
-import { configuration } from "../../config/config";
 
 const MenuCard: React.FC<{
   title: string;
@@ -11,9 +10,7 @@ const MenuCard: React.FC<{
   menuId: string | number;
   setSelectedMenu: (id: string | number) => void;
   date: string;
-
-}> = ({ title, menuId, setSelectedMenu, date }) => {
-
+}> = ({ menuId, setSelectedMenu, date }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -21,38 +18,82 @@ const MenuCard: React.FC<{
     navigate(`${ROUTES.GET_CATEGORY_ROUTE(menuId)}?date=${date}`);
   };
 
+  // Función para extraer y formatear la fecha usando la zona horaria de Santiago
+  const formatDate = (dateString: string) => {
+    // Crear la fecha usando la zona horaria de Santiago
+    const date = new Date(dateString + "T12:00:00");
+
+    // Obtener la zona horaria desde las variables de entorno
+    const timezone = import.meta.env.VITE_TIMEZONE || "America/Santiago";
+
+    // Formatear usando la zona horaria específica
+    const year = date.toLocaleDateString("es-CL", {
+      year: "numeric",
+      timeZone: timezone,
+    });
+
+    const dayNumber = date.toLocaleDateString("es-CL", {
+      day: "numeric",
+      timeZone: timezone,
+    });
+
+    const dayName = date.toLocaleDateString("es-CL", {
+      weekday: "long",
+      timeZone: timezone,
+    });
+
+    const monthName = date.toLocaleDateString("es-CL", {
+      month: "long",
+      timeZone: timezone,
+    });
+
+    // Capitalizar la primera letra del día de la semana
+    const capitalizedDayName =
+      dayName.charAt(0).toUpperCase() + dayName.slice(1);
+
+    return {
+      year: parseInt(year),
+      dayNumber: parseInt(dayNumber),
+      dayName: capitalizedDayName,
+      monthName,
+    };
+  };
+
+  const { year, dayNumber, dayName, monthName } = formatDate(date);
+
   return (
     <div
       onClick={handleClick}
-      className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100"
-      >
-      <img
-        className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
-        src={configuration.menu.image}
-        alt=""
-      />
-      <div className="flex flex-col justify-between p-4 leading-normal">
-        <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-          {title}
-        </h5>
+      className="bg-green-100 size-40 md:size-48 lg:size-60 text-white cursor-pointer hover:bg-yellow-active transition-colors rounded-md md:rounded-xl"
+    >
+      <div className="w-full flex justify-end content-end font-cera-light tracking-normal text-sm md:text-lg pt-1 md:leading-3 md:mt-2">
+        <span className="mr-2 md:mr-3">{year}</span>
+      </div>
+      <div className="w-full flex justify-center font-cera-medium tracking-normal text-sm md:text-lg">
+        <span>{dayName}</span>
+      </div>
+      <div className="w-full flex justify-center font-cera-bold text-9xl md:text-[9rem] lg:text-[13rem] leading-[0.6] tracking-normal">
+        {dayNumber}
+      </div>
+      <div className="w-full flex justify-center font-cera-medium mt-2 md:mt-3 tracking-normal text-sm md:text-lg">
+        <span>de {monthName}</span>
       </div>
     </div>
   );
 };
 
 export const Menus = (): JSX.Element => {
-
   const { menuItems, isLoading, setSelectedMenu } = useMenus();
 
   const handleSelected = (id: number | string) => {
     const menuSelected = menuItems.find((item) => item.id === id);
-    if(menuSelected) setSelectedMenu(menuSelected)
-  }
+    if (menuSelected) setSelectedMenu(menuSelected);
+  };
 
   return (
     <>
-      <div className="lg:px-96">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="lg:px-96 mt-8">
+        <div className="grid grid-cols-[160px_160px] md:grid-cols-[198px_198px_198px] gap-x-5 gap-y-5 lg:grid-cols-[240px_240px_240px] justify-center justify-items-center">
           {menuItems.map((item) => (
             <MenuCard
               key={item.id}
@@ -67,17 +108,16 @@ export const Menus = (): JSX.Element => {
         </div>
         {menuItems.length === 0 && !isLoading && (
           <div
-            className="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50"
+            className="p-4 mb-4 mx-4 text-sm text-center text-green-100 rounded-lg bg-blue-50"
             role="alert"
           >
-            <span className="font-medium">No hay Menús disponibles!</span> para el
-            día de hoy.
+            <span className="font-medium font-cera-regular">¡ No hay menús disponibles !</span> para
+            el día de hoy.
           </div>
         )}
         <div className="flex justify-center m-4">
           <SpinnerLoading show={isLoading} size={8} />
         </div>
-        
       </div>
     </>
   );

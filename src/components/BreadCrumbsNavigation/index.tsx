@@ -64,20 +64,11 @@ export const BreadCrumbsNavigation = () => {
   }, [location.pathname, location.search]); // Dependencias: path y queryParams
 
   const renderMenuLink = useMemo(() => {
-    if (isMenuRoute) {
-      return (
-        <span className="inline-flex items-center text-lg font-medium text-gray-500 cursor-default">
-          Menus
-        </span>
-      );
-    }
     return (
-      <Link
-        to={{ pathname: "/" }}
-        className="inline-flex items-center text-lg font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"
-      >
-        Menus
-      </Link>
+      <section className="flex flex-col justify-center text-center text-green-100">
+        <p className="font-cera-bold text-3xl tracking-tight">Selecciona día de entrega</p>
+        <p className="font-cera-regular tracking-tight text-base leading-3">¿Que día necesitas que entreguemos tu pedido?</p>
+      </section>
     );
   }, [isMenuRoute]);
 
@@ -162,17 +153,23 @@ export const BreadCrumbsNavigation = () => {
 
   return (
     <section className="mt-8 lg:px-96">
-      <nav className="flex pt-2.5 pb-5" aria-label="Breadcrumb">
-        <div className="flex">
-          <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+      {isMenuRoute && (
+        <>
+          {renderMenuLink}
+        </>
+      )}
+      {!isMenuRoute && (
+        <nav className="flex pt-2.5 pb-5" aria-label="Breadcrumb">
+          <div className="flex">
             <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-              <li className="inline-flex items-center">{renderMenuLink}</li>
-              {renderCategoryLink}
-              {renderCartLink}
+              <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                {renderCategoryLink}
+                {renderCartLink}
+              </ol>
             </ol>
-          </ol>
-        </div>
-      </nav>
+          </div>
+        </nav>
+      )}
     </section>
   );
 };
