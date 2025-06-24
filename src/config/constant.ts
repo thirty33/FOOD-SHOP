@@ -44,9 +44,9 @@ export const ORDER_STATUS_TEXT = {
 
 export const ORDER_STATUS_COLOR = {
     PENDING: 'bg-yellow-500',
-    PROCESSED: 'bg-green-500',
+    PROCESSED: 'bg-green-50',
     CANCELED: 'bg-red-500',
-    PARTIALLY_SCHEDULED: 'bg-blue-500',
+    PARTIALLY_SCHEDULED: 'bg-gray-state',
 } as const
 
 export const ORDER_FILTERS_DATES_VALUES = {

@@ -3,3 +3,43 @@
   height: calc(100vh - 110px);
   top: 110px;
 }
+
+@media (max-width: 639px) {
+  .checkout-side-menu {
+    max-width: 93vw;
+    width: 93vw;
+    height: calc(100vh - 100px);
+    top: 100px;
+    right: calc(100vw - 96.5vw);
+  }
+}
+
+@media (min-width: 767px) {
+  .checkout-side-menu {
+    max-width: 60vw;
+    width: 60vw;
+    height: calc(100vh - 150px);
+    top: 150px;
+    right: calc(100vw - 96.5vw);
+  }
+}
+
+@media (min-width: 1023px) {
+  .checkout-side-menu {
+    max-width: 60vw;
+    width: 40vw;
+    height: calc(100vh - 90px);
+    top: 90px;
+    right: calc(100vw - 98.5vw);
+  }
+}
+
+@media (min-width: 1279px) {
+  .checkout-side-menu {
+    max-width: 60vw;
+    width: 25vw;
+    height: calc(100vh - 90px);
+    top: 90px;
+    right: calc(100vw - 98.5vw);
+  }
+}

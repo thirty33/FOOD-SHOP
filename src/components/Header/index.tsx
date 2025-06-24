@@ -60,6 +60,20 @@ export const Header = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const openMenu = (currentState: boolean) => {
+    if(showSideCart) {
+      setShowSideCart(currentState)
+    }
+    setIsMenuOpen(!currentState)
+  }
+
+  const openSideCart = (currentState: boolean) => {
+    if(isMenuOpen) {
+      setIsMenuOpen(currentState)
+    }
+    setShowSideCart(!currentState)
+  }
+
   const SignOut = async (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
@@ -129,13 +143,13 @@ export const Header = () => {
                 <button
                   type="button"
                   className="md:col-start-2 relative inline-flex items-center p-3 text-sm font-medium text-center rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200 md:w-[64px]"
+                  onClick={() => openSideCart(showSideCart)}
                 >
                   <CartIcon
                     className="w-9 h-9 text-white cursor-pointer"
                     color="white"
                     width="64"
                     height="56"
-                    onClick={() => setShowSideCart(!showSideCart)}
                   />
                   <span className="sr-only">Notifications</span>
                   <div className="absolute inline-flex items-center justify-center w-5 h-5 text-md text-white bg-red-1000 rounded-full top-[8px] end-[5px] font-cera-regular">
@@ -162,7 +176,7 @@ export const Header = () => {
                 className="md:hidden col-start-2 inline-flex justify-center items-center p-3 text-sm text-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200"
                 aria-controls="mobile-menu-2"
                 aria-expanded={isMenuOpen}
-                onClick={() => setIsMenuOpen((prevState) => !prevState)}
+                onClick={() => openMenu(isMenuOpen)}
               >
                 <span className="sr-only">Open main menu</span>
                 <BurgerButton

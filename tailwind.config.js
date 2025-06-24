@@ -26,6 +26,10 @@ export default {
         },
         yellow: {
           'active': '#FFC543'
+        },
+        gray: {
+          'state': '#E6E6E6',
+          'text-state': '#999999'
         }
       },
     },

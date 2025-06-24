@@ -6,20 +6,20 @@ import { useOrder } from "../../hooks/useCurrentOrder";
 import { isAgreementIndividual } from "../../helpers/permissions";
 import { useAuth } from "../../hooks/useAuth";
 import { User } from "../../types/user";
+import { useMemo } from "react";
+import { truncateString } from "../../helpers/texts";
 
 // Componente para la lista de productos de una categoría
 const ProductList = ({ products }: { products: Product[] }) => {
   const { addProductToCart } = useOrder();
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 2xl:gap-8">
       {products.map((product) => (
         <ProductItem
           key={product.id}
           id={product.id}
           imageLight={product.image}
-          imageDark={product.image}
           price={product.price_list_lines[0].unit_price}
-          priceWithTax={product.price_list_lines[0].unit_price_with_tax}
           title={product.name}
           ingredients={product.ingredients}
           addProductToCart={addProductToCart}
@@ -46,20 +46,27 @@ const CategorySection = ({ category, user }: { category: Category, user: User })
   // Get subcategories, if any
   const subcategories = category?.category?.subcategories || [];
 
+  const showSubcategories = useMemo(
+    () => isAgreementIndividual(user) && subcategories.length > 0,
+    [subcategories, user]
+  );
+
   return (
-    <div className="mb-12">
-      <div className="flex flex-col justify-start items-center mb-2 md:flex-row md:justify-start">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">
-          {category?.category?.name}
+    <div className="mb-6">
+
+      <div className={`flex flex-col justify-start content-start items-start ${showSubcategories ? "mb-1" : "mb-6"} md:flex-row md:items-end`}>
+
+        <h2 className="text-4xl md:text-5xl font-bold font-cera-bold tracking-tight text-green-100 text-nowrap">
+          {truncateString(category?.category?.name || '', 18)}
         </h2>
-        <p className="text-gray-600 ml-2">{maximumOrderTime}</p>
+        <p className="text-green-100 font-cera-regular tracking-normal text-sm md:text-base md:ml-2">{maximumOrderTime}</p>
       </div>
 
       {/* Display subcategories if they exist */}
-      {isAgreementIndividual(user) && subcategories.length > 0 && (
-        <div className="mb-6 flex justify-center md:justify-start">
-          <p className="text-gray-600">
-            <strong>Categorías:</strong>{" "}
+      {showSubcategories && (
+        <div className="mb-2 flex justify-center md:justify-start font-cera-bold">
+          <p className="text-green-100">
+            {/* <strong>Categorías:</strong>{" "} */}
             {subcategories.map((subcategory) => subcategory.name).join(", ")}
           </p>
         </div>
@@ -73,16 +80,19 @@ const CategorySection = ({ category, user }: { category: Category, user: User })
 export const CategoriesProducts = () => {
 
   const { user } = useAuth();
-  const { categories, isLoading } = useCategories();
-
+  const { 
+    categories, 
+    isLoading
+  } = useCategories();
+  
   const allCategoriesNull = categories.every(
     (category) => category.category === null
   );
 
   return (
     <>
-      <div className="lg:px-96">
-        <div className="container mx-auto px-4 py-8">
+      <div className="2xl:px-80 lg:px-48">
+        <div className="container mx-auto px-4">
           {!allCategoriesNull &&
             categories.map((category) => (
               <CategorySection key={category.id} category={category} user={user} />
@@ -90,11 +100,10 @@ export const CategoriesProducts = () => {
         </div>
         {(categories.length === 0 || allCategoriesNull) && !isLoading && (
           <div
-            className="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+            className="p-4 mb-4 text-sm text-green-100 rounded-lg bg-blue-50 flex justify-center"
             role="alert"
           >
-            <span className="font-medium">No hay categorías disponibles!</span>{" "}
-            para el día de hoy.
+            <span className="font-medium text-green-100">No hay categorías disponibles! para el día de hoy.</span>
           </div>
         )}
         <div className="flex justify-center m-4">

@@ -6,34 +6,28 @@ export const BreadCrumbsNavigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Extraer la fecha del parámetro de la URL
   const queryParams = useMemo(() => {
     return new URLSearchParams(location.search);
   }, [location.search]);
-  
-  // Fecha del query param ajustada con timezone
+
   const dateFromQuery = useMemo(() => {
-    const dateParam = queryParams.get('date');
+    const dateParam = queryParams.get("date");
     if (dateParam) {
       try {
-        // Obtener la zona horaria de la variable de entorno, o usar 'UTC' como fallback
-        const timezone = import.meta.env.VITE_TIMEZONE || 'America/Santiago';
-        
-        // Crear un formatter que tenga en cuenta la zona horaria correcta
-        const formatter = new Intl.DateTimeFormat('es-ES', {
-          weekday: 'long',
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-          timeZone: timezone
+
+        const timezone = import.meta.env.VITE_TIMEZONE || "America/Santiago";
+
+        const formatter = new Intl.DateTimeFormat("es-ES", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+          timeZone: timezone,
         });
-        
-        // Asegurarse de que la fecha se interprete correctamente con la zona horaria
-        // Crear la fecha con formato ISO para mejor manejo de zonas horarias
+
         const dateString = `${dateParam}T00:00:00`;
         const dateObj = new Date(dateString);
-        
-        // Formatear la fecha usando el formatter con la zona horaria correcta
+
         return formatter.format(dateObj);
       } catch (e) {
         console.error("Error al parsear la fecha del query param:", e);
@@ -43,42 +37,53 @@ export const BreadCrumbsNavigation = () => {
     return "fecha no disponible";
   }, [queryParams]);
 
-  // Utilizar useMemo para recalcular estas variables cuando la ruta o los queryParams cambien
-  const { 
-    isMenuRoute, 
-    isCartRoute, 
-    isCategoryRoute, 
-    showCategoryRoute 
-  } = useMemo(() => {
-    const isMenuRoute = location.pathname === ROUTES.MENUS;
-    const isCartRoute = location.pathname === `/${ROUTES.CART_ROUTE}`;
-    const isCategoryRoute = location.pathname.includes("/categories");
-    const showCategoryRoute = isCategoryRoute || isCartRoute;
+  const { isMenuRoute, isCartRoute, isCategoryRoute, showCategoryRoute } =
+    useMemo(() => {
+      const isMenuRoute = location.pathname === ROUTES.MENUS;
+      const isCartRoute = location.pathname === `/${ROUTES.CART_ROUTE}`;
+      const isCategoryRoute = location.pathname.includes("/categories");
+      const showCategoryRoute = isCategoryRoute || isCartRoute;
 
-    return {
-      isMenuRoute,
-      isCartRoute,
-      isCategoryRoute,
-      showCategoryRoute
-    };
-  }, [location.pathname, location.search]); // Dependencias: path y queryParams
+      return {
+        isMenuRoute,
+        isCartRoute,
+        isCategoryRoute,
+        showCategoryRoute,
+      };
+    }, [location.pathname, location.search]);
+
+  const renderMenuMessage = useMemo(() => {
+    if (isMenuRoute) {
+      return (
+        <section className="flex flex-col justify-center text-center text-green-100">
+          <p className="font-cera-bold text-3xl md:text-5xl lg:text-6xl tracking-tight">
+            Selecciona día de entrega
+          </p>
+          <p className="font-cera-regular tracking-tight text-base md:text-2xl lg:text-3xl leading-3">
+            ¿Que día necesitas que entreguemos tu pedido?
+          </p>
+        </section>
+      );
+    }
+  }, [isMenuRoute]);
 
   const renderMenuLink = useMemo(() => {
     return (
-      <section className="flex flex-col justify-center text-center text-green-100">
-        <p className="font-cera-bold text-3xl tracking-tight">Selecciona día de entrega</p>
-        <p className="font-cera-regular tracking-tight text-base leading-3">¿Que día necesitas que entreguemos tu pedido?</p>
-      </section>
+      <Link
+        to={{ pathname: "/" }}
+        className="font-cera-light tracking-tight inline-flex items-center text-md lg:text-xl font-medium text-gray-400 hover:text-yellow-active dark:text-gray-400 dark:hover:text-white"
+      >
+        Menús
+      </Link>
     );
-  }, [isMenuRoute]);
+  }, []);
 
   const renderCategoryLink = useMemo(() => {
     if (!showCategoryRoute) {
       return null;
     }
 
-    // Usar la fecha del query param para construir el título
-    const title = `Menú del ${dateFromQuery}`;
+    const title = `Menú ${dateFromQuery}`;
 
     const handleNavigate = () => {
       navigate(-1);
@@ -86,9 +91,9 @@ export const BreadCrumbsNavigation = () => {
 
     return (
       <li>
-        <div className="flex items-center">
+        <div className="flex items-center justify-center font-cera-light tracking-tight">
           <svg
-            className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1"
+            className="rtl:rotate-180 w-3 h-3 text-gray-400 ml-2"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -103,14 +108,14 @@ export const BreadCrumbsNavigation = () => {
             />
           </svg>
           {isCategoryRoute ? (
-            <span className="ms-1 text-lg font-medium text-gray-500 md:ms-2 dark:text-gray-400 cursor-default">
-              Categorías del {title}
+            <span className="ms-1 text-md lg:text-xl font-medium text-gray-400 md:ms-2 cursor-default">
+              {title}
             </span>
           ) : (
             <Link
               onClick={handleNavigate}
               to={"#"}
-              className="ms-1 text-lg font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white"
+              className="ms-1 text-lg lg:text-xl font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white"
             >
               Categorías del {title}
             </Link>
@@ -118,7 +123,13 @@ export const BreadCrumbsNavigation = () => {
         </div>
       </li>
     );
-  }, [showCategoryRoute, isCategoryRoute, dateFromQuery, navigate, location.search]);
+  }, [
+    showCategoryRoute,
+    isCategoryRoute,
+    dateFromQuery,
+    navigate,
+    location.search,
+  ]);
 
   const renderCartLink = useMemo(() => {
     if (!isCartRoute) {
@@ -152,22 +163,15 @@ export const BreadCrumbsNavigation = () => {
   }, [isCartRoute]);
 
   return (
-    <section className="mt-8 lg:px-96">
-      {isMenuRoute && (
-        <>
-          {renderMenuLink}
-        </>
-      )}
+    <section className="mt-8 px-1 md:px-0 2xl:px-[21rem] lg:px-52">
+      {isMenuRoute && <>{renderMenuMessage}</>}
       {!isMenuRoute && (
-        <nav className="flex pt-2.5 pb-5" aria-label="Breadcrumb">
-          <div className="flex">
-            <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-              <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-                {renderCategoryLink}
-                {renderCartLink}
-              </ol>
-            </ol>
-          </div>
+        <nav className="flex pt-2.5 pb-5 justify-center content-center lg:justify-start" aria-label="Breadcrumb">
+          <ul className="flex">
+            {renderMenuLink}
+            {renderCategoryLink}
+            {renderCartLink}
+          </ul>
         </nav>
       )}
     </section>

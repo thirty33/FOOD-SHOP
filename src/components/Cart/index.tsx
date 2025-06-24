@@ -4,7 +4,10 @@ import { QuantitySelector } from "../QuantitySelector";
 import { useQuantityChange } from "../../hooks/useQuantityChange";
 import { ORDER_STATUS, ORDER_STATUS_TEXT } from "../../config/constant";
 import { XMarkIcon } from "@heroicons/react/24/solid";
+import XIcon from "../../components/Icons/XIcon";
 import { configuration } from "../../config/config";
+import { truncateString } from "../../helpers/texts";
+import CloseButton from "../Icons/CloseButton";
 
 export interface CartItemProps {
   id: number | number;
@@ -38,9 +41,18 @@ export const CartItem = ({
   } = useQuantityChange();
 
   return (
-    <div className="flex items-center gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+    <div className="relative flex items-center gap-2 rounded-lg border border-gray-200 bg-white p-4 shadow-sm h-32 max-h-32 md:h-40 md:max-h-40">
+
+      <CloseButton
+        className="w-8 h-8 md:w-12 md:h-12 cursor-pointer absolute top-[-1rem] md:top-[-1.5rem] right-0"
+        color="white"
+        width="8"
+        height="8"
+        onClick={() => deleteItemFromCart(id, 1)} 
+      />
+
       {/* Product Image */}
-      <div className="h-20 w-20 flex-shrink-0">
+      <div className="h-24 w-24 md:h-32 md:w-32 flex-shrink-0">
         <img
           className="h-full w-full rounded-md object-cover"
           src={image ?? configuration.product.image}
@@ -49,55 +61,16 @@ export const CartItem = ({
       </div>
 
       {/* Product Details */}
-      <div className="flex flex-1 flex-col space-y-2">
-        <div className="flex flex-col gap-y-2 items-start justify-between">
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-            {name}
+      <div className="flex flex-col">
+        <div className="flex flex-col gap-y-1 md:gap-y-2 items-start justify-between">
+          <h3 className="text-lg md:text-3xl text-nowrap text-green-100 font-cera-bold tracking-tighter leading-4 md:leading-4">
+            {truncateString(name, 17)}
           </h3>
           {showPrices && (
-            <p className="text-lg font-bold text-gray-900 dark:text-white">
+            <p className="text-base md:text-2xl text-green-100 font-cera-regular tracking-tighter leading-4 md:leading-4">
               {price}
             </p>
           )}
-          {canSchedulePartially && !showPartialiSheduledTag && (
-            <button
-              type="button"
-              onClick={() =>
-                handlePartiallyScheduled(
-                  id,
-                  initialQuantity,
-                  !showPartialiSheduledTag
-                )
-              }
-              className="bg-blue-600 text-white text-xs font-semibold px-2.5 py-0.5 rounded-sm hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <span>Agendar parcialmente</span>
-            </button>
-          )}
-
-          {canSchedulePartially && showPartialiSheduledTag && (
-            <div className="flex items-center justify-between text-start">
-              <div className="flex items-center gap-2">
-                <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-sm dark:bg-blue-200 dark:text-blue-800">
-                  {ORDER_STATUS_TEXT[ORDER_STATUS.PARTIALLY_SCHEDULED]}
-                </span>
-              </div>
-              <XMarkIcon
-                className="w-4 h-4 text-gray-500 hover:text-gray-700 cursor-pointer"
-                onClick={() =>
-                  handlePartiallyScheduled(
-                    id,
-                    initialQuantity,
-                    !showPartialiSheduledTag
-                  )
-                }
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Quantity Controls and Remove Button */}
-        <div className="flex items-center justify-between">
           {showQuantitySelector && (
             <QuantitySelector
               quantity={initialQuantity}
@@ -112,14 +85,44 @@ export const CartItem = ({
               }
             />
           )}
+          
+          {canSchedulePartially && showPartialiSheduledTag && (
+            <div className="flex items-center justify-between text-start gap-x-1">
+              <div className="flex items-center gap-2">
+                <span className="bg-gray-state text-gray-text-state text-xs md:text-base text-nowrap font-cera-bold px-2 py-1 rounded-sm">
+                  {ORDER_STATUS_TEXT[ORDER_STATUS.PARTIALLY_SCHEDULED]}
+                </span>
+              </div>
+              <XIcon 
+                className="w-2 h-2 md:w-4 md:h-4 fill-gray-text-state stroke-gray-text-state"
+                onClick={() =>
+                  handlePartiallyScheduled(
+                    id,
+                    initialQuantity,
+                    !showPartialiSheduledTag
+                  )
+                }
+              />
+            </div>
+          )}
 
-          <button
-            onClick={() => deleteItemFromCart(id, 1)}
-            type="button"
-            className="text-sm text-red-600 hover:text-red-800 dark:text-red-500 dark:hover:text-red-400"
-          >
-            Eliminar
-          </button>
+          {canSchedulePartially && !showPartialiSheduledTag && (
+            <section className="flex items-center gap-x-1">
+              <button
+                type="button"
+                onClick={() =>
+                  handlePartiallyScheduled(
+                    id,
+                    initialQuantity,
+                    !showPartialiSheduledTag
+                  )
+                }
+                className="bg-green-50 text-white text-xs md:text-base text-nowrap font-cera-bold px-3 py-1 rounded-sm hover:bg-yellow-active hover:text-white"
+              >
+                <span>Agendar parcialmente</span>
+              </button>
+            </section>
+          )}
         </div>
       </div>
     </div>
@@ -135,45 +138,7 @@ export const Cart = (): JSX.Element => {
         </h2>
         <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
           <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
-            <div className="space-y-6">
-              {/* <CartItem
-                image="https://www.elmejornido.com/sites/g/files/jgfbjl316/files/styles/facebook_share/public/recipe-thumbnail/116753-cc72869fabfc2bdfa036fd1fe0e2bad8_creamy_alfredo_pasta_long_left.jpg?itok=vtPFA3DF"
-                name="Pasta Alfredo Cremosa"
-                price="299"
-                quantity={4}
-                deleteItemFromCart={() => {}}
-                id={1}
-                showQuantitySelector={true}
-              />
-              <CartItem
-                image="https://www.elmejornido.com/sites/g/files/jgfbjl316/files/styles/facebook_share/public/recipe-thumbnail/116753-cc72869fabfc2bdfa036fd1fe0e2bad8_creamy_alfredo_pasta_long_left.jpg?itok=vtPFA3DF"
-                name="Pasta Alfredo Cremosa"
-                price="299"
-                quantity={4}
-                deleteItemFromCart={() => {}}
-                id={1}
-                showQuantitySelector={true}
-              />
-              <CartItem
-                image="https://www.elmejornido.com/sites/g/files/jgfbjl316/files/styles/facebook_share/public/recipe-thumbnail/116753-cc72869fabfc2bdfa036fd1fe0e2bad8_creamy_alfredo_pasta_long_left.jpg?itok=vtPFA3DF"
-                name="Pasta Alfredo Cremosa"
-                price="299"
-                quantity={4}
-                deleteItemFromCart={() => {}}
-                id={1}
-                showQuantitySelector={true}
-              />
-              <CartItem
-                image="https://www.elmejornido.com/sites/g/files/jgfbjl316/files/styles/facebook_share/public/recipe-thumbnail/116753-cc72869fabfc2bdfa036fd1fe0e2bad8_creamy_alfredo_pasta_long_left.jpg?itok=vtPFA3DF"
-                name="Pasta Alfredo Cremosa"
-                price="299"
-                quantity={4}
-                deleteItemFromCart={() => {}}
-                id={1}
-                showQuantitySelector={true} 
-              />
-              */}
-            </div>
+            <div className="space-y-6"></div>
             <div className="hidden xl:mt-8 xl:block">
               <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
                 La gente también compró
