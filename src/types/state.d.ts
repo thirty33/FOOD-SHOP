@@ -42,6 +42,8 @@ export interface state {
     partiallyScheduleOrder: (status: string) => void;
     setCurrentOrder: (order: OrderData | null) => void;
     getOrders: () => void;
+    showModal: boolean;
+    setShowModal: (value: boolean) => void;
 }   
 
 export interface GlobalProviderProps {
@@ -65,6 +67,7 @@ export interface globalState {
         permission: Permission
     }
     orders: OrderData[] | null;
+    showModal: boolean;
 }
 
 export type signOutState = Pick<globalState, 
@@ -86,3 +89,4 @@ export type Action =
     | { type: typeof CART_ACTION_TYPES.SET_SHOW_CART, payload: Pick<globalState, 'showSideCart'> }
     | { type: typeof CART_ACTION_TYPES.SET_USER_INFO, payload: Pick<globalState, 'user'> }
     | { type: typeof CART_ACTION_TYPES.SET_ORDERS, payload: Pick<globalState, 'orders'> }
+    | { type: typeof CART_ACTION_TYPES.SET_SHOW_MODAL, payload: Pick<globalState, 'showModal'> }

@@ -69,13 +69,13 @@ const MenuCard: React.FC<{
       <div className="w-full flex justify-end content-end font-cera-light tracking-normal text-sm md:text-lg pt-1 md:leading-3 md:mt-2">
         <span className="mr-2 md:mr-3">{year}</span>
       </div>
-      <div className="w-full flex justify-center font-cera-medium tracking-normal text-sm md:text-lg">
+      <div className="w-full flex justify-center font-cera-medium tracking-normal text-sm md:text-lg leading-9 md:leading-10">
         <span>{dayName}</span>
       </div>
       <div className="w-full flex justify-center font-cera-bold text-9xl md:text-[9rem] lg:text-[13rem] leading-[0.6] tracking-normal">
         {dayNumber}
       </div>
-      <div className="w-full flex justify-center font-cera-medium mt-2 md:mt-3 tracking-normal text-sm md:text-lg">
+      <div className="w-full flex justify-center font-cera-medium md:mt-3 tracking-normal text-sm md:text-lg">
         <span>de {monthName}</span>
       </div>
     </div>

@@ -45,7 +45,7 @@ export function useMenus() {
     }
 
     useEffect(() => {
-        setMenus([]);
+        // setMenus([]);
         setCurrenPage(1); 
         setLastPage(1); 
         setHasMore(false);

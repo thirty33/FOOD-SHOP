@@ -31,6 +31,8 @@ type globalContextState = Pick<
   | "signOut"
   | "user"
   | "setUser"
+  | "showModal"
+  | "setShowModal"
 >;
 
 export const GlobalContext = createContext<globalContextState>({
@@ -58,6 +60,8 @@ export const GlobalContext = createContext<globalContextState>({
     role: null,
     permission: null,
   },
+  showModal: false,
+  setShowModal: () => {},
 });
 
 export function GlobalProvider({ children }: GlobalProviderProps) {
@@ -73,6 +77,7 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
     // selectedMenu
     currentOrder,
     user,
+    showModal,
   } = state;
 
   const setUser = (role: Role, permission: Permission) => {
@@ -196,6 +201,13 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
     });
   };
 
+  const setShowModal = (showModal: boolean) => {
+    dispatch({
+      type: CART_ACTION_TYPES.SET_SHOW_MODAL,
+      payload: { showModal },
+    });
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -220,6 +232,8 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
         currentOrder,
         user: getUser,
         setUser,
+        showModal,
+        setShowModal,
       }}
     >
       {children}

@@ -3,7 +3,6 @@ import { ROUTES } from "../../config/routes";
 import { QuantitySelector } from "../QuantitySelector";
 import { useQuantityChange } from "../../hooks/useQuantityChange";
 import { ORDER_STATUS, ORDER_STATUS_TEXT } from "../../config/constant";
-import { XMarkIcon } from "@heroicons/react/24/solid";
 import XIcon from "../../components/Icons/XIcon";
 import { configuration } from "../../config/config";
 import { truncateString } from "../../helpers/texts";
@@ -44,7 +43,7 @@ export const CartItem = ({
     <div className="relative flex items-center gap-2 rounded-lg border border-gray-200 bg-white p-4 shadow-sm h-32 max-h-32 md:h-40 md:max-h-40">
 
       <CloseButton
-        className="w-8 h-8 md:w-12 md:h-12 cursor-pointer absolute top-[-1rem] md:top-[-1.5rem] right-0"
+        className="w-10 h-10 md:w-8 md:h-8 cursor-pointer absolute top-[-1rem] md:top-[-1rem] right-0"
         color="white"
         width="8"
         height="8"

@@ -110,7 +110,7 @@ export const Header = () => {
 
           <div className="flex flex-row md:grid md:grid-cols-[1fr_280px_1fr] lg:grid-cols-[1fr_320px_1fr] md:grid-rows-[80px_32px] md:gap-0 items-center md:items-start basis-full md:bg-white">
 
-            <section className="bg-green-50 hidden md:flex basis-1/3 flex-row justify-end md:h-20 pr-8">
+            <section className="bg-green-50 hidden md:flex basis-1/3 flex-row justify-end md:h-20 lg:pr-8">
               <ul className="flex flex-row items-center justify-center h-full">
                 {menuLinks
                   .filter((link) => link.menuName !== "Cerrar sesión")
@@ -181,7 +181,6 @@ export const Header = () => {
                 <span className="sr-only">Open main menu</span>
                 <BurgerButton
                   className="w-9 h-9 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
-                  isOpen={isMenuOpen}
                 />
               </button>
             </div>

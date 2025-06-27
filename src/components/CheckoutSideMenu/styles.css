@@ -18,8 +18,8 @@
   .checkout-side-menu {
     max-width: 60vw;
     width: 60vw;
-    height: calc(100vh - 150px);
-    top: 150px;
+    height: calc(100vh - 100px);
+    top: 100px;
     right: calc(100vw - 96.5vw);
   }
 }
@@ -37,6 +37,16 @@
 @media (min-width: 1279px) {
   .checkout-side-menu {
     max-width: 60vw;
+    width: 40vw;
+    height: calc(100vh - 20px);
+    top: 20px;
+    right: calc(100vw - 98.5vw);
+  }
+}
+
+@media (min-width: 1534px) {
+  .checkout-side-menu {
+    max-width: 25vw;
     width: 25vw;
     height: calc(100vh - 90px);
     top: 90px;

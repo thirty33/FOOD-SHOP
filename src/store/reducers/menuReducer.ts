@@ -94,6 +94,12 @@ const UPDATE_STATE_BY_ACTION = {
             orders: (action.payload as Pick<globalState, 'orders'>).orders,
         };
     },
+    [CART_ACTION_TYPES.SET_SHOW_MODAL]: (state: globalState, action: Action) => {
+        return {
+            ...state,
+            showModal: (action.payload as Pick<globalState, 'showModal'>).showModal,
+        };
+    },
 }
 
 export const menuReducer = (state: globalState, action: Action & { type: keyof typeof UPDATE_STATE_BY_ACTION }): globalState => {

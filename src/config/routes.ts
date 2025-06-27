@@ -52,6 +52,7 @@ export const API_ROUTES = {
             updateOrderStatus: 'update-order-status',
             partiallyScheduleOrder: 'partially-schedule-order',
             getOrders: 'get-orders',
+            updateUserComment: 'update-user-comment',
         }
     },
 }

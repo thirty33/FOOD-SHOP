@@ -60,6 +60,7 @@ export interface OrderData {
 	address: string | null;
 	order_lines: OrderLine[];
 	menu?: MenuData;
+	user_comment: string | null;
 }
 
 export interface SuccessResponse {

@@ -29,7 +29,8 @@ export default {
         },
         gray: {
           'state': '#E6E6E6',
-          'text-state': '#999999'
+          'text-state': '#999999',
+          'text-info': '#CCCCCC'
         }
       },
     },

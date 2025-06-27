@@ -16,5 +16,6 @@ export const InitialState: globalState = {
         role: null,
         permission: null
     },
-    orders: null
+    orders: null,
+    showModal: false
 };

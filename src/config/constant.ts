@@ -13,6 +13,7 @@ export const CART_ACTION_TYPES = {
     SET_SHOW_CART: 'SET_SHOW_CART',
     SET_USER_INFO: 'SET_USER_INFO',
     SET_ORDERS: 'SET_ORDERS',
+    SET_SHOW_MODAL: 'SET_SHOW_MODAL',
 } as const
 
 export const ROLES_TYPES = {

@@ -1,5 +1,5 @@
-import { XMarkIcon } from "@heroicons/react/24/solid";
 import "./styles.css";
+import { useContext } from "react";
 import { CartItem } from "../Cart";
 import { useOrder } from "../../hooks/useCurrentOrder";
 import { SpinnerLoading } from "../SpinnerLoading";
@@ -12,6 +12,7 @@ import {
 import { isAdminOrCafe } from "../../helpers/permissions";
 import MonkeyIcon from "../Icons/MonkeyIcon";
 import CloseButton from "../Icons/CloseButton";
+import { GlobalContext } from "../../context/globalContext";
 
 export const CheckoutSideMenu = () => {
   const {
@@ -27,9 +28,14 @@ export const CheckoutSideMenu = () => {
   } = useOrder();
 
   const { showQuantitySelector } = useAuth();
+  const { setShowModal } = useContext(GlobalContext);
 
   const handleCheckout = () => {
     updateOrderStatus(ORDER_STATUS.PROCESSED);
+  };
+
+  const handleAddComments = () => {
+    setShowModal(true);
   };
   
   return (
@@ -81,7 +87,7 @@ export const CheckoutSideMenu = () => {
         </div>
 
       </div>
-      <div className="overflow-y-hidden hover:overflow-y-scroll px-6 flex flex-col gap-y-5 md:gap-y-8 h-[19rem] max-h-[19rem] md:h-[60%] md:max-h-[60%] pt-4 md:pt-6">
+      <div className="overflow-y-auto px-6 flex flex-col gap-y-5 md:gap-y-8 max-h-[19rem] md:max-h-[55%] xl:max-h-[90%] 2xl:max-h-[55%] pt-4 md:pt-6">
         {currentOrder &&
           currentOrder.order_lines.map((line) => {
             if (!line.product) return null;
@@ -131,20 +137,22 @@ export const CheckoutSideMenu = () => {
             </p>
           </>
         )}
-        <button
-          className="bg-yellow-active font-cera-bold text-2xl md:text-3xl tracking-tighter py-3 text-white w-full rounded-lg disabled:bg-gray-300 mb-2"
-          onClick={() => handleCheckout()}
-        >
-          Añadir comentarios
-        </button>
         {currentOrder && currentOrder.order_lines.length > 0 && (
-          <button
-            className="bg-red-1000 font-cera-bold text-2xl md:text-3xl tracking-tighter py-3 text-white w-full rounded-lg disabled:bg-gray-300"
-            onClick={() => handleCheckout()}
-            disabled={currentOrder.status === ORDER_STATUS.PROCESSED}
-          >
-            Completar orden
-          </button>
+          <>
+            <button
+              className="bg-yellow-active font-cera-bold text-2xl md:text-3xl tracking-tighter py-3 text-white w-full rounded-lg disabled:bg-gray-300 mb-2"
+              onClick={handleAddComments}
+            >
+              Añadir comentarios
+            </button>
+            <button
+              className="bg-red-1000 font-cera-bold text-2xl md:text-3xl tracking-tighter py-3 text-white w-full rounded-lg disabled:bg-gray-300"
+              onClick={() => handleCheckout()}
+              disabled={currentOrder.status === ORDER_STATUS.PROCESSED}
+            >
+              Completar orden
+            </button>
+          </>
         )}
       </div>
       <div className="flex justify-center m-4">

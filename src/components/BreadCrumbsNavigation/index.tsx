@@ -71,7 +71,7 @@ export const BreadCrumbsNavigation = () => {
     return (
       <Link
         to={{ pathname: "/" }}
-        className="font-cera-light tracking-tight inline-flex items-center text-md lg:text-xl font-medium text-gray-400 hover:text-yellow-active dark:text-gray-400 dark:hover:text-white"
+        className="font-cera-light tracking-tight inline-flex items-center text-md md:text-xl font-medium text-gray-400 hover:text-yellow-active dark:text-gray-400 dark:hover:text-white"
       >
         Menús
       </Link>
@@ -108,14 +108,14 @@ export const BreadCrumbsNavigation = () => {
             />
           </svg>
           {isCategoryRoute ? (
-            <span className="ms-1 text-md lg:text-xl font-medium text-gray-400 md:ms-2 cursor-default">
+            <span className="ms-1 text-md md:text-xl font-medium text-gray-400 md:ms-2 cursor-default">
               {title}
             </span>
           ) : (
             <Link
               onClick={handleNavigate}
               to={"#"}
-              className="ms-1 text-lg lg:text-xl font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white"
+              className="ms-1 text-lg md:text-xl font-medium text-gray-700 hover:text-blue-600 md:ms-2"
             >
               Categorías del {title}
             </Link>
