@@ -37,18 +37,21 @@ export const BreadCrumbsNavigation = () => {
     return "fecha no disponible";
   }, [queryParams]);
 
-  const { isMenuRoute, isCartRoute, isCategoryRoute, showCategoryRoute } =
+  const { isMenuRoute, isCartRoute, isCategoryRoute, showCategoryRoute, isOrdersRoute } =
     useMemo(() => {
       const isMenuRoute = location.pathname === ROUTES.MENUS;
       const isCartRoute = location.pathname === `/${ROUTES.CART_ROUTE}`;
       const isCategoryRoute = location.pathname.includes("/categories");
       const showCategoryRoute = isCategoryRoute || isCartRoute;
+      const isOrdersRoute = location.pathname.includes(`/${ROUTES.GET_ORDERS_ROUTE}`) || 
+                           location.pathname.includes(ROUTES.ORDER_SUMMARY_ROUTE.split(':')[0]);
 
       return {
         isMenuRoute,
         isCartRoute,
         isCategoryRoute,
         showCategoryRoute,
+        isOrdersRoute,
       };
     }, [location.pathname, location.search]);
 
@@ -161,6 +164,11 @@ export const BreadCrumbsNavigation = () => {
       </li>
     );
   }, [isCartRoute]);
+
+  // Don't render anything if on orders routes
+  if (isOrdersRoute) {
+    return null;
+  }
 
   return (
     <section className="mt-8 px-1 md:px-0 2xl:px-[21rem] lg:px-52">

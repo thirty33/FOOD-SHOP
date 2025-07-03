@@ -6,8 +6,9 @@ import { useOrder } from "../../hooks/useCurrentOrder";
 import { isAgreementIndividual } from "../../helpers/permissions";
 import { useAuth } from "../../hooks/useAuth";
 import { User } from "../../types/user";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { truncateString } from "../../helpers/texts";
+import { useScrollToClose } from "../../hooks/useScrollToClose";
 
 // Componente para la lista de productos de una categoría
 const ProductList = ({ products }: { products: Product[] }) => {
@@ -78,12 +79,20 @@ const CategorySection = ({ category, user }: { category: Category, user: User })
 };
 
 export const CategoriesProducts = () => {
-
   const { user } = useAuth();
+  const { showSideCart, setShowSideCart } = useOrder();
+  const categoriesRef = useRef<HTMLDivElement>(null);
   const { 
     categories, 
     isLoading
   } = useCategories();
+
+  // Use custom hook for scroll to close functionality
+  useScrollToClose({
+    elementRef: categoriesRef,
+    isOpen: showSideCart,
+    onClose: () => setShowSideCart(false)
+  });
   
   const allCategoriesNull = categories.every(
     (category) => category.category === null
@@ -91,7 +100,7 @@ export const CategoriesProducts = () => {
 
   return (
     <>
-      <div className="2xl:px-80 lg:px-48">
+      <div ref={categoriesRef} className="2xl:px-80 lg:px-48">
         <div className="container mx-auto px-4">
           {!allCategoriesNull &&
             categories.map((category) => (

@@ -8,6 +8,7 @@ import {
   ORDER_STATUS,
   ORDER_STATUS_COLOR,
   ORDER_STATUS_TEXT,
+  CHECKOUT_SIDE_MENU_CLASS,
 } from "../../config/constant";
 import { isAdminOrCafe } from "../../helpers/permissions";
 import MonkeyIcon from "../Icons/MonkeyIcon";
@@ -42,7 +43,7 @@ export const CheckoutSideMenu = () => {
     <aside
       className={`${
         showSideCart && isAtCategoriesRoute() ? "flex" : "hidden"
-      } checkout-side-menu flex-col fixed rounded-t-3xl z-50 bg-green-100`}
+      } ${CHECKOUT_SIDE_MENU_CLASS} flex-col fixed rounded-t-3xl z-50 bg-green-100`}
     >
 
       <CloseButton

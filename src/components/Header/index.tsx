@@ -13,9 +13,10 @@ interface NavItemProps {
   menuName: string;
   route?: string;
   onClick?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
+  onNavClick?: () => void;
 }
 
-export const NavItem = ({ menuName, route, onClick }: NavItemProps) => {
+export const NavItem = ({ menuName, route, onClick, onNavClick }: NavItemProps) => {
   const baseClasses =
     "text-white tracking-tighter text-4xl block py-1 pr-4 pl-3 rounded border-gray-100 lg:border-0 lg:p-0 dark:border-gray-700 transition-colors duration-200";
 
@@ -44,6 +45,7 @@ export const NavItem = ({ menuName, route, onClick }: NavItemProps) => {
           }`
         }
         aria-current="page"
+        onClick={onNavClick}
       >
         {menuName}
       </NavLink>
@@ -59,6 +61,10 @@ export const Header = () => {
   const navigate = useNavigate();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
 
   const openMenu = (currentState: boolean) => {
     if(showSideCart) {
@@ -120,6 +126,7 @@ export const Header = () => {
                       menuName={link.menuName}
                       route={link.route}
                       onClick={link.onClick}
+                      onNavClick={closeMenu}
                     />
                   ))}
               </ul>
@@ -207,6 +214,7 @@ export const Header = () => {
                 menuName={link.menuName}
                 route={link.route}
                 onClick={link.onClick}
+                onNavClick={closeMenu}
               />
             ))}
           </ul>

@@ -193,6 +193,11 @@ export function OrderProvider({ children }: GlobalProviderProps) {
 
       setReloandCart(true);
 
+      // Auto-open CheckoutSideMenu when adding products if it's not already open
+      if (!showSideCart && filterOrderLines.length > 0) {
+        setShowSideCart(true);
+      }
+
     }
   };
 

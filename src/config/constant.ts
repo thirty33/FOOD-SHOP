@@ -70,3 +70,5 @@ export const ORDERS_QUERY_PARAMS = {
     ORDER_STATUS: 'order_status',
     TIME_PERIOD: 'time_period',
 }
+
+export const CHECKOUT_SIDE_MENU_CLASS = "checkout-side-menu";
