@@ -1,6 +1,7 @@
 import { ORDER_STATUS } from "../config/constant"
 import { MenuData } from "./menus";
 import { Pagination, SuccessResponse, UnauthorizedResponse, RateLimitResponse } from './responses.d.ts';
+import { Ingredients } from './categories.d.ts';
 
 export interface Category {
   id: number
@@ -31,6 +32,7 @@ interface Product {
 	weight: string;
 	allow_sales_without_stock: number;
 	category: Category;
+	ingredients: Ingredients[];
 }
 
 export interface OrderLine {

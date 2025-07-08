@@ -37,7 +37,7 @@ export const BreadCrumbsNavigation = () => {
     return "fecha no disponible";
   }, [queryParams]);
 
-  const { isMenuRoute, isCartRoute, isCategoryRoute, showCategoryRoute, isOrdersRoute } =
+  const { isMenuRoute, isCartRoute, isCategoryRoute, showCategoryRoute, isOrdersRoute, isOrderDetailRoute } =
     useMemo(() => {
       const isMenuRoute = location.pathname === ROUTES.MENUS;
       const isCartRoute = location.pathname === `/${ROUTES.CART_ROUTE}`;
@@ -45,6 +45,7 @@ export const BreadCrumbsNavigation = () => {
       const showCategoryRoute = isCategoryRoute || isCartRoute;
       const isOrdersRoute = location.pathname.includes(`/${ROUTES.GET_ORDERS_ROUTE}`) || 
                            location.pathname.includes(ROUTES.ORDER_SUMMARY_ROUTE.split(':')[0]);
+      const isOrderDetailRoute = location.pathname.includes("order-detail/");
 
       return {
         isMenuRoute,
@@ -52,6 +53,7 @@ export const BreadCrumbsNavigation = () => {
         isCategoryRoute,
         showCategoryRoute,
         isOrdersRoute,
+        isOrderDetailRoute,
       };
     }, [location.pathname, location.search]);
 
@@ -165,8 +167,47 @@ export const BreadCrumbsNavigation = () => {
     );
   }, [isCartRoute]);
 
-  // Don't render anything if on orders routes
-  if (isOrdersRoute) {
+  const renderOrderDetailLink = useMemo(() => {
+    if (!isOrderDetailRoute) {
+      return null;
+    }
+
+    return (
+      <>
+        <Link
+          to={`/${ROUTES.GET_ORDERS_ROUTE}`}
+          className="font-cera-light tracking-tight inline-flex items-center text-md md:text-xl font-medium text-gray-400 hover:text-yellow-active dark:text-gray-400 dark:hover:text-white"
+        >
+          Mis pedidos
+        </Link>
+        <li aria-current="page">
+          <div className="flex items-center">
+            <svg
+              className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 6 10"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="m1 9 4-4-4-4"
+              />
+            </svg>
+            <span className="ms-1 text-md md:text-xl font-cera-light tracking-tight text-gray-400 md:ms-2 cursor-default">
+              Detalle del pedido
+            </span>
+          </div>
+        </li>
+      </>
+    );
+  }, [isOrderDetailRoute]);
+
+  // Don't render anything if on orders routes (except order detail)
+  if (isOrdersRoute && !isOrderDetailRoute) {
     return null;
   }
 
@@ -174,11 +215,12 @@ export const BreadCrumbsNavigation = () => {
     <section className="mt-8 px-1 md:px-0 2xl:px-[21rem] lg:px-52">
       {isMenuRoute && <>{renderMenuMessage}</>}
       {!isMenuRoute && (
-        <nav className="flex pt-2.5 pb-5 justify-center content-center lg:justify-start" aria-label="Breadcrumb">
+        <nav className="flex pt-2.5 pb-5 justify-center content-center" aria-label="Breadcrumb">
           <ul className="flex">
-            {renderMenuLink}
+            {!isOrderDetailRoute && renderMenuLink}
             {renderCategoryLink}
             {renderCartLink}
+            {renderOrderDetailLink}
           </ul>
         </nav>
       )}

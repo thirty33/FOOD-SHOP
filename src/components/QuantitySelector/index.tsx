@@ -14,7 +14,7 @@ export const QuantitySelector = ({
 	restOneItem
 }: QuantitySelectorProps): JSX.Element => {
   return (
-    <div className="flex items-center rounded-md content-center justify-center border h-8 w-24">
+    <div className="flex items-center rounded-md content-center justify-center border h-8 w-24 md:w-28">
       <button
         onClick={() => restOneItem()}
 				disabled={quantity === 1}
@@ -26,7 +26,7 @@ export const QuantitySelector = ({
 
       <input
         type="number"
-        className="bg-blue-500 w-8 text-center text-2xl md:text-3xl text-green-100 font-cera-bold bg-transparent border-gray-300 p-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:border-none"
+        className="bg-blue-500 w-8 md:w-9 text-center text-2xl md:text-3xl text-green-100 font-cera-bold bg-transparent border-gray-300 p-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:border-none"
         value={quantity}
         onChange={handleQuantityChange}
         min="0"

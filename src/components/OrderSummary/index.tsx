@@ -5,6 +5,9 @@ import { ORDER_STATUS_TEXT, ORDER_STATUS_COLOR } from "../../config/constant";
 import { configuration } from "../../config/config";
 import { isAdminOrCafe } from "../../helpers/permissions";
 import { useAuth } from "../../hooks/useAuth";
+import CloseButton from "../Icons/CloseButton";
+import { ROUTES } from "../../config/routes";
+import { truncateString } from "../../helpers/texts";
 
 export const OrderSummary = (): JSX.Element => {
   const { order, isLoading } = useGetOrderById();
@@ -23,12 +26,12 @@ export const OrderSummary = (): JSX.Element => {
   if (!order) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white tracking-tighter">
           No se encontró el pedido
         </h2>
         <Link
           to="/"
-          className="mt-4 rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300"
+          className="mt-4 rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 tracking-tighter"
         >
           Ir al inicio
         </Link>
@@ -38,169 +41,196 @@ export const OrderSummary = (): JSX.Element => {
 
   return (
     <>
-      <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
-        <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
+      <section className="antialiased px-5 lg:px-0">
+        <div className="mx-auto max-w-screen-xl 2xl:px-0 md:px-8">
           <div className="mx-auto max-w-3xl">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
-              Detalle del pedido #{order.id}
-            </h2>
-            <div className="mt-6 space-y-4 border-b border-t border-gray-200 py-8 dark:border-gray-700 sm:mt-8">
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Información sobre pedido
-              </h4>
-              <dl>
-                <dt className="text-base font-medium text-gray-900 dark:text-white">
-                  Estado
-                </dt>
-                <dd className="mt-1.5">
-                  <span
-                    className={`me-2 inline-flex items-center rounded ${
-                      ORDER_STATUS_COLOR[order.status]
-                    } px-2.5 py-0.5 text-xs font-medium text-white dark:bg-primary-900 dark:text-primary-300`}
-                  >
-                    <svg
-                      className="me-1 h-3 w-3"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={24}
-                      height={24}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M18.5 4h-13m13 16h-13M8 20v-3.333a2 2 0 0 1 .4-1.2L10 12.6a1 1 0 0 0 0-1.2L8.4 8.533a2 2 0 0 1-.4-1.2V4h8v3.333a2 2 0 0 1-.4 1.2L13.957 11.4a1 1 0 0 0 0 1.2l1.643 2.867a2 2 0 0 1 .4 1.2V20H8Z"
-                      />
-                    </svg>
+            <div className="bg-white rounded-2xl md:rounded-3xl border border-gray-state md:border-2 shadow-sm p-6 md:px-8 md:py-8 mb-6 relative">
+              <CloseButton
+                className="absolute top-[-1rem] right-[-1rem] w-8 h-8 md:w-10 md:h-10 cursor-pointer"
+                size="32"
+                onClick={() => navigate(`/${ROUTES.GET_ORDERS_ROUTE}`)}
+              />
+              <h2 className="text-4xl md:text-5xl tracking-tighter text-nowrap font-cera-bold text-green-100 mb-3 pr-12 md:px-4">
+                Detalle del pedido
+              </h2>
+              
+              <div className="mb-2 md:grid md:grid-cols-3 md:gap-6 md:mb-6 md:px-4">
+                <div>
+                  <h4 className="text-lg md:text-xl font-cera-medium text-green-100 mb-0 tracking-tighter">
+                    Despacho
+                  </h4>
+                  <p className="text-base md:text-lg font-cera-regular text-green-100 lowercase tracking-tighter">
+                    {order.dispatch_date}
+                  </p>
+                </div>
+                
+                <div className="mb-2 md:mb-0">
+                  <h4 className="text-lg md:text-xl font-cera-medium text-green-100 mb-0 tracking-tighter">
+                    Dirección
+                  </h4>
+                  <p className="text-base md:text-lg font-cera-regular text-green-100 lowercase tracking-tighter">
+                    {order.address}
+                  </p>
+                </div>
+                
+                <div className="mb-3 md:mb-0">
+                  <h4 className="text-lg md:text-xl font-cera-medium text-green-100 mb-0 tracking-tighter">
+                    Estado
+                  </h4>
+                  <span className={`inline-flex items-center px-3 py-1 rounded-lg text-sm md:text-base font-cera-medium ${ORDER_STATUS_COLOR[order.status]} text-white tracking-tighter`}>
                     {ORDER_STATUS_TEXT[order.status]}
                   </span>
-                </dd>
-              </dl>
-              <dl>
-                <dt className="text-base font-medium text-gray-900 dark:text-white">
-                  Fecha de despacho
-                </dt>
-                <dd className="mt-1 text-base font-normal text-gray-500 dark:text-gray-400">
-                  {order.dispatch_date}
-                </dd>
-              </dl>
-              <dl>
-                <dt className="text-base font-medium text-gray-900 dark:text-white">
-                  Fecha de creación
-                </dt>
-                <dd className="mt-1 text-base font-normal text-gray-500 dark:text-gray-400">
-                  {order.created_date}
-                </dd>
-              </dl>
-              {order.address && (
-                <dl>
-                  <dt className="text-base font-medium text-gray-900 dark:text-white">
-                    Dirección de despacho
-                  </dt>
-                  <dd className="mt-1 text-base font-normal text-gray-500 dark:text-gray-400">
-                    {order.address}
-                  </dd>
-                </dl>
-              )}
-            </div>
-            <div className="mt-6 sm:mt-8">
-              <div className="relative overflow-x-auto border-b border-gray-200 dark:border-gray-800">
-                <table className="w-full text-left font-medium text-gray-900 dark:text-white md:table-fixed">
-                  <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
-                    {order.order_lines.map((line) => (
-                      <tr key={line.id}>
-                        <td className="whitespace-nowrap py-4 md:w-[384px]">
-                          <div className="flex items-center gap-4">
-                            <div>
-                              <a
-                                href="#"
-                                className="flex items-center aspect-square w-10 h-10 shrink-0"
-                              >
-                                <img
-                                  className="h-full w-full object-cover"
-                                  src={
-                                    line?.product?.image ??
-                                    configuration.product.image
-                                  }
-                                  alt={line?.product?.name ?? "product_image"}
-                                />
-                              </a>
-                            </div>
-
-                            <span className="hover:underline">
-                              {line.product?.name}
+                </div>
+              </div>
+              
+              <div className="border-t border-gray-state pt-4">
+                {/* Headers for md+ only */}
+                <div className="hidden md:grid md:grid-cols-12 md:gap-2 md:mb-4 md:px-4">
+                  <div className="md:col-span-8">
+                    {/* No header for product column */}
+                  </div>
+                  <div className="md:col-span-2 md:text-center">
+                    <span className="text-xl font-cera-bold text-green-100 tracking-tighter">Cantidades</span>
+                  </div>
+                  <div className="md:col-span-2 md:text-center">
+                    <span className="text-xl font-cera-bold text-green-100 tracking-tighter">Neto</span>
+                  </div>
+                </div>
+                {order.order_lines.map((line, index) => (
+                  <div key={line.id} className="md:grid md:grid-cols-12 md:gap-2 md:items-center md:mb-4 md:px-4">
+                    {/* Mobile layout */}
+                    <div className="md:hidden">
+                      <div className="bg-white rounded-lg border border-gray-state p-4 mb-4">
+                        <div className="flex items-center gap-4">
+                          <div className="flex-shrink-0">
+                            <img
+                              className="h-16 w-32 object-cover rounded-lg"
+                              src={line?.product?.image ?? configuration.product.image}
+                              alt={line?.product?.name ?? "product_image"}
+                            />
+                          </div>
+                          <div className="flex-1 flex flex-col justify-center">
+                            <h5 className="text-lg font-cera-bold text-green-100 tracking-tighter leading-[1.1] mb-0">
+                              {truncateString(line.product?.name ?? '', 12)}
+                            </h5>
+                            <p className="text-sm font-cera-medium text-green-100 tracking-tighter leading-[1.1] mb-0">
+                              Ingredientes
+                            </p>
+                            <p className="text-xs font-cera-light text-green-100 tracking-tighter leading-[1.1] mb-0">
+                              {truncateString(line.product?.ingredients?.map((ing, index) => 
+                                `${ing.descriptive_text}${index < (line.product?.ingredients?.length ?? 0) - 1 ? ', ' : '.'}`
+                              ).join('') || 'Lechuga, tomate, ceitunas.', 20)}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-12 gap-4 mb-6">
+                        <div className="col-span-4 flex items-center">
+                          <span className="text-sm font-cera-bold text-green-100 tracking-tighter">
+                            Cantidades
+                          </span>
+                        </div>
+                        <div className="col-span-3 flex items-center justify-center">
+                          <span className="inline-flex items-center justify-center w-full h-6 border border-gray-state text-green-100 text-md font-cera-bold rounded tracking-tighter">
+                            {line.quantity}
+                          </span>
+                        </div>
+                        <div className="col-span-2"></div>
+                        {canViewPrices && (
+                          <div className="col-span-3 flex items-center justify-end gap-3">
+                            <span className="text-sm font-cera-bold text-green-100 tracking-tighter">
+                              Neto
+                            </span>
+                            <span className="text-md font-cera-regular text-green-100 tracking-tighter">
+                              {line.total_price}
                             </span>
                           </div>
-                        </td>
-                        <td className="p-4 text-base font-normal text-gray-900 dark:text-white">
-                          x{line.quantity}
-                        </td>
-                        {canViewPrices && (
-                          <td className="p-4 text-right text-base font-bold text-gray-900 dark:text-white">
-                            {line.total_price}
-                            <div className="text-xs text-gray-500">
-                              Con imp: {line.total_price_with_tax}
-                            </div>
-                          </td>
                         )}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                      </div>
+                    </div>
+                    
+                    {/* Desktop layout */}
+                    <div className="hidden md:contents">
+                      <div className="md:col-span-8 md:pr-4">
+                        <div className="bg-white rounded-lg md:rounded-2xl border border-gray-state p-4 w-fit">
+                          <div className="flex items-center gap-4">
+                            <div className="flex-shrink-0">
+                              <img
+                                className="h-20 w-48 object-cover rounded-lg md:rounded-2xl"
+                                src={line?.product?.image ?? configuration.product.image}
+                                alt={line?.product?.name ?? "product_image"}
+                              />
+                            </div>
+                            <div className="flex-shrink-0 flex flex-col justify-center">
+                              <h5 className="text-xl font-cera-bold text-green-100 tracking-tighter leading-[1.1] mb-0">
+                                {truncateString(line.product?.name ?? '', 12)}
+                              </h5>
+                              <p className="text-base font-cera-medium text-green-100 tracking-tighter leading-[1.1] mb-0">
+                                Ingredientes
+                              </p>
+                              <p className="text-sm font-cera-light text-green-100 tracking-tighter leading-[1.1] mb-0">
+                                {truncateString(line.product?.ingredients?.map((ing, index) => 
+                                  `${ing.descriptive_text}${index < (line.product?.ingredients?.length ?? 0) - 1 ? ', ' : '.'}`
+                                ).join('') || 'Lechuga, tomate, ceitunas.', 20)}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="md:col-span-2 md:text-center">
+                        <span className="inline-flex items-center justify-center w-16 h-10 border border-gray-state text-green-100 text-xl font-cera-bold rounded tracking-tighter">
+                          {line.quantity}
+                        </span>
+                      </div>
+                      {canViewPrices && (
+                        <div className="md:col-span-2 md:text-center">
+                          <span className="text-xl font-cera-regular text-green-100 tracking-tighter">
+                            {line.total_price}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {index < order.order_lines.length - 1 && (
+                      <div className="border-t border-gray-state mb-6 md:hidden"></div>
+                    )}
+                  </div>
+                ))}
               </div>
+              
               {canViewPrices && (
-                <div className="mt-4 space-y-6">
-                  <h4 className="text-xl font-semibold text-gray-900 dark:text-white">
+                <div className="mt-6 md:px-4 md:border-t md:border-gray-state md:pt-6">
+                  <h4 className="text-xl font-cera-bold text-green-100 mb-0 tracking-tighter md:text-center">
                     Resumen del pedido
                   </h4>
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <dl className="flex items-center justify-between gap-4">
-                        <dt className="text-gray-500 dark:text-gray-400">
-                          Total
-                        </dt>
-                        <dd className="text-base font-medium text-gray-900 dark:text-white">
-                          {order.total}
-                        </dd>
-                      </dl>
-                      <dl className="flex items-center justify-between gap-4">
-                        <dt className="text-gray-500 dark:text-gray-400">
-                          Total con impuestos
-                        </dt>
-                        <dd className="text-base font-medium text-gray-900 dark:text-white">
-                          {order.total_with_tax}
-                        </dd>
-                      </dl>
+                  <div className="space-y-0">
+                    <div className="flex justify-between items-center">
+                      <span className="text-base md:text-lg font-cera-regular text-green-100 tracking-tighter">Total Neto</span>
+                      <div className="flex justify-start w-24">
+                        <span className="text-lg md:text-xl font-cera-bold text-green-100 tracking-tighter">{order.total}</span>
+                      </div>
                     </div>
-                    <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
-                      <dt className="text-lg font-bold text-gray-900 dark:text-white">
-                        Total
-                      </dt>
-                      <dd className="text-lg font-bold text-gray-900 dark:text-white">
-                        {order.total_with_tax}
-                      </dd>
-                    </dl>
+                    <div className="flex justify-between items-center">
+                      <span className="text-base md:text-lg font-cera-regular text-green-100 tracking-tighter">IVA 19%</span>
+                      <div className="flex justify-start w-24">
+                        <span className="text-lg md:text-xl font-cera-bold text-green-100 tracking-tighter">
+                          {(parseFloat(String(order.total_with_tax).replace('$', '').replace('.', '')) - parseFloat(String(order.total).replace('$', '').replace('.', ''))).toLocaleString('es-CL', {style: 'currency', currency: 'CLP'})}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="border-t border-gray-state pt-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-lg md:text-xl font-cera-bold text-green-100 tracking-tighter">Total</span>
+                        <div className="flex justify-start w-24">
+                          <span className="text-lg md:text-xl font-cera-bold text-green-100 tracking-tighter">{order.total_with_tax}</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
-              <div className="gap-4 sm:flex sm:items-center mt-4">
-                <button
-                  type="button"
-                  onClick={() => navigate(-1)}
-                  className="w-full rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
-                >
-                  Regresar a los pedidos
-                </button>
-                <Link
-                  to="/"
-                  className="mt-4 flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 sm:mt-0"
-                >
-                  Ir al inicio
-                </Link>
-              </div>
+              
             </div>
           </div>
         </div>
