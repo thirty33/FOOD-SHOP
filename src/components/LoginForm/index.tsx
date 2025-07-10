@@ -16,20 +16,6 @@ const schema = yup
     password: yup
       .string()
       .required("La contraseña es obligatoria")
-      .min(8, "La contraseña debe tener al menos 8 caracteres")
-      .matches(
-        /[a-z]/,
-        "La contraseña debe contener al menos una letra minúscula"
-      )
-      .matches(
-        /[A-Z]/,
-        "La contraseña debe contener al menos una letra mayúscula"
-      )
-      .matches(/[0-9]/, "La contraseña debe contener al menos un número")
-      .matches(
-        /[@$!%*?&#]/,
-        "La contraseña debe contener al menos un carácter especial"
-      ),
   })
   .required();
 
