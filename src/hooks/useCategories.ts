@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { categoryService } from "../services/category";
 import { CategoryItemPagination } from "../types/categories";
-import { useInifiniteScroll } from "./useInifiniteScroll";
+import { useInfiniteScroll } from "./useInfiniteScroll";
 import { useSnackbar } from "notistack";
 import { useParams } from "react-router-dom";
 
@@ -17,7 +17,7 @@ export function useCategories() {
         lastPage,
         setLastPage,
         setCurrenPage
-    } = useInifiniteScroll();
+    } = useInfiniteScroll();
 
     const { enqueueSnackbar } = useSnackbar();
 

@@ -6,7 +6,7 @@ import { menuReducer } from "../store/reducers/menuReducer";
 import { InitialState } from "../store/state/initialState";
 import { CART_ACTION_TYPES, ORDERS_QUERY_PARAMS } from "../config/constant";
 import { useNotification } from "./useNotification";
-import { useInifiniteScroll } from "./useInifiniteScroll";
+import { useInfiniteScroll } from "./useInfiniteScroll";
 
 export function useCurrentList() {
 
@@ -32,7 +32,7 @@ export function useCurrentList() {
 		setHasMore,
 		setLastPage,
 		setCurrenPage
-	} = useInifiniteScroll();
+	} = useInfiniteScroll();
 
 	const { orders } = state;
 

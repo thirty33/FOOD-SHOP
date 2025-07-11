@@ -63,7 +63,7 @@ export const ProductItem = ({
         onClick={() => addProductToCart(id, 1)}
       >
         <img
-          className="w-full h-64 object-contain object-top"
+          className="w-full h-64 object-cover object-center bg-red-500"
           src={imageLight ?? configuration.product.image}
           alt=""
         />
