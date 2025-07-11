@@ -9,6 +9,8 @@ import { User } from "../../types/user";
 import { useMemo, useRef } from "react";
 import { truncateString } from "../../helpers/texts";
 import { useScrollToClose } from "../../hooks/useScrollToClose";
+import { useScrollToTop } from "../../hooks/useScrollToTop";
+import ArrowUpIcon from "../Icons/ArrowUpIcon";
 
 // Componente para la lista de productos de una categoría
 const ProductList = ({ products }: { products: Product[] }) => {
@@ -31,7 +33,13 @@ const ProductList = ({ products }: { products: Product[] }) => {
 };
 
 // Componente para una categoría
-const CategorySection = ({ category, user }: { category: Category, user: User }): JSX.Element => {
+const CategorySection = ({
+  category,
+  user,
+}: {
+  category: Category;
+  user: User;
+}): JSX.Element => {
   const completeCategory = category.show_all_products;
 
   const products = !completeCategory
@@ -54,13 +62,17 @@ const CategorySection = ({ category, user }: { category: Category, user: User })
 
   return (
     <div className="mb-6">
-
-      <div className={`flex flex-col justify-start content-start items-start ${showSubcategories ? "mb-1" : "mb-6"} md:flex-row md:items-end`}>
-
+      <div
+        className={`flex flex-col justify-start content-start items-start ${
+          showSubcategories ? "mb-1" : "mb-6"
+        } md:flex-row md:items-end`}
+      >
         <h2 className="text-4xl md:text-5xl font-bold font-cera-bold tracking-tight text-green-100 text-nowrap">
-          {truncateString(category?.category?.name || '', 18)}
+          {truncateString(category?.category?.name || "", 18)}
         </h2>
-        <p className="text-green-100 font-cera-regular tracking-normal text-sm md:text-base md:ml-2">{maximumOrderTime}</p>
+        <p className="text-green-100 font-cera-regular tracking-normal text-sm md:text-base md:ml-2">
+          {maximumOrderTime}
+        </p>
       </div>
 
       {/* Display subcategories if they exist */}
@@ -82,18 +94,16 @@ export const CategoriesProducts = () => {
   const { user } = useAuth();
   const { showSideCart, setShowSideCart } = useOrder();
   const categoriesRef = useRef<HTMLDivElement>(null);
-  const { 
-    categories, 
-    isLoading
-  } = useCategories();
+  const { categories, isLoading } = useCategories();
+  const { isVisible, scrollToTop } = useScrollToTop();
 
   // Use custom hook for scroll to close functionality
   useScrollToClose({
     elementRef: categoriesRef,
     isOpen: showSideCart,
-    onClose: () => setShowSideCart(false)
+    onClose: () => setShowSideCart(false),
   });
-  
+
   const allCategoriesNull = categories.every(
     (category) => category.category === null
   );
@@ -104,7 +114,11 @@ export const CategoriesProducts = () => {
         <div className="container mx-auto px-4">
           {!allCategoriesNull &&
             categories.map((category) => (
-              <CategorySection key={category.id} category={category} user={user} />
+              <CategorySection
+                key={category.id}
+                category={category}
+                user={user}
+              />
             ))}
         </div>
         {(categories.length === 0 || allCategoriesNull) && !isLoading && (
@@ -112,13 +126,22 @@ export const CategoriesProducts = () => {
             className="p-4 mb-4 text-sm text-green-100 rounded-lg bg-blue-50 flex justify-center"
             role="alert"
           >
-            <span className="font-medium text-green-100">No hay categorías disponibles! para el día de hoy.</span>
+            <span className="font-medium text-green-100">
+              No hay categorías disponibles! para el día de hoy.
+            </span>
           </div>
         )}
         <div className="flex justify-center m-4">
           <SpinnerLoading show={isLoading} size={8} />
         </div>
       </div>
+      {isVisible && (
+        <ArrowUpIcon 
+          className="fixed bottom-16 right-6 cursor-pointer block lg:hidden" 
+          size="64" 
+          onClick={scrollToTop}
+        />
+      )}
     </>
   );
 };

@@ -8,10 +8,10 @@ interface UseInfiniteScrollOptions {
 }
 
 export function useInfiniteScroll(options: UseInfiniteScrollOptions = {}) {
+  
   const {
     threshold = 100,
-    debounceDelay = 150,
-    rootMargin = "0px 0px 100px 0px"
+    debounceDelay = 150
   } = options;
 
   const [currentPage, setCurrentPage] = useState(1);

@@ -3,7 +3,7 @@ import { render, screen, act, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { GlobalProvider } from "../../context/globalContext.tsx";
 import { CategoriesProducts } from "./index.tsx";
-import { useInifiniteScroll } from "../../hooks/useInifiniteScroll.ts";
+import { useInfiniteScroll } from "../../hooks/useInfiniteScroll.ts";
 import { SnackbarProvider } from "notistack";
 import { categoryService } from "../../services/category";
 import { Pagination } from "../../types/responses";
@@ -25,8 +25,8 @@ vi.mock("react-router-dom", async () => {
   };
 });
 
-vi.mock("../../hooks/useInifiniteScroll.ts", () => ({
-  useInifiniteScroll: vi.fn(),
+vi.mock("../../hooks/useInfiniteScroll.ts", () => ({
+  useInfiniteScroll: vi.fn(),
 }));
 
 describe("<CategoriesProducts />", () => {
@@ -55,7 +55,7 @@ describe("<CategoriesProducts />", () => {
     const mockSetIsLoading = vi.fn();
     const mockSetCategories = vi.fn();
 
-    (useInifiniteScroll as Mock).mockReturnValue({
+    (useInfiniteScroll as Mock).mockReturnValue({
       currentPage: 1,
       isLoading: false,
       categories: [],
@@ -167,7 +167,7 @@ describe("<CategoriesProducts />", () => {
     const mockSetIsLoading = vi.fn();
     const mockSetCategories = vi.fn();
 
-    (useInifiniteScroll as Mock).mockReturnValue({
+    (useInfiniteScroll as Mock).mockReturnValue({
       currentPage: 1,
       isLoading: false,
       categories: [],
