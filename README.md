@@ -30,17 +30,17 @@ Products are organized by categories (Daily Menu, Special Sandwiches, etc.) with
 The shopping cart allows customers to manage selected products, modify quantities, and remove items before completing their order.
 
 ### Orders List
-![alt text](order_detail.JPG)
+![alt text](orders.JPG)
 
 The orders view shows a complete history with creation dates, delivery dates, and current status. Customers can view details or resume pending orders.
 
 ### Order Detail
-![alt text](orders.JPG)
+![alt text](order_detail.JPG)
 
 The detailed view of an order includes information about status, dates, delivery address, and a complete list of products with prices and taxes.
 
 ### Order Summary
-![alt text](orders-1.JPG)
+![alt text](order_detail.JPG)
 
 The final summary displays totals with and without taxes and offers options to complete the purchase or return to the order list.
 
