@@ -15,32 +15,32 @@ Frontend for the CRM system designed to manage prepared meal sales. This applica
 ## Screenshots
 
 ### Menu Calendar
-![alt text](image.png)
+![alt text](menus.JPG)
 
 The calendar view allows visualization of available menus by day, facilitating weekly planning. Each day displays a representative image of the menu and the corresponding date.
 
 ### Menus by Category
-![alt text](image-1.png)
+![alt text](image-1.JPG)
 
 Products are organized by categories (Daily Menu, Special Sandwiches, etc.) with images, prices, and ingredient listings. Each category shows the time limit for availability.
 
 ### Shopping Cart
-![alt text](image-2.png)
+![alt text](image-1-1.JPG)
 
 The shopping cart allows customers to manage selected products, modify quantities, and remove items before completing their order.
 
 ### Orders List
-![alt text](image-3.png)
+![alt text](order_detail.JPG)
 
 The orders view shows a complete history with creation dates, delivery dates, and current status. Customers can view details or resume pending orders.
 
 ### Order Detail
-![alt text](image-4.png)
+![alt text](orders.JPG)
 
 The detailed view of an order includes information about status, dates, delivery address, and a complete list of products with prices and taxes.
 
 ### Order Summary
-![alt text](image-5.png)
+![alt text](orders-1.JPG)
 
 The final summary displays totals with and without taxes and offers options to complete the purchase or return to the order list.
 
