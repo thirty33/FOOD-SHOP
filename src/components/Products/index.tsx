@@ -3,6 +3,7 @@ import { useQuantityChange } from "../../hooks/useQuantityChange";
 import { Ingredients } from "../../types/categories";
 import { QuantitySelector } from "../QuantitySelector";
 import { configuration } from "../../config/config";
+import { useOrder } from "../../hooks/useCurrentOrder";
 import AddToCartIcon from "../Icons/AddToCartIcon";
 
 interface ProductItemProps {
@@ -30,6 +31,8 @@ export const ProductItem = ({
     showQuantityInput,
     showPrices,
   } = useQuantityChange();
+  
+  const { setShowProductDetail } = useOrder();
 
   const currentQuantity = useMemo(() => {
     return (
@@ -53,15 +56,38 @@ export const ProductItem = ({
     }).join(' ')
   }, [ingredients])
 
+  const handleProductClick = () => {
+    const product = {
+      id: typeof id === 'string' ? parseInt(id) : id,
+      name: title,
+      description: "",
+      price: typeof price === 'string' ? price : price.toString(),
+      image: imageLight,
+      category_id: 0,
+      code: "",
+      active: 1,
+      measure_unit: "",
+      price_list: "",
+      stock: 0,
+      weight: "",
+      allow_sales_without_stock: 0,
+      price_list_lines: [{ 
+        id: 1, 
+        unit_price: typeof price === 'string' ? price : price.toString(),
+        unit_price_with_tax: typeof price === 'string' ? price : price.toString()
+      }],
+      ingredients
+    };
+    setShowProductDetail(product);
+  };
+
   return (
     <div
       key={id}
-      className="rounded-lg md:rounded-2xl border-2 border-gray-200 px-6 pt-8 lg:pt-6 shadow-sm mx-6 lg:mx-0 lg:lg:max-w-96"
+      className="rounded-lg md:rounded-2xl border-2 border-gray-200 px-6 pt-8 lg:pt-6 shadow-sm mx-6 lg:mx-0 lg:lg:max-w-96 cursor-pointer"
+      onClick={handleProductClick}
     >
-      <div
-        className="mx-auto h-32 w-full max-h-32 max-w-full overflow-hidden rounded-lg md:rounded-2xl"
-        onClick={() => addProductToCart(id, 1)}
-      >
+      <div className="mx-auto h-32 w-full max-h-32 max-w-full overflow-hidden rounded-lg md:rounded-2xl">
         <img
           className="w-full h-64 object-cover object-center"
           src={imageLight ?? configuration.product.image}
@@ -100,7 +126,10 @@ export const ProductItem = ({
               <button
                 type="button"
                 className="inline-flex items-center rounded-md bg-green-50 px-5 py-1 text-md font-medium font-cera-bold text-white hover:bg-green-100 focus:outline-none focus:ring-4"
-                onClick={() => addProductToCart(id, 1)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  addProductToCart(id, 1);
+                }}
               >
                 <AddToCartIcon                   
                   width="12"
@@ -116,7 +145,10 @@ export const ProductItem = ({
           {showQuantityInput &&
             ((typeof currentQuantity === "number" && currentQuantity >= 1) ||
               currentQuantity === "") && (
-              <div className="grid grid-col grid-cols-2 justify-start justify-items-start">
+              <div 
+                className="grid grid-col grid-cols-2 justify-start justify-items-start"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <QuantitySelector
                   quantity={currentQuantity}
                   handleQuantityChange={(ev) =>
