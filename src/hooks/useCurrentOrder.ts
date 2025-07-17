@@ -21,7 +21,10 @@ export function useOrder() {
         updateCurrentOrder,
         updateOrderStatus,
         partiallyScheduleOrder,
-        setCurrentOrder
+        setCurrentOrder,
+        modalState,
+        setShowProductDetail,
+        closeModal
     } = useContext(OrderContext);
 
     const modifyOrder = async (id: string | number, quantity: number | string) => {
@@ -60,6 +63,9 @@ export function useOrder() {
         updateOrderStatus,
         partiallyScheduleOrder,
         setCurrentOrder,
-        isAtCategoriesRoute
+        isAtCategoriesRoute,
+        modalState,
+        setShowProductDetail,
+        closeModal
     }
 }

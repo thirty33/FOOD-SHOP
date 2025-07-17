@@ -16,6 +16,14 @@ import { OrderData, SuccessResponse } from "../types/order";
 import { GlobalProviderProps, type state } from "../types/state";
 import debounce from "just-debounce-it";
 import { useNotification } from "../hooks/useNotification";
+import { Product } from "../types/categories";
+
+// Modal state interface
+interface ModalState {
+  isOpen: boolean;
+  type: 'cart' | 'productDetail' | null;
+  selectedProduct?: Product;
+}
 
 type orderState = Pick<
   state,
@@ -31,7 +39,12 @@ type orderState = Pick<
   | "partiallyScheduleOrder"
   | "setCurrentOrder"
   | "getOrders"
->;
+> & {
+  // New modal functions
+  modalState: ModalState;
+  setShowProductDetail: (product: Product) => void;
+  closeModal: () => void;
+};
 
 // Create context
 export const OrderContext = createContext<orderState>({
@@ -46,7 +59,10 @@ export const OrderContext = createContext<orderState>({
   updateOrderStatus: () => {},
   partiallyScheduleOrder: () => {},
   setCurrentOrder: () => {},
-  getOrders: () => {}
+  getOrders: () => {},
+  modalState: { isOpen: false, type: null },
+  setShowProductDetail: () => {},
+  closeModal: () => {}
 });
 
 // Create provider component
@@ -58,14 +74,40 @@ export function OrderProvider({ children }: GlobalProviderProps) {
   const location = useLocation();
   const [state, dispatch] = useReducer(menuReducer, InitialState);
 
-  const { currentOrder, isLoading, showSideCart } = state;
+  // New modal state
+  const [modalState, setModalState] = useState<ModalState>({
+    isOpen: false,
+    type: null
+  });
 
+  const { currentOrder, isLoading } = state;
+
+  // Backward compatible setShowSideCart
   const setShowSideCart = (value: boolean) => {
-    dispatch({
-      type: CART_ACTION_TYPES.SET_SHOW_CART,
-      payload: { showSideCart: value },
+    setModalState({
+      isOpen: value,
+      type: value ? 'cart' : null
     });
   };
+
+  // New modal functions
+  const setShowProductDetail = (product: Product) => {
+    setModalState({
+      isOpen: true,
+      type: 'productDetail',
+      selectedProduct: product
+    });
+  };
+
+  const closeModal = () => {
+    setModalState({
+      isOpen: false,
+      type: null
+    });
+  };
+
+  // Backward compatible showSideCart getter
+  const showSideCart = modalState.isOpen && modalState.type === 'cart';
 
   const fetchOrder = async (date: string) => {
     try {
@@ -193,8 +235,8 @@ export function OrderProvider({ children }: GlobalProviderProps) {
 
       setReloandCart(true);
 
-      // Auto-open CheckoutSideMenu when adding products if it's not already open
-      if (!showSideCart && filterOrderLines.length > 0) {
+      // Auto-open CheckoutSideMenu when adding products (always switch to cart view)
+      if (filterOrderLines.length > 0) {
         setShowSideCart(true);
       }
 
@@ -293,6 +335,16 @@ export function OrderProvider({ children }: GlobalProviderProps) {
     }
   }, [location.search, reloadCart]);
 
+  // Reset modal to cart view when route changes
+  useEffect(() => {
+    if (modalState.isOpen && modalState.type === 'productDetail') {
+      setModalState({
+        isOpen: false,
+        type: null
+      });
+    }
+  }, [location.pathname]);
+
   const cartItemsCount = useMemo(() => {
     return currentOrder?.order_lines.length || 0;
   }, [currentOrder]);
@@ -344,7 +396,10 @@ export function OrderProvider({ children }: GlobalProviderProps) {
     updateOrderStatus,
     partiallyScheduleOrder,
     setCurrentOrder,
-    getOrders
+    getOrders,
+    modalState,
+    setShowProductDetail,
+    closeModal
   };
 
   return (
