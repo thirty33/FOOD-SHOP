@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { useOrder } from "../../hooks/useCurrentOrder";
 import { CHECKOUT_SIDE_MENU_CLASS } from "../../config/constant";
 import CloseButton from "../Icons/CloseButton";
 

@@ -9,6 +9,7 @@ import {
 import { MemoryRouter, useNavigate } from "react-router-dom";
 import { GlobalProvider } from "../../context/globalContext.tsx";
 import { LoginForm } from "./index";
+import { textMessages } from "../../config/textMessages";
 
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
@@ -18,11 +19,36 @@ vi.mock("react-router-dom", async () => {
   };
 });
 
+// Mock the hooks at module level
+const mockAuthUser = vi.fn();
+const mockSetShowHeader = vi.fn();
+const mockSetToken = vi.fn();
+const mockSetUser = vi.fn();
+const mockEnqueueSnackbar = vi.fn();
+
+vi.mock("../../hooks/useAuth", () => ({
+  useAuth: () => ({
+    setShowHeader: mockSetShowHeader,
+    authUser: mockAuthUser,
+    isLoading: false,
+    setToken: mockSetToken,
+    setUser: mockSetUser,
+  }),
+}));
+
+vi.mock("../../hooks/useNotification", () => ({
+  useNotification: () => ({
+    enqueueSnackbar: mockEnqueueSnackbar,
+  }),
+}));
+
 describe("<Login />", () => {
   const mockNavigate = vi.fn();
 
   beforeEach(() => {
     vi.mocked(useNavigate).mockImplementation(() => mockNavigate);
+    // Clear all mocks before each test
+    vi.clearAllMocks();
   });
   
   const handleLogin = () => {
@@ -37,27 +63,14 @@ describe("<Login />", () => {
   
 
   it("should display an error message", async () => {
-    
-    vi.mock("../../hooks/useAuth", () => ({
-      useAuth: () => ({
-        setShowHeader: vi.fn(),
-        authUser: vi.fn().mockRejectedValue(new Error("Invalid credentials")),
-        isLoading: false,
-        setToken: vi.fn(),
-      }),
-    }));
-
-    vi.mock("../../hooks/useNotification", () => ({
-      useNotification: () => ({
-        enqueueSnackbar: vi.fn(),
-      }),
-    }));
+    // Configure the authUser mock to reject with an error
+    mockAuthUser.mockRejectedValue(new Error("Invalid credentials"));
 
     handleLogin();
 
-    const usernameInput = screen.getByPlaceholderText("nombre@empresa.com");
-    const passwordInput = screen.getByPlaceholderText("••••••••");
-    const submitButton = screen.getByText(/Iniciar sesión/i);
+    const usernameInput = screen.getByPlaceholderText(textMessages.LOGIN_FORM.EMAIL_PLACEHOLDER);
+    const passwordInput = screen.getByPlaceholderText(textMessages.LOGIN_FORM.PASSWORD_PLACEHOLDER);
+    const submitButton = screen.getByText(textMessages.LOGIN_FORM.SUBMIT_BUTTON);
 
     await act(async () => {
       fireEvent.change(usernameInput, {
@@ -69,8 +82,8 @@ describe("<Login />", () => {
 
     await waitFor(
       () => {
-        const errorMessage = screen.getByText("Invalid credentials");
-        expect(errorMessage).toBeInTheDocument();
+        // Error is displayed via notification system, not in DOM
+        expect(mockEnqueueSnackbar).toHaveBeenCalledWith("Invalid credentials", { variant: "error" });
       },
       {
         timeout: 2000,

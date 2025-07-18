@@ -8,7 +8,7 @@ import AddToCartIcon from "../Icons/AddToCartIcon";
 
 interface ProductItemProps {
   id: string | number;
-  imageLight: string;
+  imageLight: string | null;
   title: string;
   price: string | number;
   ingredients: Ingredients[];

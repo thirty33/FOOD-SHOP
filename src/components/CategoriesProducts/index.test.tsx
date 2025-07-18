@@ -8,6 +8,7 @@ import { SnackbarProvider } from "notistack";
 import { categoryService } from "../../services/category";
 import { Pagination } from "../../types/responses";
 import { Category } from "../../types/categories";
+import { textMessages } from "../../config/textMessages.ts";
 
 vi.mock("../../services/category", () => {
   return {
@@ -73,7 +74,7 @@ describe("<CategoriesProducts />", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("No hay categorías disponibles!")
+        screen.getByText(textMessages.NO_CATEGORIES_MESSAGE)
       ).toBeInTheDocument();
     });
 

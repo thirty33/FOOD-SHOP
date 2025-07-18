@@ -10,6 +10,7 @@ import { MemoryRouter, useNavigate } from "react-router-dom";
 import { GlobalProvider } from "../../context/globalContext.tsx";
 import { LoginForm } from "./index";
 import { ROUTES } from "../../config/routes";
+import { textMessages } from "../../config/textMessages";
 
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
@@ -64,9 +65,9 @@ describe("<Login />", () => {
 
     handleLogin();
 
-    const usernameInput = screen.getByPlaceholderText("nombre@empresa.com");
-    const passwordInput = screen.getByPlaceholderText("••••••••");
-    const submitButton = screen.getByText(/Iniciar sesión/i);
+    const usernameInput = screen.getByPlaceholderText(textMessages.LOGIN_FORM.EMAIL_PLACEHOLDER);
+    const passwordInput = screen.getByPlaceholderText(textMessages.LOGIN_FORM.PASSWORD_PLACEHOLDER);
+    const submitButton = screen.getByText(textMessages.LOGIN_FORM.SUBMIT_BUTTON);
 
     await act(async () => {
       fireEvent.change(usernameInput, {

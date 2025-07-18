@@ -4,13 +4,7 @@ import { CheckoutContent } from "../CheckoutContent";
 import { ProductDetailContent } from "../ProductDetailContent";
 
 export const SideMenuManager = () => {
-  const { modalState, closeModal, isAtCategoriesRoute, setShowSideCart } = useOrder();
-
-  const handleAddToCart = (id: string | number, quantity: number) => {
-    // This will be passed to ProductDetailContent
-    // When user adds to cart from detail view, switch to cart view
-    setShowSideCart(true);
-  };
+  const { modalState, closeModal, isAtCategoriesRoute } = useOrder();
 
   return (
     <SideModal 
@@ -22,7 +16,6 @@ export const SideMenuManager = () => {
       {modalState.type === 'productDetail' && modalState.selectedProduct && (
         <ProductDetailContent 
           product={modalState.selectedProduct}
-          onAddToCart={handleAddToCart}
         />
       )}
     </SideModal>

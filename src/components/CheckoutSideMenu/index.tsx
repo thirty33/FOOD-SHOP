@@ -21,8 +21,6 @@ export const CheckoutSideMenu = () => {
     currentOrder,
     isLoading,
     deleteItemFromCart,
-    showSideCart,
-    setShowSideCart,
     updateOrderStatus,
     showPrices,
     user,
@@ -42,9 +40,6 @@ export const CheckoutSideMenu = () => {
     setShowModal(true);
   };
 
-  const handleAddToCart = (id: string | number, quantity: number) => {
-    setShowSideCart(true);
-  };
   
   return (
     <aside

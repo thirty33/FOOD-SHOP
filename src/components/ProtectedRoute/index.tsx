@@ -2,6 +2,7 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { Layout } from "../Layout";
 import { OrderProvider } from "../../context/orderContext";
+import { ROUTES } from "../../config/routes";
 
 export const ProtectedRoute = ({
   children,
@@ -11,7 +12,7 @@ export const ProtectedRoute = ({
   const { token } = useAuth();
 
   if (!token) {
-    return <Navigate to="/login" />;
+    return <Navigate to={ROUTES.LOGIN} />;
   }
 
   return (

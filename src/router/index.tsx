@@ -3,7 +3,6 @@ import { Menus } from "../components/Menus";
 import { useRoutes } from "react-router-dom";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import { ROUTES } from "../config/routes";
-// import { Products } from "../components/Products";
 import { ProductDetail } from "../components/ProductDetail";
 import { Cart } from "../components/Cart";
 import { Checkout } from "../components/Checkout";
@@ -27,19 +26,10 @@ export const AppRouter = () => {
       path: ROUTES.CATEGORY_ROUTE,
       element: (
         <ProtectedRoute>
-          {/* <Categories /> */}
           <CategoriesProducts />
         </ProtectedRoute>
       ),
     },
-    // {
-    //   path: ROUTES.PRODUCTS_ROUTE,
-    //   element: (
-    //     <ProtectedRoute>
-    //       <Products />
-    //     </ProtectedRoute>
-    //   ),
-    // },
     {
       path: ROUTES.PRODUCT_DETAIL_ROUTE,
       element: (

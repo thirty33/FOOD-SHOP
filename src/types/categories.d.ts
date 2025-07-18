@@ -8,6 +8,8 @@ type PriceListLine = {
     id: number | string;
     unit_price: string;
     unit_price_with_tax: string;
+    unit_price_raw?: number;
+    unit_price_with_tax_raw?: number;
 };
 
 export type Product = {
@@ -15,7 +17,7 @@ export type Product = {
     name: string;
     description: string;
     price: string;
-    image: string;
+    image: string | null;
     category_id: number;
     code: string;
     active: number;
