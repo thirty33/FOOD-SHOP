@@ -60,10 +60,12 @@ describe("Menus Component", () => {
       </BrowserRouter>
     );
 
-    // Verify that menu cards are rendered
-    mockMenuItems.forEach((menu) => {
-      expect(screen.getByText(menu.title)).toBeInTheDocument();
-    });
+    // Verify that menu cards are rendered with formatted dates
+    // The component renders dates in Spanish format, not the title
+    // For 2024-10-28, it should show "Lunes", "28", "de octubre"
+    expect(screen.getAllByText("Lunes")).toHaveLength(2); // Both menus have same date
+    expect(screen.getAllByText("28")).toHaveLength(2);
+    expect(screen.getAllByText(/de octubre/)).toHaveLength(2);
 
     // Verify that there's no "No hay Menús disponibles!" message
     expect(
@@ -136,14 +138,18 @@ describe("Menus Component", () => {
 
     // Wait for the menus to be rendered and verify the formatted dates
     await waitFor(() => {
+      // The component renders date parts separately, not as a single string
       // 2024-10-28 is a Monday (Lunes)
-      expect(
-        screen.getByText("lunes 28 de octubre de 2024")
-      ).toBeInTheDocument();
+      expect(screen.getByText("Lunes")).toBeInTheDocument();
+      expect(screen.getByText("28")).toBeInTheDocument();
+      
       // 2024-10-29 is a Tuesday (Martes)
-      expect(
-        screen.getByText("martes 29 de octubre de 2024")
-      ).toBeInTheDocument();
+      expect(screen.getByText("Martes")).toBeInTheDocument();
+      expect(screen.getByText("29")).toBeInTheDocument();
+      
+      // Both dates are in October 2024
+      expect(screen.getAllByText(/de octubre/)).toHaveLength(2);
+      expect(screen.getAllByText("2024")).toHaveLength(2);
     });
 
     // Verify that there's no loading spinner

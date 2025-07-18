@@ -8,6 +8,7 @@ import { useNotification } from "../../hooks/useNotification";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../config/routes";
 import { configuration } from "../../config/config";
+import { textMessages } from "../../config/textMessages";
 import { useEffect } from "react";
 
 const schema = yup
@@ -75,7 +76,7 @@ export const LoginForm = () => {
 
           {/* Title */}
           <h1 className="text-white font-cera-bold text-[1.2rem] md:text-[32px] text-center tracking-tighter mb-2">
-            Inicia sesión en tu cuenta
+            {textMessages.LOGIN_FORM.TITLE}
           </h1>
 
           <form
@@ -88,7 +89,7 @@ export const LoginForm = () => {
                 type="text"
                 id="email"
                 className="w-full h-8 md:h-16 py-4 md:py-0 px-3 md:px-6 bg-white border-0 rounded-lg md:rounded-2xl text-[#CCCCCC] placeholder-[#CCCCCC] focus:outline-none focus:ring-2 focus:ring-green-100 shadow-sm font-cera-regular text-xs md:text-xl tracking-tighter"
-                placeholder="Correo electrónico o usuario"
+                placeholder={textMessages.LOGIN_FORM.EMAIL_PLACEHOLDER}
                 {...register("email")}
                 defaultValue=""
               />
@@ -99,7 +100,7 @@ export const LoginForm = () => {
               <input
                 type="password"
                 id="password"
-                placeholder="Contraseña"
+                placeholder={textMessages.LOGIN_FORM.PASSWORD_PLACEHOLDER}
                 className="w-full h-8 md:h-16 py-4 md:py-0 px-3 md:px-6 bg-white border-0 rounded-lg md:rounded-2xl text-[#CCCCCC] placeholder-[#CCCCCC] focus:outline-none focus:ring-2 focus:ring-green-100 shadow-sm font-cera-regular text-xs md:text-xl tracking-tighter"
                 {...register("password")}
                 defaultValue=""
@@ -117,7 +118,7 @@ export const LoginForm = () => {
                 htmlFor="remember"
                 className="ml-1 md:ml-2 text-xs md:text-lg font-cera-regular text-white"
               >
-                Recuérdame
+                {textMessages.LOGIN_FORM.REMEMBER_ME}
               </label>
             </div>
 
@@ -126,7 +127,7 @@ export const LoginForm = () => {
               <ActionButton
                 isLoading={isLoading}
                 type="submit"
-                buttonText="Iniciar sesión"
+                buttonText={textMessages.LOGIN_FORM.SUBMIT_BUTTON}
                 disable={isLoading}
               />
             </div>

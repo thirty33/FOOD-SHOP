@@ -11,6 +11,7 @@ import { truncateString } from "../../helpers/texts";
 import { useScrollToClose } from "../../hooks/useScrollToClose";
 import { useScrollToTop } from "../../hooks/useScrollToTop";
 import ArrowUpIcon from "../Icons/ArrowUpIcon";
+import { textMessages } from "../../config/textMessages";
 
 // Componente para la lista de productos de una categoría
 const ProductList = ({ products }: { products: Product[] }) => {
@@ -127,7 +128,7 @@ export const CategoriesProducts = () => {
             role="alert"
           >
             <span className="font-medium text-green-100">
-              No hay categorías disponibles! para el día de hoy.
+              {textMessages.NO_CATEGORIES_MESSAGE}
             </span>
           </div>
         )}
