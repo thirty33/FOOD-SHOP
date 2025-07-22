@@ -247,7 +247,131 @@ const successCategoriesResponse: CategoryItemPagination = {
   total: 2
 }
 
+// Mock data para menus basado en la respuesta real
+const mockMenusData = [
+  {
+    id: 368,
+    active: true,
+    title: "Menú Viernes 009 - 25/07",
+    description: "Selección gourmet con ingredientes premium y presentaciones elegantes.",
+    publication_date: "2025-07-25"
+  },
+  {
+    id: 374,
+    active: true,
+    title: "Menú Lunes 015 - 04/08",
+    description: "Opciones vegetarianas y veganas para una alimentación consciente.",
+    publication_date: "2025-08-04"
+  },
+  {
+    id: 380,
+    active: true,
+    title: "Menú Martes 021 - 12/08",
+    description: "Menú tradicional con opciones clásicas de la gastronomía chilena.",
+    publication_date: "2025-08-12"
+  }
+]
+
+// Respuesta exitosa de menus
+const successMenusResponse = {
+  current_page: 1,
+  data: mockMenusData,
+  first_page_url: `${API_URL}/menus?page=1`,
+  from: 1,
+  last_page: 1,
+  last_page_url: `${API_URL}/menus?page=1`,
+  links: [
+    {
+      url: null,
+      label: "&laquo; Previous",
+      active: false
+    },
+    {
+      url: `${API_URL}/menus?page=1`,
+      label: "1",
+      active: true
+    },
+    {
+      url: null,
+      label: "Next &raquo;",
+      active: false
+    }
+  ],
+  next_page_url: null,
+  path: `${API_URL}/menus`,
+  per_page: 15,
+  prev_page_url: null,
+  to: 3,
+  total: 3
+}
+
+// Respuesta vacía de menus
+const emptyMenusResponse = {
+  current_page: 1,
+  data: [],
+  first_page_url: `${API_URL}/menus?page=1`,
+  from: 1,
+  last_page: 1,
+  last_page_url: `${API_URL}/menus?page=1`,
+  links: [
+    {
+      url: null,
+      label: "&laquo; Previous",
+      active: false
+    },
+    {
+      url: `${API_URL}/menus?page=1`,
+      label: "1",
+      active: true
+    },
+    {
+      url: null,
+      label: "Next &raquo;",
+      active: false
+    }
+  ],
+  next_page_url: null,
+  path: `${API_URL}/menus`,
+  per_page: 15,
+  prev_page_url: null,
+  to: 0,
+  total: 0
+}
+
 export const handlers = [
+  // Handler para obtener menus
+  http.get(`${API_URL}/menus`, ({ request }) => {
+    const url = new URL(request.url)
+    const page = url.searchParams.get('page')
+    
+    // Simular caso sin menus
+    if (page === '999') {
+      return HttpResponse.json({
+        status: 'success',
+        message: 'Active menus retrieved successfully',
+        data: emptyMenusResponse
+      })
+    }
+    
+    // Simular error del servidor
+    if (page === '500') {
+      return HttpResponse.json(
+        { 
+          status: 'error', 
+          message: 'Internal server error' 
+        },
+        { status: 500 }
+      )
+    }
+    
+    // Caso exitoso por defecto
+    return HttpResponse.json({
+      status: 'success',
+      message: 'Active menus retrieved successfully',
+      data: successMenusResponse
+    })
+  }),
+
   // Handler para obtener categorías - caso exitoso
   http.get(`${API_URL}/categories/:menuId`, ({ params }) => {
     const { menuId } = params
@@ -278,6 +402,15 @@ export const handlers = [
       status: 'success',
       message: 'Categories retrieved successfully',
       data: successCategoriesResponse
+    })
+  }),
+
+  // Handler para obtener órdenes por fecha
+  http.get(`${API_URL}/orders/get-order/:date`, () => {
+    return HttpResponse.json({
+      status: 'success',
+      message: 'Order retrieved successfully',
+      data: null
     })
   })
 ]

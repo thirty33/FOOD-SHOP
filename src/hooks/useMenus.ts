@@ -40,7 +40,7 @@ export function useMenus() {
 
         } catch (error) {
             setIsLoading(false);
-            throw error;
+            console.error('Error fetching menus:', error);
         }
     }
 
@@ -49,7 +49,6 @@ export function useMenus() {
         setCurrenPage(1); 
         setLastPage(1); 
         setHasMore(false);
-        // setCurrentOrder(null);
     }, []);
     
     useEffect(() => {

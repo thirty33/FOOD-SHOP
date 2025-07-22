@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../config/routes";
+import { textMessages } from "../../config/textMessages";
 import { useMemo } from "react";
 
 export const BreadCrumbsNavigation = () => {
@@ -75,10 +76,10 @@ export const BreadCrumbsNavigation = () => {
   const renderMenuLink = useMemo(() => {
     return (
       <Link
-        to={{ pathname: "/" }}
+        to={{ pathname: ROUTES.MENUS }}
         className="font-cera-light tracking-tight inline-flex items-center text-md md:text-xl font-medium text-gray-400 hover:text-yellow-active dark:text-gray-400 dark:hover:text-white"
       >
-        Menús
+        {textMessages.BREADCRUMBS.MENUS}
       </Link>
     );
   }, []);
