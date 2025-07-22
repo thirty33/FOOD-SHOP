@@ -8,6 +8,7 @@ import { useOrder } from "../../hooks/useCurrentOrder";
 import CartIcon from "../Icons/CartIcon";
 import BurgerButton from "../Icons/BurgerButton";
 import CloseButton from "../Icons/CloseButton";
+import { textMessages } from "../../config/textMessages";
 
 interface NavItemProps {
   menuName: string;
@@ -96,15 +97,15 @@ export const Header = () => {
 
   const menuLinks = [
     {
-      menuName: "Menús",
+      menuName: textMessages.HEADER.MENUS,
       route: ROUTES.MENUS,
     },
     {
-      menuName: "Pedidos",
+      menuName: textMessages.HEADER.ORDERS,
       route: `/${ROUTES.GET_ORDERS_ROUTE}`,
     },
     {
-      menuName: "Cerrar sesión",
+      menuName: textMessages.HEADER.SIGN_OUT,
       onClick: SignOut,
     },
   ];
@@ -119,7 +120,7 @@ export const Header = () => {
             <section className="bg-green-50 hidden md:flex basis-1/3 flex-row justify-end md:h-20 lg:pr-8">
               <ul className="flex flex-row items-center justify-center h-full">
                 {menuLinks
-                  .filter((link) => link.menuName !== "Cerrar sesión")
+                  .filter((link) => link.menuName !== textMessages.HEADER.SIGN_OUT)
                   .map((link, index) => (
                     <NavItem
                       key={index}
@@ -158,7 +159,7 @@ export const Header = () => {
                     width="64"
                     height="56"
                   />
-                  <span className="sr-only">Notifications</span>
+                  <span className="sr-only">{textMessages.HEADER.NOTIFICATIONS_SR}</span>
                   <div className="absolute inline-flex items-center justify-center w-5 h-5 text-md text-white bg-red-1000 rounded-full top-[8px] end-[5px] font-cera-regular">
                     {cartItemsCount}
                   </div>
@@ -167,7 +168,7 @@ export const Header = () => {
 
               <section className="hidden md:flex items-center justify-center col-start-3">
                 {menuLinks
-                  .filter((link) => link.menuName === "Cerrar sesión")
+                  .filter((link) => link.menuName === textMessages.HEADER.SIGN_OUT)
                   .map((link, index) => (
                     <NavItem
                       key={index}
@@ -185,7 +186,7 @@ export const Header = () => {
                 aria-expanded={isMenuOpen}
                 onClick={() => openMenu(isMenuOpen)}
               >
-                <span className="sr-only">Open main menu</span>
+                <span className="sr-only">{textMessages.HEADER.OPEN_MAIN_MENU_SR}</span>
                 <BurgerButton
                   className="w-9 h-9 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
                 />

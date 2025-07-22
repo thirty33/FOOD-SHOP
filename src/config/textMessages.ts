@@ -6,5 +6,15 @@ export const textMessages = {
 		PASSWORD_PLACEHOLDER: 'Contraseña',
 		REMEMBER_ME: 'Recuérdame',
 		SUBMIT_BUTTON: 'Iniciar sesión'
+	},
+	HEADER: {
+		MENUS: 'Menús',
+		ORDERS: 'Pedidos',
+		SIGN_OUT: 'Cerrar sesión',
+		NOTIFICATIONS_SR: 'Notifications',
+		OPEN_MAIN_MENU_SR: 'Open main menu'
+	},
+	BREADCRUMBS: {
+		MENUS: 'Menús'
 	}
 }

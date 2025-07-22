@@ -15,6 +15,7 @@ export default defineConfig({
                 '**/App.tsx',
                 '**/main.tsx'
             ],
+            reporter: ['text', 'text-summary', 'html'],
             thresholds: {
                 // functions: 80
             }
