@@ -72,3 +72,12 @@ export const ORDERS_QUERY_PARAMS = {
 }
 
 export const CHECKOUT_SIDE_MENU_CLASS = "checkout-side-menu";
+
+// Text truncation constants
+export const TRUNCATE_LENGTHS = {
+  CATEGORY_NAME: 18,     // For category names in CategoriesProducts
+  PRODUCT_NAME: 12,      // For product names in OrderSummary and OrderLines
+  INGREDIENTS: 20,       // For ingredients in OrderSummary
+  CART_NAME: 17,         // For names in Cart component
+  ORDER_STATUS: 12,      // For order status in OrderLines
+} as const;

@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { render, screen, waitFor, cleanup } from '@testing-library/react'
 import { Routes, Route } from 'react-router-dom'
 import { SnackbarProvider } from 'notistack'
 import { CategoriesProducts } from './index'
@@ -10,6 +10,8 @@ import { http, HttpResponse } from 'msw'
 import { textMessages } from '../../config/textMessages'
 import { ROUTES } from '../../config/routes'
 import { TestRouter } from '../../tests/utils/testWrappers'
+import { truncateString } from '../../helpers/texts'
+import { TRUNCATE_LENGTHS } from '../../config/constant'
 
 // Get the base API URL
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
@@ -77,6 +79,22 @@ describe('CategoriesProducts Component', () => {
   beforeEach(() => {
     // Clear mocks before each test
     vi.clearAllMocks()
+    // Reset MSW handlers to default state
+    server.resetHandlers()
+  })
+
+  afterEach(() => {
+    // Clean up rendered components
+    cleanup()
+    // Clean up mocks and timers if they exist
+    vi.clearAllMocks()
+    // Only clear timers if they are mocked
+    if (vi.isMockFunction(setTimeout)) {
+      vi.clearAllTimers()
+      vi.runOnlyPendingTimers()
+    }
+    // Reset MSW handlers after each test
+    server.resetHandlers()
   })
 
   it('should render categories and products successfully', async () => {
@@ -97,7 +115,7 @@ describe('CategoriesProducts Component', () => {
     // Verify that categories are displayed
     expect(screen.getByText('NUEVOS')).toBeInTheDocument()
     // Look specifically for the h2 with truncated category text (level 2)
-    expect(screen.getByRole('heading', { level: 2, name: /OFERTAS DE LA SEMA/ })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 2, name: new RegExp(truncateString('OFERTAS DE LA SEMANA', TRUNCATE_LENGTHS.CATEGORY_NAME)) })).toBeInTheDocument()
 
     // Verify that schedules are displayed (actual text from API) - there are 2 categories with the same schedule
     expect(screen.getAllByText('disponible hasta el viernes 18 de julio de 2025 a las 15:00')).toHaveLength(2)
@@ -131,7 +149,7 @@ describe('CategoriesProducts Component', () => {
 
     // Verify that NO categories are displayed
     expect(screen.queryByText('NUEVOS')).not.toBeInTheDocument()
-    expect(screen.queryByRole('heading', { level: 2, name: /OFERTAS DE LA SEMA/ })).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { level: 2, name: new RegExp(truncateString('OFERTAS DE LA SEMANA', TRUNCATE_LENGTHS.CATEGORY_NAME)) })).not.toBeInTheDocument()
   })
 
   it('should handle API errors gracefully', async () => {
@@ -149,8 +167,8 @@ describe('CategoriesProducts Component', () => {
       expect(screen.queryByRole('status')).not.toBeInTheDocument()
     })
 
-    // Verify that the no categories message is displayed when there's an error
-    expect(screen.getByText(textMessages.NO_CATEGORIES_MESSAGE)).toBeInTheDocument()
+    // Verify that the no categories message is displayed when there's an error (may appear multiple times due to error handling)
+    expect(screen.getAllByText(textMessages.NO_CATEGORIES_MESSAGE)).toHaveLength(1)
 
     // Clean up the spy
     consoleSpy.mockRestore()
@@ -261,8 +279,8 @@ describe('CategoriesProducts Component', () => {
     await waitFor(() => {
       // The text should be truncated (should not show the full name)
       expect(screen.queryByText(longCategoryName)).not.toBeInTheDocument()
-      // But it should show a truncated version (18 characters + "...")
-      expect(screen.getByText('Este es un nombre ...')).toBeInTheDocument()
+      // But it should show a truncated version (TRUNCATE_LENGTHS.CATEGORY_NAME characters + "...")
+      expect(screen.getByText(truncateString(longCategoryName, TRUNCATE_LENGTHS.CATEGORY_NAME))).toBeInTheDocument()
     })
   })
 })

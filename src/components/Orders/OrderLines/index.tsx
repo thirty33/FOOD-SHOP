@@ -3,6 +3,7 @@ import {
   ORDER_STATUS_TEXT,
   ORDER_STATUS_COLOR,
   ORDER_STATUS,
+  TRUNCATE_LENGTHS,
 } from "../../../config/constant";
 import { OrderData } from "../../../types/order";
 import { SpinnerLoading } from "../../SpinnerLoading";
@@ -80,7 +81,7 @@ export const OrderLines = ({
                       order.status === ORDER_STATUS.PARTIALLY_SCHEDULED ? 'text-gray-text-state' : 'text-white'
                     } text-nowrap text-center`}
                   >
-                    {truncateString(ORDER_STATUS_TEXT[order.status], 12)}
+                    {truncateString(ORDER_STATUS_TEXT[order.status], TRUNCATE_LENGTHS.ORDER_STATUS)}
                   </dd>
                 </dl>
                 <div className="grid grid-cols-1 grid-rows-2 px-0 col-span-3 lg:col-span-2 gap-y-2">

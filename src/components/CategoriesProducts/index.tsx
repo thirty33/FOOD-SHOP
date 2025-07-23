@@ -8,6 +8,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { User } from "../../types/user";
 import { useMemo, useRef } from "react";
 import { truncateString } from "../../helpers/texts";
+import { TRUNCATE_LENGTHS } from "../../config/constant";
 import { useScrollToClose } from "../../hooks/useScrollToClose";
 import { useScrollToTop } from "../../hooks/useScrollToTop";
 import ArrowUpIcon from "../Icons/ArrowUpIcon";
@@ -69,7 +70,7 @@ const CategorySection = ({
         } md:flex-row md:items-end`}
       >
         <h2 className="text-4xl md:text-5xl font-bold font-cera-bold tracking-tight text-green-100 text-nowrap">
-          {truncateString(category?.category?.name || "", 18)}
+          {truncateString(category?.category?.name || "", TRUNCATE_LENGTHS.CATEGORY_NAME)}
         </h2>
         <p className="text-green-100 font-cera-regular tracking-normal text-sm md:text-base md:ml-2">
           {maximumOrderTime}

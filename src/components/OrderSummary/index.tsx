@@ -1,7 +1,7 @@
 import { useGetOrderById } from "../../hooks/useGetOrderById";
 import { SpinnerLoading } from "../../components/SpinnerLoading";
 import { Link, useNavigate } from "react-router-dom";
-import { ORDER_STATUS_TEXT, ORDER_STATUS_COLOR } from "../../config/constant";
+import { ORDER_STATUS_TEXT, ORDER_STATUS_COLOR, TRUNCATE_LENGTHS } from "../../config/constant";
 import { configuration } from "../../config/config";
 import { isAdminOrCafe } from "../../helpers/permissions";
 import { useAuth } from "../../hooks/useAuth";
@@ -111,7 +111,7 @@ export const OrderSummary = (): JSX.Element => {
                           </div>
                           <div className="flex-1 flex flex-col justify-center">
                             <h5 className="text-lg font-cera-bold text-green-100 tracking-tighter leading-[1.1] mb-0">
-                              {truncateString(line.product?.name ?? '', 12)}
+                              {truncateString(line.product?.name ?? '', TRUNCATE_LENGTHS.PRODUCT_NAME)}
                             </h5>
                             <p className="text-sm font-cera-medium text-green-100 tracking-tighter leading-[1.1] mb-0">
                               Ingredientes
@@ -119,7 +119,7 @@ export const OrderSummary = (): JSX.Element => {
                             <p className="text-xs font-cera-light text-green-100 tracking-tighter leading-[1.1] mb-0">
                               {truncateString(line.product?.ingredients?.map((ing, index) => 
                                 `${ing.descriptive_text}${index < (line.product?.ingredients?.length ?? 0) - 1 ? ', ' : '.'}`
-                              ).join('') || 'Lechuga, tomate, ceitunas.', 20)}
+                              ).join('') || 'Lechuga, tomate, ceitunas.', TRUNCATE_LENGTHS.INGREDIENTS)}
                             </p>
                           </div>
                         </div>
@@ -164,7 +164,7 @@ export const OrderSummary = (): JSX.Element => {
                             </div>
                             <div className="flex-shrink-0 flex flex-col justify-center">
                               <h5 className="text-xl font-cera-bold text-green-100 tracking-tighter leading-[1.1] mb-0">
-                                {truncateString(line.product?.name ?? '', 12)}
+                                {truncateString(line.product?.name ?? '', TRUNCATE_LENGTHS.PRODUCT_NAME)}
                               </h5>
                               <p className="text-base font-cera-medium text-green-100 tracking-tighter leading-[1.1] mb-0">
                                 Ingredientes
@@ -172,7 +172,7 @@ export const OrderSummary = (): JSX.Element => {
                               <p className="text-sm font-cera-light text-green-100 tracking-tighter leading-[1.1] mb-0">
                                 {truncateString(line.product?.ingredients?.map((ing, index) => 
                                   `${ing.descriptive_text}${index < (line.product?.ingredients?.length ?? 0) - 1 ? ', ' : '.'}`
-                                ).join('') || 'Lechuga, tomate, ceitunas.', 20)}
+                                ).join('') || 'Lechuga, tomate, ceitunas.', TRUNCATE_LENGTHS.INGREDIENTS)}
                               </p>
                             </div>
                           </div>

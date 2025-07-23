@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { ROUTES } from "../../config/routes";
 import { QuantitySelector } from "../QuantitySelector";
 import { useQuantityChange } from "../../hooks/useQuantityChange";
-import { ORDER_STATUS, ORDER_STATUS_TEXT } from "../../config/constant";
+import { ORDER_STATUS, ORDER_STATUS_TEXT, TRUNCATE_LENGTHS } from "../../config/constant";
 import XIcon from "../../components/Icons/XIcon";
 import { configuration } from "../../config/config";
 import { truncateString } from "../../helpers/texts";
@@ -63,7 +63,7 @@ export const CartItem = ({
       <div className="flex flex-col">
         <div className="flex flex-col gap-y-1 md:gap-y-2 items-start justify-between">
           <h3 className="text-lg md:text-3xl text-nowrap text-green-100 font-cera-bold tracking-tighter leading-4 md:leading-4">
-            {truncateString(name, 17)}
+            {truncateString(name, TRUNCATE_LENGTHS.CART_NAME)}
           </h3>
           {showPrices && (
             <p className="text-base md:text-2xl text-green-100 font-cera-regular tracking-tighter leading-4 md:leading-4">

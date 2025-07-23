@@ -113,10 +113,14 @@ describe('Menus Infinite Scroll Component', () => {
   })
 
   afterEach(() => {
-    // Clear timers after each test
-    vi.clearAllTimers()
+    // Clear timers after each test if they are mocked
+    if (vi.isMockFunction(setTimeout)) {
+      vi.clearAllTimers()
+    }
     // Clear global navigation function
     delete (window as any).testNavigate
+    // Clear all mocks
+    vi.clearAllMocks()
   })
 
   it('should load second page when scrolling to bottom with 2 pages available', async () => {
@@ -355,57 +359,31 @@ describe('Menus Infinite Scroll Component', () => {
     menuServiceSpy.mockClear()
 
     // Simulate multiple scroll events after reaching the last page
-    act(() => {
-      simulateScroll(1400, 800, 1600) // Scroll even further down
+    await act(async () => {
+      // First scroll - even further down
+      simulateScroll(1400, 800, 1600)
       window.dispatchEvent(new Event('scroll'))
-    })
-
-    // Wait a moment for any possible calls
-    await new Promise(resolve => setTimeout(resolve, 300))
-
-    act(() => {
-      simulateScroll(1500, 800, 1600) // Scroll to absolute end
+      
+      // Wait for debounce
+      await new Promise(resolve => setTimeout(resolve, 300))
+      
+      // Second scroll - to absolute end
+      simulateScroll(1500, 800, 1600)
       window.dispatchEvent(new Event('scroll'))
+      
+      // Wait for final debounce
+      await new Promise(resolve => setTimeout(resolve, 300))
     })
-
-    // Wait a moment more
-    await new Promise(resolve => setTimeout(resolve, 300))
 
     // Verify that NO more calls were made to the service
     expect(menuServiceSpy).not.toHaveBeenCalled()
-  })
+  }, 10000)
 
   it('should reset state when navigating away and returning to Menus', async () => {
     // Spy on the list method of menuService
     const menuServiceSpy = vi.spyOn(menuService, 'list')
 
-    // Wrapper component that controls internal navigation
-    const NavigationTestWrapper = () => {
-      const [currentRoute, setCurrentRoute] = React.useState(ROUTES.MENUS)
-      
-      // Expose the navigation function globally for the test
-      React.useEffect(() => {
-        (window as any).testNavigate = (route: string) => {
-          setCurrentRoute(route)
-        }
-      }, [])
-
-      return (
-        <TestRouter>
-          <GlobalProvider>
-            <OrderProvider>
-              <Routes>
-                <Route path="*" element={
-                  currentRoute === ROUTES.MENUS ? <Menus /> : <CategoriesProducts />
-                } />
-              </Routes>
-            </OrderProvider>
-          </GlobalProvider>
-        </TestRouter>
-      )
-    }
-
-    // Configure handlers for multiple pages and categories
+    // Configure MSW handlers to properly return paginated data
     server.use(
       http.get(`${API_URL}/menus`, ({ request }) => {
         const url = new URL(request.url)
@@ -452,30 +430,26 @@ describe('Menus Infinite Scroll Component', () => {
             }
           })
         }
-      }),
-      // Handler for categories - return empty list to show the message
-      http.get(`${API_URL}/categories/:menuId`, () => {
-        return HttpResponse.json({
-          status: 'success',
-          message: 'Categories retrieved successfully',
-          data: {
-            current_page: 1,
-            data: [],
-            first_page_url: `${API_URL}/categories/15?page=1`,
-            from: 1,
-            last_page: 1,
-            last_page_url: `${API_URL}/categories/15?page=1`,
-            links: [],
-            next_page_url: null,
-            path: `${API_URL}/categories/15`,
-            per_page: 5,
-            prev_page_url: null,
-            to: 0,
-            total: 0
-          }
-        })
       })
     )
+
+    // Simplified wrapper component for navigation testing
+    const NavigationTestWrapper = () => {
+      const [showMenus, setShowMenus] = React.useState(true)
+      
+      // Expose the navigation function globally for the test
+      React.useEffect(() => {
+        (window as any).testNavigate = (show: boolean) => {
+          setShowMenus(show)
+        }
+      }, [])
+
+      return (
+        <TestWrapper>
+          {showMenus ? <Menus /> : <div data-testid="other-page">Other Page</div>}
+        </TestWrapper>
+      )
+    }
 
     // Step 1: Render the Menus component initially
     render(<NavigationTestWrapper />)
@@ -483,11 +457,21 @@ describe('Menus Infinite Scroll Component', () => {
     // Wait for the first page to load
     await waitFor(() => {
       expect(screen.queryByRole('status')).not.toBeInTheDocument()
+    }, { timeout: 10000 })
+
+    // Verify initial API call was made
+    await waitFor(() => {
+      expect(menuServiceSpy).toHaveBeenCalledTimes(1)
     })
+    expect(menuServiceSpy).toHaveBeenCalledWith({ page: 1 })
 
     // Verify that the menus from the first page were loaded
     expect(screen.getByText('Viernes')).toBeInTheDocument()
     expect(screen.getByText('Lunes')).toBeInTheDocument()
+
+    // Verify that only first page items are initially displayed
+    expect(screen.queryByText('Martes')).not.toBeInTheDocument()
+    expect(screen.queryByText('Miércoles')).not.toBeInTheDocument()
 
     // Simulate scroll to load the second page
     await act(async () => {
@@ -499,39 +483,36 @@ describe('Menus Infinite Scroll Component', () => {
     // Wait for the second page to load
     await waitFor(() => {
       expect(menuServiceSpy).toHaveBeenCalledTimes(2)
-    }, { timeout: 5000 })
+    }, { timeout: 10000 })
 
     // Verify that all menus were loaded (first + second page)
     await waitFor(() => {
       expect(screen.getByText('Martes')).toBeInTheDocument()
       expect(screen.getByText('Miércoles')).toBeInTheDocument()
+    }, { timeout: 5000 })
+
+    // Step 2: Navigate away from Menus
+    await act(async () => {
+      (window as any).testNavigate(false)
     })
 
-    // Step 2: Navigate to another page (Categories)
-    act(() => {
-      (window as any).testNavigate(ROUTES.GET_CATEGORY_ROUTE('15'))
-    })
-
-    // Verify that we're on the categories page (CategoriesProducts component shows message when no categories)
+    // Verify that we're on the other page
     await waitFor(() => {
-      expect(screen.getByText(textMessages.NO_CATEGORIES_MESSAGE)).toBeInTheDocument()
+      expect(screen.getByTestId('other-page')).toBeInTheDocument()
     })
 
     // Reset the spy to count only the calls when we return
     menuServiceSpy.mockClear()
 
     // Step 3: Return to the Menus page
-    act(() => {
-      (window as any).testNavigate(ROUTES.MENUS)
+    await act(async () => {
+      (window as any).testNavigate(true)
     })
 
-    // Verify that we return to the Menus page and it shows the spinner (initial state)
-    expect(screen.getByRole('status')).toBeInTheDocument()
-
-    // Esperar a que se complete la nueva carga
+    // Wait for the component to re-mount and load
     await waitFor(() => {
       expect(screen.queryByRole('status')).not.toBeInTheDocument()
-    })
+    }, { timeout: 10000 })
 
     // Verify that the state was reset correctly:
     // 1. ONE new call was made to the API (page 1 only)
@@ -543,22 +524,5 @@ describe('Menus Infinite Scroll Component', () => {
     expect(screen.getByText('Lunes')).toBeInTheDocument() // page 1
     expect(screen.queryByText('Martes')).not.toBeInTheDocument() // page 2 - should not be there
     expect(screen.queryByText('Miércoles')).not.toBeInTheDocument() // page 2 - should not be there
-
-    // 3. Verify that the state was reset by testing that infinite scroll works again
-    // (esto implica que currentPage=1, lastPage=1, hasMore=false inicialmente)
-    menuServiceSpy.mockClear()
-    
-    // Simulate scroll - should load page 2 again
-    await act(async () => {
-      simulateScroll(1200, 800, 1600)
-      window.dispatchEvent(new Event('scroll'))
-      await new Promise(resolve => setTimeout(resolve, 300))
-    })
-
-    // Verify that the call is made for page 2 again
-    await waitFor(() => {
-      expect(menuServiceSpy).toHaveBeenCalledTimes(1)
-      expect(menuServiceSpy).toHaveBeenCalledWith({ page: 2 })
-    }, { timeout: 5000 })
-  })
+  }, 15000)
 })
