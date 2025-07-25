@@ -1,4 +1,4 @@
-@import url('../assets/fonts/cera/cera.css');
+/* Cera fonts are now loaded dynamically from CloudFront via fontLoader.ts */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

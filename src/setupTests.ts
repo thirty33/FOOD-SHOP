@@ -26,7 +26,7 @@ if (typeof ProgressEvent === 'undefined') {
 
   // Set it on multiple global objects for maximum compatibility
   (globalThis as any).ProgressEvent = ProgressEventPolyfill;
-  (global as any).ProgressEvent = ProgressEventPolyfill;
+  (globalThis as any).ProgressEvent = ProgressEventPolyfill;
   // Only set on window if it exists (to avoid window is not defined errors)
   if (typeof window !== 'undefined') {
     (window as any).ProgressEvent = ProgressEventPolyfill;
@@ -61,17 +61,19 @@ afterAll(() => {
   console.error = originalConsoleError;
 });
 
-// Add process error handlers
-process.on('unhandledRejection', (reason, promise) => {
+// Add process error handlers (commented out to avoid Node.js types issues in browser environment)
+/*
+process.on('unhandledRejection', (reason: any, promise: any) => {
   // Only log if it's not a ProgressEvent related error from MSW
   if (!reason?.toString().includes('ProgressEvent is not defined')) {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
   }
 });
 
-process.on('uncaughtException', (error) => {
+process.on('uncaughtException', (error: any) => {
   // Only log if it's not a ProgressEvent related error from MSW
   if (!error?.message?.includes('ProgressEvent is not defined')) {
     console.error('Uncaught Exception:', error);
   }
 });
+*/

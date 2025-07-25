@@ -15,7 +15,7 @@ import { truncateString } from '../../helpers/texts'
 import { TRUNCATE_LENGTHS } from '../../config/constant'
 
 // Get the base API URL
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
+// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
 
 // Mock all dependencies except useCategories
 vi.mock('../../hooks/useAuth', () => ({
