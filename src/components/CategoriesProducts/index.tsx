@@ -96,7 +96,7 @@ export const CategoriesProducts = () => {
   const { user } = useAuth();
   const { showSideCart, setShowSideCart } = useOrder();
   const categoriesRef = useRef<HTMLDivElement>(null);
-  const { categories, isLoading } = useCategories();
+  const { categories, isLoading, hasMore, loadMoreCategories } = useCategories();
   const { isVisible, scrollToTop } = useScrollToTop();
 
   // Use custom hook for scroll to close functionality
@@ -133,6 +133,19 @@ export const CategoriesProducts = () => {
             </span>
           </div>
         )}
+        
+        {/* Load More Button */}
+        {hasMore && !isLoading && (
+          <div className="flex justify-center m-4">
+            <button
+              onClick={loadMoreCategories}
+              className="px-6 py-3 bg-lime-600 text-white font-cera-medium rounded-lg hover:bg-lime-700 transition-colors"
+            >
+              Cargar más
+            </button>
+          </div>
+        )}
+        
         <div className="flex justify-center m-4">
           <SpinnerLoading show={isLoading} size={8} />
         </div>

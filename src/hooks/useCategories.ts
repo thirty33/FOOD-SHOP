@@ -1,23 +1,32 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { categoryService } from "../services/category";
 import { CategoryItemPagination } from "../types/categories";
-import { useInfiniteScroll } from "./useInfiniteScroll";
+// import { useInfiniteScroll } from "./useInfiniteScroll";
 import { useSnackbar } from "notistack";
 import { useParams } from "react-router-dom";
+import { Category } from "../types/categories";
 
 export function useCategories() {
 
-    const {
-        currentPage,
-        isLoading,
-        categories,
-        setIsLoading,
-        setHasMore,
-        setCategories,
-        lastPage,
-        setLastPage,
-        setCurrenPage
-    } = useInfiniteScroll();
+    // ❌ COMMENTED OUT - Original useInfiniteScroll hook usage
+    // const {
+    //     currentPage,
+    //     isLoading,
+    //     categories,
+    //     setIsLoading,
+    //     setHasMore,
+    //     setCategories,
+    //     lastPage,
+    //     setLastPage,
+    //     setCurrenPage
+    // } = useInfiniteScroll();
+
+    // ✅ NEW - Replace useInfiniteScroll with local states for manual loading
+    const [currentPage, setCurrentPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [hasMore, setHasMore] = useState(false);
+    const [lastPage, setLastPage] = useState(1);
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -48,7 +57,7 @@ export function useCategories() {
 
     useEffect(() => {
         setCategories([]);
-        setCurrenPage(1);
+        setCurrentPage(1);
         setLastPage(1);
         setHasMore(false);
     }, [menuId]);
@@ -60,7 +69,8 @@ export function useCategories() {
     }, [currentPage, menuId]);
 
     const hasFetched = useRef(false);
-    // Fetch categories only after categories have been reset
+    
+    // Initial fetch - only trigger when categories are empty and we're on page 1
     useEffect(() => {
         if (!hasFetched.current && categories.length === 0 && currentPage === 1) {
             fetchCategories();
@@ -68,8 +78,14 @@ export function useCategories() {
         }
     }, [categories, currentPage]);
 
+    const loadMoreCategories = () => {
+        setCurrentPage(prev => prev + 1);
+    };
+
     return {
         categories,
-        isLoading
+        isLoading,
+        hasMore,
+        loadMoreCategories
     }
 }
