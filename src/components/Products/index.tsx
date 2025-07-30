@@ -87,9 +87,9 @@ export const ProductItem = ({
       className="rounded-lg md:rounded-2xl border-2 border-gray-200 px-6 pt-8 lg:pt-6 shadow-sm mx-6 lg:mx-0 lg:lg:max-w-96 cursor-pointer"
       onClick={handleProductClick}
     >
-      <div className="mx-auto h-32 w-full max-h-32 max-w-full overflow-hidden rounded-lg md:rounded-2xl">
+      <div className="relative mx-auto h-36 w-full max-h-36 max-w-full overflow-hidden rounded-lg md:rounded-2xl">
         <img
-          className="w-full h-64 object-cover object-center"
+          className="absolute top-[-2.9o rem] w-full h-64 object-cover object-center"
           src={imageLight ?? configuration.product.image}
           alt=""
         />

@@ -64,19 +64,25 @@ const MenuCard: React.FC<{
   return (
     <div
       onClick={handleClick}
-      className="bg-green-100 size-40 md:size-48 lg:size-60 text-white cursor-pointer hover:bg-yellow-active transition-colors rounded-md md:rounded-xl"
+      className="bg-green-100 w-28 h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64 text-white cursor-pointer hover:bg-yellow-active transition-colors rounded-md md:rounded-xl pt-2 pb-8 overflow-hidden"
     >
-      <div className="w-full flex justify-end content-end font-cera-light tracking-normal text-sm md:text-lg pt-1 md:leading-3 md:mt-2">
-        <span className="mr-2 md:mr-3">{year}</span>
+      <div className="w-full flex justify-end content-end font-cera-light tracking-normal text-xs md:text-lg lg:text-xl pt-1 md:leading-3 md:mt-2">
+        <span className="mr-2 md:mr-3">
+          {year}
+        </span>
       </div>
-      <div className="w-full flex justify-center font-cera-medium tracking-normal text-sm md:text-lg leading-9 md:leading-10">
-        <span>{dayName}</span>
+      <div className="w-full flex justify-center font-cera-medium tracking-normal text-xs md:text-base lg:text-lg leading-6 md:leading-7">
+        <span>
+          {dayName}
+        </span>
       </div>
-      <div className="w-full flex justify-center font-cera-bold text-9xl md:text-[9rem] lg:text-[13rem] leading-[0.6] tracking-normal">
+      <div className="w-full flex justify-center font-cera-bold text-7xl md:text-8xl lg:text-8xl xl:text-9xl leading-[0.6] tracking-[-0.05em]">
         {dayNumber}
       </div>
-      <div className="w-full flex justify-center font-cera-medium md:mt-3 tracking-normal text-sm md:text-lg">
-        <span>de {monthName}</span>
+      <div className="w-full flex justify-center font-cera-medium md:mt-1 mb-4 tracking-normal text-xs md:text-base lg:text-lg py-1">
+        <span>
+          de {monthName}
+        </span>
       </div>
     </div>
   );
@@ -92,8 +98,8 @@ export const Menus = (): JSX.Element => {
 
   return (
     <>
-      <div className="lg:px-96 mt-8">
-        <div className="grid grid-cols-[160px_160px] md:grid-cols-[198px_198px_198px] gap-x-5 gap-y-5 lg:grid-cols-[240px_240px_240px] justify-center justify-items-center">
+      <div className="mt-8 px-1 md:px-0 2xl:px-[21rem] lg:px-52">
+        <div className="grid grid-cols-3 gap-y-3 gap-x-3 md:w-[600px] lg:w-[750px] xl:w-[900px] md:mx-auto place-items-center">
           {menuItems.map((item) => (
             <MenuCard
               key={item.id}

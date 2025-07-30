@@ -9,7 +9,9 @@ import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../config/routes";
 import { configuration } from "../../config/config";
 import { textMessages } from "../../config/textMessages";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import EyeOpenIcon from "../Icons/EyeOpenIcon";
+import EyeClosedIcon from "../Icons/EyeClosedIcon";
 
 const schema = yup
   .object({
@@ -24,6 +26,7 @@ export const LoginForm = () => {
   const { setShowHeader, authUser, isLoading, setToken, setUser } = useAuth();
   const { enqueueSnackbar } = useNotification();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -96,15 +99,32 @@ export const LoginForm = () => {
             </div>
 
             {/* Password Input */}
-            <div>
+            <div className="relative">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 placeholder={textMessages.LOGIN_FORM.PASSWORD_PLACEHOLDER}
-                className="w-full h-8 md:h-16 py-4 md:py-0 px-3 md:px-6 bg-white border-0 rounded-lg md:rounded-2xl text-[#CCCCCC] placeholder-[#CCCCCC] focus:outline-none focus:ring-2 focus:ring-green-100 shadow-sm font-cera-regular text-xs md:text-xl tracking-tighter"
+                className="w-full h-8 md:h-16 py-4 md:py-0 px-3 md:px-6 pr-10 md:pr-14 bg-white border-0 rounded-lg md:rounded-2xl text-[#CCCCCC] placeholder-[#CCCCCC] focus:outline-none focus:ring-2 focus:ring-green-100 shadow-sm font-cera-regular text-xs md:text-xl tracking-tighter"
                 {...register("password")}
                 defaultValue=""
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 flex items-center pr-3 md:pr-4"
+              >
+                {showPassword ? (
+                  <EyeClosedIcon
+                    size="16"
+                    className="md:w-6 md:h-6 text-gray-400 hover:text-gray-600"
+                  />
+                ) : (
+                  <EyeOpenIcon
+                    size="16"
+                    className="md:w-6 md:h-6 text-gray-400 hover:text-gray-600"
+                  />
+                )}
+              </button>
             </div>
 
             {/* Remember Me Checkbox */}
