@@ -51,11 +51,6 @@ export const ProductItem = ({
     );
   }, [currentOrder]);
   
-  const IngredientsText = useMemo(() => {
-    return ingredients.map((ingredient, index, row) => {
-      return `${ingredient.descriptive_text}${index + 1 === row.length ? '.' : ','}`
-    }).join(' ')
-  }, [ingredients])
 
   const handleProductClick = () => {
     const product = {

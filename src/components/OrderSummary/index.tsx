@@ -1,13 +1,12 @@
 import { useGetOrderById } from "../../hooks/useGetOrderById";
 import { SpinnerLoading } from "../../components/SpinnerLoading";
 import { Link, useNavigate } from "react-router-dom";
-import { ORDER_STATUS_TEXT, ORDER_STATUS_COLOR, TRUNCATE_LENGTHS } from "../../config/constant";
+import { ORDER_STATUS_TEXT, ORDER_STATUS_COLOR } from "../../config/constant";
 import { configuration } from "../../config/config";
 import { isAdminOrCafe } from "../../helpers/permissions";
 import { useAuth } from "../../hooks/useAuth";
 import CloseButton from "../Icons/CloseButton";
 import { ROUTES } from "../../config/routes";
-import { truncateString } from "../../helpers/texts";
 
 export const OrderSummary = (): JSX.Element => {
   const { order, isLoading } = useGetOrderById();

@@ -7,8 +7,6 @@ import { isAgreementIndividual } from "../../helpers/permissions";
 import { useAuth } from "../../hooks/useAuth";
 import { User } from "../../types/user";
 import { useMemo, useRef } from "react";
-import { truncateString } from "../../helpers/texts";
-import { TRUNCATE_LENGTHS } from "../../config/constant";
 import { useScrollToClose } from "../../hooks/useScrollToClose";
 import { useScrollToTop } from "../../hooks/useScrollToTop";
 import ArrowUpIcon from "../Icons/ArrowUpIcon";

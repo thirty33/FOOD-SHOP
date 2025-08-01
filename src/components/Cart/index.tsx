@@ -2,10 +2,9 @@ import { Link } from "react-router-dom";
 import { ROUTES } from "../../config/routes";
 import { QuantitySelector } from "../QuantitySelector";
 import { useQuantityChange } from "../../hooks/useQuantityChange";
-import { ORDER_STATUS, ORDER_STATUS_TEXT, TRUNCATE_LENGTHS } from "../../config/constant";
+import { ORDER_STATUS, ORDER_STATUS_TEXT } from "../../config/constant";
 import XIcon from "../../components/Icons/XIcon";
 import { configuration } from "../../config/config";
-import { truncateString } from "../../helpers/texts";
 import CloseButton from "../Icons/CloseButton";
 
 export interface CartItemProps {
