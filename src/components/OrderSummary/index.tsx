@@ -104,22 +104,23 @@ export const OrderSummary = (): JSX.Element => {
                         <div className="flex items-center gap-4">
                           <div className="flex-shrink-0">
                             <img
-                              className="h-16 w-32 object-cover rounded-lg"
+                              className="h-10 w-16 md:h-16 md:w-20 lg:h-20 lg:w-24 object-cover rounded-lg"
                               src={line?.product?.image ?? configuration.product.image}
-                              alt={line?.product?.name ?? "product_image"}
+                              alt={line?.product?.name ?? "product_image"} 
                             />
                           </div>
                           <div className="flex-1 flex flex-col justify-center">
-                            <h5 className="text-lg font-cera-bold text-green-100 tracking-tighter leading-[1.1] mb-0">
-                              {truncateString(line.product?.name ?? '', TRUNCATE_LENGTHS.PRODUCT_NAME)}
+                            <h5 className="text-lg font-cera-bold text-green-100 tracking-tighter leading-tight md:leading-snug lg:leading-normal mb-0 text-wrap break-words">
+                              {line.product?.name ? line.product.name.charAt(0).toUpperCase() + line.product.name.slice(1).toLowerCase() : ''}
                             </h5>
-                            <p className="text-sm font-cera-medium text-green-100 tracking-tighter leading-[1.1] mb-0">
+                            <p className="text-sm font-cera-medium text-green-100 tracking-tighter leading-tight md:leading-snug lg:leading-normal mb-0 text-wrap break-words">
                               Ingredientes
                             </p>
-                            <p className="text-xs font-cera-light text-green-100 tracking-tighter leading-[1.1] mb-0">
-                              {truncateString(line.product?.ingredients?.map((ing, index) => 
-                                `${ing.descriptive_text}${index < (line.product?.ingredients?.length ?? 0) - 1 ? ', ' : '.'}`
-                              ).join('') || 'Lechuga, tomate, ceitunas.', TRUNCATE_LENGTHS.INGREDIENTS)}
+                            <p className="text-xs font-cera-light text-green-100 tracking-tighter leading-tight md:leading-snug lg:leading-normal mb-0 text-wrap break-words">
+                              {line.product?.ingredients?.map((ing, index) => {
+                                const formattedText = ing.descriptive_text.charAt(0).toUpperCase() + ing.descriptive_text.slice(1).toLowerCase();
+                                return `${formattedText}${index < (line.product?.ingredients?.length ?? 0) - 1 ? ', ' : '.'}`;
+                              }).join('')}
                             </p>
                           </div>
                         </div>
@@ -153,26 +154,27 @@ export const OrderSummary = (): JSX.Element => {
                     {/* Desktop layout */}
                     <div className="hidden md:contents">
                       <div className="md:col-span-8 md:pr-4">
-                        <div className="bg-white rounded-lg md:rounded-2xl border border-gray-state p-4 w-fit">
+                        <div className="bg-white rounded-lg md:rounded-2xl border border-gray-state p-4 w-full max-w-md">
                           <div className="flex items-center gap-4">
                             <div className="flex-shrink-0">
                               <img
-                                className="h-20 w-48 object-cover rounded-lg md:rounded-2xl"
+                                className="h-14 w-28 md:h-20 md:w-32 lg:h-24 lg:w-36 object-cover rounded-lg md:rounded-2xl"
                                 src={line?.product?.image ?? configuration.product.image}
-                                alt={line?.product?.name ?? "product_image"}
+                                alt={line?.product?.name ?? "product_image"} 
                               />
                             </div>
-                            <div className="flex-shrink-0 flex flex-col justify-center">
-                              <h5 className="text-xl font-cera-bold text-green-100 tracking-tighter leading-[1.1] mb-0">
-                                {truncateString(line.product?.name ?? '', TRUNCATE_LENGTHS.PRODUCT_NAME)}
+                            <div className="flex-1 flex flex-col justify-center min-w-0">
+                              <h5 className="text-xl font-cera-bold text-green-100 tracking-tighter leading-tight md:leading-snug lg:leading-normal mb-0 break-words overflow-hidden">
+                                {line.product?.name ? line.product.name.charAt(0).toUpperCase() + line.product.name.slice(1).toLowerCase() : ''}
                               </h5>
-                              <p className="text-base font-cera-medium text-green-100 tracking-tighter leading-[1.1] mb-0">
+                              <p className="text-base font-cera-medium text-green-100 tracking-tighter leading-tight md:leading-snug lg:leading-normal mb-0 break-words overflow-hidden">
                                 Ingredientes
                               </p>
-                              <p className="text-sm font-cera-light text-green-100 tracking-tighter leading-[1.1] mb-0">
-                                {truncateString(line.product?.ingredients?.map((ing, index) => 
-                                  `${ing.descriptive_text}${index < (line.product?.ingredients?.length ?? 0) - 1 ? ', ' : '.'}`
-                                ).join('') || 'Lechuga, tomate, ceitunas.', TRUNCATE_LENGTHS.INGREDIENTS)}
+                              <p className="text-sm font-cera-light text-green-100 tracking-tighter leading-tight md:leading-snug lg:leading-normal mb-0 break-words overflow-hidden">
+                                {line.product?.ingredients?.map((ing, index) => {
+                                  const formattedText = ing.descriptive_text.charAt(0).toUpperCase() + ing.descriptive_text.slice(1).toLowerCase();
+                                  return `${formattedText}${index < (line.product?.ingredients?.length ?? 0) - 1 ? ', ' : '.'}`;
+                                }).join('')}
                               </p>
                             </div>
                           </div>

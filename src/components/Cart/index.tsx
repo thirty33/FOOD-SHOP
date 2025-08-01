@@ -40,10 +40,12 @@ export const CartItem = ({
   } = useQuantityChange();
 
   return (
-    <div className="relative flex items-center gap-2 rounded-lg border border-gray-200 bg-white p-4 shadow-sm h-32 max-h-32 md:h-40 md:max-h-40">
+    <div 
+      className="relative flex items-center gap-2 rounded-lg border border-gray-200 bg-white pt-2 pl-2 pr-2 pb-2 md:pt-3 md:pl-3 md:pr-3 md:pb-3 lg:pt-4 lg:pl-2 lg:pr-4 lg:pb-4 shadow-sm h-36 max-h-36 md:h-40 lg:h-40 md:max-h-40 lg:max-h-40"
+    >
 
       <CloseButton
-        className="w-10 h-10 md:w-8 md:h-8 cursor-pointer absolute top-[-1rem] md:top-[-1rem] right-0"
+        className="w-6 h-6 md:w-7 lg:w-8 md:h-7 lg:h-8 cursor-pointer absolute top-[-1rem] right-0"
         color="white"
         width="8"
         height="8"
@@ -51,7 +53,9 @@ export const CartItem = ({
       />
 
       {/* Product Image */}
-      <div className="h-24 w-24 md:h-32 md:w-32 flex-shrink-0">
+      <div 
+        className="h-28 w-28 md:h-36 lg:h-36 md:w-36 lg:w-36 flex-shrink-0"
+      >
         <img
           className="h-full w-full rounded-md object-cover"
           src={image ?? configuration.product.image}
@@ -60,18 +64,29 @@ export const CartItem = ({
       </div>
 
       {/* Product Details */}
-      <div className="flex flex-col">
-        <div className="flex flex-col gap-y-1 md:gap-y-2 items-start justify-between">
-          <h3 className="text-lg md:text-3xl text-nowrap text-green-100 font-cera-bold tracking-tighter leading-4 md:leading-4">
-            {truncateString(name, TRUNCATE_LENGTHS.CART_NAME)}
+      <div 
+        className="flex flex-col flex-1 min-w-0"
+      >
+        <div 
+          className="flex flex-col gap-y-0.5 md:gap-y-1.5 lg:gap-y-2 items-start justify-between w-full"
+        >
+          <h3 
+            className="text-xs md:text-xl lg:text-sm text-wrap text-green-100 font-cera-bold tracking-tighter leading-3 md:leading-tight w-full break-words"
+          >
+            {(() => {
+              return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+            })()}
           </h3>
           {showPrices && (
-            <p className="text-base md:text-2xl text-green-100 font-cera-regular tracking-tighter leading-4 md:leading-4">
+            <p 
+              className="text-sm md:text-xl lg:text-base text-green-100 font-cera-regular tracking-tighter leading-4 md:leading-4 truncate"
+            >
               {price}
             </p>
           )}
           {showQuantitySelector && (
-            <QuantitySelector
+            <div className="w-full max-w-full">
+              <QuantitySelector
               quantity={initialQuantity}
               handleQuantityChange={(ev) =>
                 handleQuantityChange(ev, id, showPartialiSheduledTag)
@@ -82,13 +97,18 @@ export const CartItem = ({
               restOneItem={() =>
                 restOneItem(id, initialQuantity, showPartialiSheduledTag)
               }
-            />
+              />
+            </div>
           )}
           
           {canSchedulePartially && showPartialiSheduledTag && (
-            <div className="flex items-center justify-between text-start gap-x-1">
-              <div className="flex items-center gap-2">
-                <span className="bg-gray-state text-gray-text-state text-xs md:text-base text-nowrap font-cera-bold px-2 py-1 rounded-sm">
+            <div 
+              className="flex items-center justify-between text-start gap-x-1 w-full"
+            >
+              <div 
+                className="flex items-center gap-2"
+              >
+                <span className="bg-gray-state text-gray-text-state text-xs md:text-base lg:text-xs text-nowrap font-cera-bold px-2 py-1 rounded-sm">
                   {ORDER_STATUS_TEXT[ORDER_STATUS.PARTIALLY_SCHEDULED]}
                 </span>
               </div>
@@ -106,7 +126,9 @@ export const CartItem = ({
           )}
 
           {canSchedulePartially && !showPartialiSheduledTag && (
-            <section className="flex items-center gap-x-1">
+            <section 
+              className="flex items-center gap-x-1 w-full"
+            >
               <button
                 type="button"
                 onClick={() =>
@@ -116,7 +138,7 @@ export const CartItem = ({
                     !showPartialiSheduledTag
                   )
                 }
-                className="bg-green-50 text-white text-xs md:text-base text-nowrap font-cera-bold px-3 py-1 rounded-sm hover:bg-yellow-active hover:text-white"
+                className="bg-green-50 text-white text-xs md:text-base lg:text-xs text-nowrap font-cera-bold px-3 py-1 rounded-sm hover:bg-yellow-active hover:text-white"
               >
                 <span>Agendar parcialmente</span>
               </button>

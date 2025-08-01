@@ -56,7 +56,7 @@ export function useCategories() {
     }
 
     useEffect(() => {
-        setCategories([]);
+        // setCategories([]);
         setCurrentPage(1);
         setLastPage(1);
         setHasMore(false);

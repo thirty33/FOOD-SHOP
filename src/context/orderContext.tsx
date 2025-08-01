@@ -199,6 +199,9 @@ export function OrderProvider({ children }: GlobalProviderProps) {
       partiallyScheduled?: boolean;
     }>
   ) => {
+    // Capture current cart state before adding products
+    const previousCartCount = currentOrder?.order_lines.length || 0;
+    
     const filterOrderLines = orderLines
       .filter((line) => typeof line.quantity === "number")
       .map((line) => ({
@@ -235,8 +238,8 @@ export function OrderProvider({ children }: GlobalProviderProps) {
 
       setReloandCart(true);
 
-      // Auto-open CheckoutSideMenu when adding products (always switch to cart view)
-      if (filterOrderLines.length > 0) {
+      // Auto-open CheckoutSideMenu only when adding products to an empty cart
+      if (filterOrderLines.length > 0 && previousCartCount === 0) {
         setShowSideCart(true);
       }
 

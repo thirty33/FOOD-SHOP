@@ -124,7 +124,7 @@ const CustomModal = ({ isOpen = true, onClose, orderId, initialComment }: Custom
                 <textarea
                   id="message"
                   rows={4}
-                  className={`w-11/12 border rounded-xl resize-none py-3 px-4 focus:outline-none focus:border-transparent transition-colors text-gray-text-info font-cera-light placeholder:text-gray-text-info placeholder:font-cera-light ${
+                  className={`w-11/12 border rounded-xl resize-none py-3 px-4 focus:outline-none focus:border-transparent transition-colors text-gray-700 font-cera-light placeholder:text-gray-text-info placeholder:font-cera-light ${
                     errors.message
                       ? "border-red-500 bg-red-50"
                       : "border-gray-300 bg-gray-50"

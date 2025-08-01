@@ -10,7 +10,8 @@ interface ProductDetailContentProps {
 export const ProductDetailContent = ({ product }: ProductDetailContentProps) => {
   const IngredientsText = useMemo(() => {
     return product.ingredients.map((ingredient, index, row) => {
-      return `${ingredient.descriptive_text}${index + 1 === row.length ? '.' : ','}`
+      const formattedText = ingredient.descriptive_text.charAt(0).toUpperCase() + ingredient.descriptive_text.slice(1).toLowerCase();
+      return `${formattedText}${index + 1 === row.length ? '.' : ','}`
     }).join(' ')
   }, [product.ingredients]);
 
@@ -22,7 +23,7 @@ export const ProductDetailContent = ({ product }: ProductDetailContentProps) => 
           <MonkeyIcon className="w-24 h-24 md:w-32 md:h-32 lg:w-32 lg:h-32 fill-white stroke-white" />
         </div>
         <div className="">
-          <h2 className="font-bold text-xl md:text-3xl lg:text-4xl text-white font-cera-bold tracking-tighter whitespace-nowrap">
+          <h2 className="font-bold text-lg md:text-2xl lg:text-3xl text-white font-cera-bold tracking-tighter whitespace-nowrap">
             Detalle del producto
           </h2>
         </div>
@@ -39,18 +40,18 @@ export const ProductDetailContent = ({ product }: ProductDetailContentProps) => 
 
       {/* Product details */}
       <div className="flex-1 overflow-y-auto">
-        <div className="text-3xl md:text-4xl font-semibold font-cera-bold tracking-tighter leading-tight text-white py-2 text-left">
-          {product.name}
+        <div className="text-2xl md:text-3xl font-semibold font-cera-bold tracking-tighter leading-tight text-white py-2 text-left">
+          {product.name ? product.name.charAt(0).toUpperCase() + product.name.slice(1).toLowerCase() : ''}
         </div>
 
         <div className="flex items-center justify-start gap-4 mb-2">
-          <span className="text-xl md:text-2xl font-cera-medium tracking-tighter text-white">
+          <span className="text-lg md:text-xl font-cera-medium tracking-tighter text-white">
             Ingredientes
           </span>
         </div>
 
         <div className="mb-4 space-y-2 text-left">
-          <section className="text-lg md:text-xl text-white space-y-1 font-cera-light tracking-tighter leading-5">
+          <section className="text-base md:text-lg text-white space-y-1 font-cera-light tracking-tighter leading-5">
             <p className="text-wrap">
               {IngredientsText}
             </p>
@@ -58,7 +59,7 @@ export const ProductDetailContent = ({ product }: ProductDetailContentProps) => 
         </div>
 
         <div className="text-left flex flex-col gap-2 justify-start mb-4">
-          <p className="text-xl md:text-2xl font-extrabold leading-tight text-white font-cera-bold tracking-tighter">
+          <p className="text-lg md:text-xl font-extrabold leading-tight text-white font-cera-bold tracking-tighter">
             Precio neto: {product.price_list_lines[0]?.unit_price || 'N/A'}
           </p>
         </div>

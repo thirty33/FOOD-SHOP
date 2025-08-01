@@ -1,5 +1,6 @@
 import "./styles.css";
 import { useContext } from "react";
+import { Link } from "react-router-dom";
 import { CartItem } from "../Cart";
 import { useOrder } from "../../hooks/useCurrentOrder";
 import { SpinnerLoading } from "../SpinnerLoading";
@@ -10,6 +11,7 @@ import {
   ORDER_STATUS_TEXT,
   CHECKOUT_SIDE_MENU_CLASS,
 } from "../../config/constant";
+import { ROUTES } from "../../config/routes";
 import { isAdminOrCafe } from "../../helpers/permissions";
 import MonkeyIcon from "../Icons/MonkeyIcon";
 import CloseButton from "../Icons/CloseButton";
@@ -49,7 +51,7 @@ export const CheckoutSideMenu = () => {
     >
 
       <CloseButton
-        className="w-8 h-8 md:w-12 md:h-12 cursor-pointer z-10 absolute top-[-1rem] md:top-[-1.5rem] right-2"
+        className="w-12 h-12 cursor-pointer z-10 absolute top-[-1.5rem] right-0"
         color="white"
         width="8"
         height="8"
@@ -92,7 +94,9 @@ export const CheckoutSideMenu = () => {
             </div>
 
           </div>
-          <div className="overflow-y-auto px-6 flex flex-col gap-y-5 md:gap-y-8 max-h-[19rem] md:max-h-[55%] xl:max-h-[90%] 2xl:max-h-[55%] pt-4 md:pt-6">
+          <div 
+            className="overflow-y-auto overflow-x-hidden px-3 md:px-4 lg:px-6 flex flex-col gap-y-5 md:gap-y-6 lg:gap-y-5 max-h-[19rem] md:max-h-[55%] xl:max-h-[90%] 2xl:max-h-[55%] pt-6 md:pt-5 lg:pt-6"
+          >
             {currentOrder &&
               currentOrder.order_lines.map((line) => {
                 if (!line.product) return null;
@@ -129,14 +133,14 @@ export const CheckoutSideMenu = () => {
             {showPrices && currentOrder && currentOrder.order_lines.length > 0 && (
               <>
                 <p className="flex justify-end justify-items-end items-center mb-0 mt-3 p-0">
-                  <span className="font-cera-bold text-3xl md:text-4xl text-white tracking-tighter text-nowrap mr-2">Total neto:</span>
-                  <span className="font-cera-bold text-3xl md:text-4xl text-white tracking-tighter text-nowrap">
+                  <span className="font-cera-bold text-2xl md:text-3xl lg:text-3xl text-white tracking-tighter text-nowrap mr-2">Total neto:</span>
+                  <span className="font-cera-bold text-2xl md:text-3xl lg:text-3xl text-white tracking-tighter text-nowrap">
                     {currentOrder ? currentOrder?.total : "$0"}
                   </span>
                 </p>
                 <p className="flex justify-end justify-items-end items-center mb-2 mt-0 p-0">
-                  <span className="font-cera-regular text-xl md:text-2xl text-white tracking-tighter text-nowrap mr-2">Total con IVA</span>
-                  <span className="font-cera-regular text-xl md:text-2xl text-white tracking-tighter text-nowrap">
+                  <span className="font-cera-regular text-lg md:text-xl lg:text-xl text-white tracking-tighter text-nowrap mr-2">Total con IVA</span>
+                  <span className="font-cera-regular text-lg md:text-xl lg:text-xl text-white tracking-tighter text-nowrap">
                     {currentOrder ? currentOrder?.total_with_tax : "$0"}
                   </span>
                 </p>
@@ -145,18 +149,26 @@ export const CheckoutSideMenu = () => {
             {currentOrder && currentOrder.order_lines.length > 0 && (
               <>
                 <button
-                  className="bg-yellow-active font-cera-bold text-2xl md:text-3xl tracking-tighter py-3 text-white w-full rounded-lg disabled:bg-gray-300 mb-2"
+                  className="bg-yellow-active font-cera-bold text-xl md:text-2xl lg:text-2xl tracking-tighter py-3 text-white w-full rounded-lg disabled:bg-gray-300 mb-2"
                   onClick={handleAddComments}
                 >
-                  Añadir comentarios
+                  {currentOrder.user_comment ? 'Actualizar comentarios' : 'Añadir comentarios'}
                 </button>
-                <button
-                  className="bg-red-1000 font-cera-bold text-2xl md:text-3xl tracking-tighter py-3 text-white w-full rounded-lg disabled:bg-gray-300"
-                  onClick={() => handleCheckout()}
-                  disabled={currentOrder.status === ORDER_STATUS.PROCESSED}
-                >
-                  Completar orden
-                </button>
+                {currentOrder.status !== ORDER_STATUS.PROCESSED ? (
+                  <button
+                    className="bg-red-1000 font-cera-bold text-xl md:text-2xl lg:text-2xl tracking-tighter py-3 text-white w-full rounded-lg disabled:bg-gray-300"
+                    onClick={() => handleCheckout()}
+                  >
+                    Completar orden
+                  </button>
+                ) : (
+                  <Link
+                    to={`/${ROUTES.GET_ORDER_SUMMARY_ROUTE(currentOrder.id)}`}
+                    className="bg-blue-600 font-cera-bold text-xl md:text-2xl lg:text-2xl tracking-tighter py-3 text-white w-full rounded-lg text-center block no-underline hover:bg-blue-700"
+                  >
+                    Detalle de pedido
+                  </Link>
+                )}
               </>
             )}
           </div>

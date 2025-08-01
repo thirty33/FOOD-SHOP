@@ -18,7 +18,7 @@ import { textMessages } from "../../config/textMessages";
 const ProductList = ({ products }: { products: Product[] }) => {
   const { addProductToCart } = useOrder();
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 2xl:gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 2xl:gap-8">
       {products.map((product) => (
         <ProductItem
           key={product.id}
@@ -63,24 +63,37 @@ const CategorySection = ({
   );
 
   return (
-    <div className="mb-6">
+    <div 
+      className="mb-6"
+    >
       <div
         className={`flex flex-col justify-start content-start items-start ${
-          showSubcategories ? "mb-1" : "mb-6"
-        } md:flex-row md:items-end`}
+          showSubcategories ? "mb-1" : "mb-3 md:mb-6"
+        }`}
       >
-        <h2 className="text-4xl md:text-5xl font-bold font-cera-bold tracking-tight text-green-100 text-nowrap">
-          {truncateString(category?.category?.name || "", TRUNCATE_LENGTHS.CATEGORY_NAME)}
+        <h2 
+          className="text-4xl md:text-5xl font-bold font-cera-bold tracking-tighter text-green-100 leading-[0.8] md:leading-tight"
+        >
+          {(() => {
+            const name = category?.category?.name || "";
+            return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+          })()}
         </h2>
-        <p className="text-green-100 font-cera-regular tracking-normal text-sm md:text-base md:ml-2">
+        <p 
+          className="text-green-100 font-cera-regular tracking-normal text-sm md:text-base"
+        >
           {maximumOrderTime}
         </p>
       </div>
 
       {/* Display subcategories if they exist */}
       {showSubcategories && (
-        <div className="mb-2 flex justify-center md:justify-start font-cera-bold">
-          <p className="text-green-100">
+        <div 
+          className="mb-2 flex justify-center md:justify-start font-cera-bold"
+        >
+          <p 
+            className="text-green-100"
+          >
             {/* <strong>Categorías:</strong>{" "} */}
             {subcategories.map((subcategory) => subcategory.name).join(", ")}
           </p>

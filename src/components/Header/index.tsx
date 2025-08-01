@@ -1,5 +1,5 @@
 import { useAuth } from "../../hooks/useAuth";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNotification } from "../../hooks/useNotification";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../config/routes";
@@ -9,6 +9,7 @@ import CartIcon from "../Icons/CartIcon";
 import BurgerButton from "../Icons/BurgerButton";
 import CloseButton from "../Icons/CloseButton";
 import { textMessages } from "../../config/textMessages";
+import { useOutsideClickAndScroll } from "../../hooks/useOutsideClickAndScroll";
 
 interface NavItemProps {
   menuName: string;
@@ -19,7 +20,7 @@ interface NavItemProps {
 
 export const NavItem = ({ menuName, route, onClick, onNavClick }: NavItemProps) => {
   const baseClasses =
-    "text-white tracking-tighter text-4xl block py-1 pr-4 pl-3 rounded border-gray-100 lg:border-0 lg:p-0 dark:border-gray-700 transition-colors duration-200";
+    "text-white tracking-tighter text-xl block py-1 pr-4 pl-3 rounded border-gray-100 lg:border-0 lg:p-0 dark:border-gray-700 transition-colors duration-200";
 
   // Si tiene onClick, renderizar como botón/enlace clickeable
   if (onClick) {
@@ -62,10 +63,19 @@ export const Header = () => {
   const navigate = useNavigate();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
+
+  // Auto-close mobile menu on outside click and scroll
+  useOutsideClickAndScroll({
+    elementRef: mobileMenuRef,
+    isOpen: isMenuOpen,
+    onClose: closeMenu,
+    excludeSelectors: ['.burger-button']
+  });
 
   const openMenu = (currentState: boolean) => {
     if(showSideCart) {
@@ -181,7 +191,7 @@ export const Header = () => {
 
               <button
                 type="button"
-                className="md:hidden col-start-2 inline-flex justify-center items-center p-3 text-sm text-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200"
+                className="md:hidden col-start-2 inline-flex justify-center items-center p-3 text-sm text-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200 burger-button"
                 aria-controls="mobile-menu-2"
                 aria-expanded={isMenuOpen}
                 onClick={() => openMenu(isMenuOpen)}
@@ -196,9 +206,10 @@ export const Header = () => {
         </nav>
 
         <div
+          ref={mobileMenuRef}
           className={`
               ${isMenuOpen ? "block" : "hidden"}
-              md:hidden relative justify-between items-center w-full basis-1/5 h-64
+              md:hidden relative justify-between items-center w-full basis-1/5 h-44
             `}
           id="mobile-menu-2"
         >
@@ -206,7 +217,7 @@ export const Header = () => {
             className={`
               md:hidden lg:flex 
               flex flex-col mt-4 font-medium 
-              bg-green-100 mx-6 rounded-xl py-8 h-56
+              bg-green-100 mx-6 rounded-xl py-4 h-36
             `}
           >
             {menuLinks.map((link, index) => (
@@ -220,10 +231,10 @@ export const Header = () => {
             ))}
           </ul>
           <CloseButton
-            className="w-16 h-16 cursor-pointer z-10 absolute bottom-0 left-[40%]"
+            className="w-10 h-10 cursor-pointer z-10 absolute bottom-2 left-[45%]"
             color="white"
-            width="32"
-            height="32"
+            width="20"
+            height="20"
             onClick={() => setIsMenuOpen((prevState) => !prevState)}
           />
         </div>
