@@ -158,25 +158,26 @@ export const ProductItem = ({
               </button>
             </div>
           )}
-          {showQuantityInput &&
-            ((typeof currentQuantity === "number" && currentQuantity >= 1) ||
+          {((typeof currentQuantity === "number" && currentQuantity >= 1) ||
               currentQuantity === "") && (
               <div 
-                className="grid grid-col grid-cols-2 justify-start justify-items-start"
+                className={`grid grid-col ${showQuantityInput ? 'grid-cols-2' : 'grid-cols-1'} justify-start justify-items-start`}
                 onClick={(e) => e.stopPropagation()}
               >
-                <QuantitySelector
-                  quantity={currentQuantity}
-                  handleQuantityChange={(ev) =>
-                    handleQuantityChange(ev, id, partiallyScheduled)
-                  }
-                  addOneItem={() =>
-                    addOneItem(id, currentQuantity, partiallyScheduled)
-                  }
-                  restOneItem={() =>
-                    restOneItem(id, currentQuantity, partiallyScheduled)
-                  }
-                />
+                {showQuantityInput && (
+                  <QuantitySelector
+                    quantity={currentQuantity}
+                    handleQuantityChange={(ev) =>
+                      handleQuantityChange(ev, id, partiallyScheduled)
+                    }
+                    addOneItem={() =>
+                      addOneItem(id, currentQuantity, partiallyScheduled)
+                    }
+                    restOneItem={() =>
+                      restOneItem(id, currentQuantity, partiallyScheduled)
+                    }
+                  />
+                )}
                 <div 
                   className="flex items-center justify-center gap-1 cursor-pointer"
                   onClick={(e) => {

@@ -2,12 +2,15 @@ import { useMemo } from "react";
 import { Product } from "../../types/categories";
 import { configuration } from "../../config/config";
 import MonkeyIcon from "../Icons/MonkeyIcon";
+import { useQuantityChange } from "../../hooks/useQuantityChange";
 
 interface ProductDetailContentProps {
   product: Product;
 }
 
 export const ProductDetailContent = ({ product }: ProductDetailContentProps) => {
+  const { showPrices } = useQuantityChange();
+  
   const IngredientsText = useMemo(() => {
     return product.ingredients.map((ingredient, index, row) => {
       const formattedText = ingredient.descriptive_text.charAt(0).toUpperCase() + ingredient.descriptive_text.slice(1).toLowerCase();
@@ -58,11 +61,13 @@ export const ProductDetailContent = ({ product }: ProductDetailContentProps) => 
           </section>
         </div>
 
-        <div className="text-left flex flex-col gap-2 justify-start mb-4">
-          <p className="text-lg md:text-xl font-extrabold leading-tight text-white font-cera-bold tracking-tighter">
-            Precio neto: {product.price_list_lines[0]?.unit_price || 'N/A'}
-          </p>
-        </div>
+        {showPrices && (
+          <div className="text-left flex flex-col gap-2 justify-start mb-4">
+            <p className="text-lg md:text-xl font-extrabold leading-tight text-white font-cera-bold tracking-tighter">
+              Precio neto: {product.price_list_lines[0]?.unit_price || 'N/A'}
+            </p>
+          </div>
+        )}
       </div>
 
     </div>

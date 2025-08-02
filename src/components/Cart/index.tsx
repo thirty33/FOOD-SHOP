@@ -17,6 +17,8 @@ export interface CartItemProps {
   showQuantitySelector: boolean;
   showPartialiSheduledTag: boolean;
   canSchedulePartially: boolean;
+  subcategories?: Array<{id: number, name: string}>;
+  showSubcategories?: boolean;
 }
 
 export const CartItem = ({
@@ -29,6 +31,8 @@ export const CartItem = ({
   showQuantitySelector = false,
   showPartialiSheduledTag = false,
   canSchedulePartially = false,
+  subcategories = [],
+  showSubcategories = false,
 }: CartItemProps): JSX.Element => {
   const {
     handleQuantityChange,
@@ -69,6 +73,11 @@ export const CartItem = ({
         <div 
           className="flex flex-col gap-y-0.5 md:gap-y-1.5 lg:gap-y-2 items-start justify-between w-full"
         >
+          {showSubcategories && subcategories.length > 0 && (
+            <p className="text-sm md:text-2xl lg:text-base text-wrap text-green-100 font-cera-bold tracking-tighter leading-3 md:leading-tight w-full break-words mb-1">
+              {subcategories.map(sub => sub.name.toUpperCase()).join(', ')}
+            </p>
+          )}
           <h3 
             className="text-xs md:text-xl lg:text-sm text-wrap text-green-100 font-cera-bold tracking-tighter leading-3 md:leading-tight w-full break-words"
           >
