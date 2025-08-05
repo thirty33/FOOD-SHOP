@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { OrderData } from "../types/order";
 import { useNotification } from "./useNotification";
 import { orderService } from "../services/order";
+import { configuration } from "../config/config";
 
 export function useGetOrderById() {
   const { orderId } = useParams<{ orderId: string }>();
@@ -21,7 +22,7 @@ export function useGetOrderById() {
       console.error('Error fetching order by ID:', error);
       enqueueSnackbar((error as Error).message, {
         variant: "error",
-        autoHideDuration: 5000,
+        autoHideDuration: configuration.toast.duration,
       });
       setOrder(null);
     } finally {

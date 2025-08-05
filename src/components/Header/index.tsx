@@ -100,7 +100,7 @@ export const Header = () => {
       signOut();
       navigate(ROUTES.LOGIN);
     } catch (error) {
-      enqueueSnackbar((error as Error).message, { variant: "error" });
+      enqueueSnackbar((error as Error).message, { variant: "error", autoHideDuration: configuration.toast.duration });
     }
     event.preventDefault();
   };

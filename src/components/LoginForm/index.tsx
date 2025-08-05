@@ -51,16 +51,16 @@ export const LoginForm = () => {
         type: "manual",
         message: (error as Error).message,
       });
-      enqueueSnackbar((error as Error).message, { variant: "error" });
+      enqueueSnackbar((error as Error).message, { variant: "error", autoHideDuration: configuration.toast.duration });
     }
   };
 
   useEffect(() => {
     if (errors.email) {
-      enqueueSnackbar(errors.email.message, { variant: "error" });
+      enqueueSnackbar(errors.email.message, { variant: "error", autoHideDuration: configuration.toast.duration });
     }
     if (errors.password) {
-      enqueueSnackbar(errors.password.message, { variant: "error" });
+      enqueueSnackbar(errors.password.message, { variant: "error", autoHideDuration: configuration.toast.duration });
     }
   }, [errors, enqueueSnackbar]);
 

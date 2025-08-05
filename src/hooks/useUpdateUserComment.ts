@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { orderService } from "../services/order";
 import { useNotification } from "./useNotification";
 import { OrderContext } from "../context/orderContext";
+import { configuration } from "../config/config";
 
 export function useUpdateUserComment() {
     const [isLoading, setIsLoading] = useState(false);
@@ -23,14 +24,14 @@ export function useUpdateUserComment() {
             
             enqueueSnackbar("Comentario actualizado exitosamente", {
                 variant: "success",
-                autoHideDuration: 3000,
+                autoHideDuration: configuration.toast.duration,
             });
             return response;
         } catch (error) {
             console.error("Error updating user comment:", error);
             enqueueSnackbar((error as Error).message, {
                 variant: "error",
-                autoHideDuration: 5000,
+                autoHideDuration: configuration.toast.duration,
             });
             throw error;
         } finally {

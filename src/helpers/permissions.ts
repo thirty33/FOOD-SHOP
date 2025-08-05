@@ -8,3 +8,7 @@ export const isAdminOrCafe = (user: User) => {
 export const isAgreementIndividual = (user: User) => {
 	return user.role === ROLES_TYPES.CONVENIO && user.permission === PERMISSION_TYPES.INDIVIDUAL
 }
+
+export const isAgreementConsolidated = (user: User) => {
+	return user.role === ROLES_TYPES.CONVENIO && user.permission === PERMISSION_TYPES.CONSOLIDADO
+}

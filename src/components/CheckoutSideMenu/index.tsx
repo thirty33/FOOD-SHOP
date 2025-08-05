@@ -12,7 +12,7 @@ import {
   CHECKOUT_SIDE_MENU_CLASS,
 } from "../../config/constant";
 import { ROUTES } from "../../config/routes";
-import { isAdminOrCafe, isAgreementIndividual } from "../../helpers/permissions";
+import { isAdminOrCafe, isAgreementIndividual, isAgreementConsolidated } from "../../helpers/permissions";
 import MonkeyIcon from "../Icons/MonkeyIcon";
 import CloseButton from "../Icons/CloseButton";
 import { GlobalContext } from "../../context/globalContext";
@@ -113,6 +113,7 @@ export const CheckoutSideMenu = () => {
                     showPartialiSheduledTag={line.partially_scheduled}
                     canSchedulePartially={isAdminOrCafe(user)}
                     subcategories={line.product?.category?.subcategories || []}
+                    categoryName={line.product?.category?.name || ''}
                     showSubcategories={isAgreementIndividual(user)}
                   />
                 );

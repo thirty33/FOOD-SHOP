@@ -97,7 +97,7 @@ export const ProductItem = ({
       >
         <div>
           <div 
-            className="text-sm md:text-2xl font-semibold font-cera-bold tracking-tighter leading-[0.8] md:leading-tight text-green-100 py-0"
+            className="text-sm md:text-2xl font-semibold font-cera-bold tracking-tighter leading-[1.1] md:leading-tight text-green-100 py-0"
           >
             {(() => {
               return title.charAt(0).toUpperCase() + title.slice(1).toLowerCase();

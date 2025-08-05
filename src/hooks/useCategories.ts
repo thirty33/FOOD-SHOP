@@ -5,6 +5,7 @@ import { CategoryItemPagination } from "../types/categories";
 import { useSnackbar } from "notistack";
 import { useParams } from "react-router-dom";
 import { Category } from "../types/categories";
+import { configuration } from "../config/config";
 
 export function useCategories() {
 
@@ -51,7 +52,7 @@ export function useCategories() {
 
         } catch (error) {
             setIsLoading(false);
-            enqueueSnackbar((error as Error).message, { variant: 'error' });
+            enqueueSnackbar((error as Error).message, { variant: 'error', autoHideDuration: configuration.toast.duration });
         }
     }
 

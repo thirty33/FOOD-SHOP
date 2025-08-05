@@ -18,6 +18,7 @@ export interface CartItemProps {
   showPartialiSheduledTag: boolean;
   canSchedulePartially: boolean;
   subcategories?: Array<{id: number, name: string}>;
+  categoryName?: string;
   showSubcategories?: boolean;
 }
 
@@ -32,6 +33,7 @@ export const CartItem = ({
   showPartialiSheduledTag = false,
   canSchedulePartially = false,
   subcategories = [],
+  categoryName = '',
   showSubcategories = false,
 }: CartItemProps): JSX.Element => {
   const {
@@ -73,9 +75,11 @@ export const CartItem = ({
         <div 
           className="flex flex-col gap-y-0.5 md:gap-y-1.5 lg:gap-y-2 items-start justify-between w-full"
         >
-          {showSubcategories && subcategories.length > 0 && (
+          {showSubcategories && (subcategories.length > 0 || categoryName) && (
             <p className="text-sm md:text-2xl lg:text-base text-wrap text-green-100 font-cera-bold tracking-tighter leading-3 md:leading-tight w-full break-words mb-1">
-              {subcategories.map(sub => sub.name.toUpperCase()).join(', ')}
+              {subcategories.length > 0 
+                ? subcategories.map(sub => sub.name.toUpperCase()).join(' ')
+                : categoryName.toUpperCase()}
             </p>
           )}
           <h3 

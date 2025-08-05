@@ -3,6 +3,9 @@ export const configuration = {
         name: import.meta.env.VITE_COMPANY_NAME,
         logo: import.meta.env.VITE_COMPANY_LOGO,   
     },
+    toast: {
+        duration: Number(import.meta.env.VITE_TOAST_DURATION) || 20000,
+    },
     menu: {
         image: import.meta.env.VITE_MENU_LOGO
     },

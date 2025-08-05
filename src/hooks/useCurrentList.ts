@@ -7,6 +7,7 @@ import { InitialState } from "../store/state/initialState";
 import { CART_ACTION_TYPES, ORDERS_QUERY_PARAMS } from "../config/constant";
 import { useNotification } from "./useNotification";
 import { useInfiniteScroll } from "./useInfiniteScroll";
+import { configuration } from "../config/config";
 
 export function useCurrentList() {
 
@@ -61,7 +62,7 @@ export function useCurrentList() {
 			console.error(error);
 			enqueueSnackbar((error as Error).message, {
 				variant: "error",
-				autoHideDuration: 5000,
+				autoHideDuration: configuration.toast.duration,
 			});
 		} finally {
 			setIsLoading(false);

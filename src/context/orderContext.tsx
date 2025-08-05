@@ -17,6 +17,7 @@ import { GlobalProviderProps, type state } from "../types/state";
 import debounce from "just-debounce-it";
 import { useNotification } from "../hooks/useNotification";
 import { Product } from "../types/categories";
+import { configuration } from "../config/config";
 
 // Modal state interface
 interface ModalState {
@@ -226,7 +227,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
 
       enqueueSnackbar((error as Error).message, {
         variant: "error",
-        autoHideDuration: 5000,
+        autoHideDuration: configuration.toast.duration,
       });
       
     } finally {
@@ -263,7 +264,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
     } catch (error) {
       enqueueSnackbar((error as Error).message, {
         variant: "error",
-        autoHideDuration: 5000,
+        autoHideDuration: configuration.toast.duration,
       });
     } finally {
       dispatch({
@@ -289,7 +290,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
       console.error(error);
       enqueueSnackbar((error as Error).message, {
         variant: "error",
-        autoHideDuration: 5000,
+        autoHideDuration: configuration.toast.duration,
       });
     } finally {
       dispatch({
@@ -315,7 +316,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
       console.error(error);
       enqueueSnackbar((error as Error).message, {
         variant: "error",
-        autoHideDuration: 5000,
+        autoHideDuration: configuration.toast.duration,
       });
     } finally {
       dispatch({
@@ -377,7 +378,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
     } catch (error) {
       enqueueSnackbar((error as Error).message, {
         variant: "error",
-        autoHideDuration: 5000,
+        autoHideDuration: configuration.toast.duration,
       });
     } finally {
       dispatch({
