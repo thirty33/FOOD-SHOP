@@ -12,7 +12,7 @@ import {
   CHECKOUT_SIDE_MENU_CLASS,
 } from "../../config/constant";
 import { ROUTES } from "../../config/routes";
-import { isAdminOrCafe, isAgreementIndividual, isAgreementConsolidated } from "../../helpers/permissions";
+import { isAdminOrCafe, isAgreementIndividual } from "../../helpers/permissions";
 import MonkeyIcon from "../Icons/MonkeyIcon";
 import CloseButton from "../Icons/CloseButton";
 import { GlobalContext } from "../../context/globalContext";

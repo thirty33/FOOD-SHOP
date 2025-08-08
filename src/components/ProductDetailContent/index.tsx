@@ -27,18 +27,32 @@ export const ProductDetailContent = ({ product }: ProductDetailContentProps) => 
         </div>
         <div className="">
           <h2 className="font-bold text-lg md:text-2xl lg:text-3xl text-white font-cera-bold tracking-tighter whitespace-nowrap">
-            Detalle del producto
+            Detalle
           </h2>
         </div>
       </div>
 
       {/* Product image */}
       <div className="h-48 md:h-64 w-full overflow-hidden rounded-lg md:rounded-2xl mb-4">
-        <img
-          className="w-full h-full object-cover object-center"
-          src={product.image ?? configuration.product.image}
-          alt={product.name}
-        />
+        {product.image ? (
+          <img
+            className="w-full h-full object-cover object-center"
+            src={product.image}
+            alt={product.name}
+          />
+        ) : (
+          <div 
+            className="w-full h-full flex items-center justify-center text-center p-4"
+            style={{ backgroundColor: '#E6E6E6' }}
+          >
+            <span 
+              className="text-lg md:text-xl font-cera-bold leading-tight"
+              style={{ color: '#CCCCCC' }}
+            >
+              Imagen no disponible
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Product details */}

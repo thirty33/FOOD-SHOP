@@ -18,6 +18,8 @@ import debounce from "just-debounce-it";
 import { useNotification } from "../hooks/useNotification";
 import { Product } from "../types/categories";
 import { configuration } from "../config/config";
+import { handleAutoOpenSideCart } from "../helpers/sideCart";
+import { useAuth } from "../hooks/useAuth";
 
 // Modal state interface
 interface ModalState {
@@ -45,6 +47,8 @@ type orderState = Pick<
   modalState: ModalState;
   setShowProductDetail: (product: Product) => void;
   closeModal: () => void;
+  // Recent operation state
+  recentOperation: boolean;
 };
 
 // Create context
@@ -63,13 +67,15 @@ export const OrderContext = createContext<orderState>({
   getOrders: () => {},
   modalState: { isOpen: false, type: null },
   setShowProductDetail: () => {},
-  closeModal: () => {}
+  closeModal: () => {},
+  recentOperation: false
 });
 
 // Create provider component
 export function OrderProvider({ children }: GlobalProviderProps) {
   const [reloadCart, setReloandCart] = useState(true);
   const { enqueueSnackbar } = useNotification();
+  const { user } = useAuth();
 
   const prevDateRef = useRef<string | null>(null);
   const location = useLocation();
@@ -80,8 +86,8 @@ export function OrderProvider({ children }: GlobalProviderProps) {
     isOpen: false,
     type: null
   });
-
-  const { currentOrder, isLoading } = state;
+  
+  const { currentOrder, isLoading, isPendingReload, recentOperation } = state;
 
   // Backward compatible setShowSideCart
   const setShowSideCart = (value: boolean) => {
@@ -112,10 +118,13 @@ export function OrderProvider({ children }: GlobalProviderProps) {
 
   const fetchOrder = async (date: string) => {
     try {
-      dispatch({
-        type: CART_ACTION_TYPES.APP_IS_LOADING,
-        payload: { isLoading: true },
-      });
+      // Only set loading to true if not coming from a multiple operation
+      if (!isPendingReload) {
+        dispatch({
+          type: CART_ACTION_TYPES.APP_IS_LOADING,
+          payload: { isLoading: true },
+        });
+      }
 
       const { data } = (await orderService.get(date)) as SuccessResponse;
 
@@ -129,10 +138,30 @@ export function OrderProvider({ children }: GlobalProviderProps) {
         payload: { currentOrder: null },
       });
     } finally {
+      // Always set loading to false and clear pending reload
       dispatch({
         type: CART_ACTION_TYPES.APP_IS_LOADING,
         payload: { isLoading: false },
       });
+      
+      if (isPendingReload) {
+        dispatch({
+          type: CART_ACTION_TYPES.SET_PENDING_RELOAD,
+          payload: { isPendingReload: false },
+        });
+        
+        // Set recent operation flag and clear after delay
+        dispatch({
+          type: CART_ACTION_TYPES.SET_RECENT_OPERATION,
+          payload: { recentOperation: true },
+        });
+        setTimeout(() => {
+          dispatch({
+            type: CART_ACTION_TYPES.SET_RECENT_OPERATION,
+            payload: { recentOperation: false },
+          });
+        }, 2000); // 2 second delay for better reliability
+      }
     }
   };
 
@@ -212,16 +241,20 @@ export function OrderProvider({ children }: GlobalProviderProps) {
       }));
 
     try {
+      // Start operation with all flags
       dispatch({
-        type: CART_ACTION_TYPES.APP_IS_LOADING,
-        payload: { isLoading: true },
+        type: CART_ACTION_TYPES.START_OPERATION,
+        payload: { 
+          isLoading: true, 
+          isPendingReload: true, 
+          recentOperation: true 
+        },
       });
 
       (await orderService.createOrUpdate(
         getDate(location.search)!,
         filterOrderLines
       )) as SuccessResponse;
-
 
     } catch (error) {
 
@@ -230,100 +263,144 @@ export function OrderProvider({ children }: GlobalProviderProps) {
         autoHideDuration: configuration.toast.duration,
       });
       
-    } finally {
-
+      // Clear all operation flags on error
       dispatch({
-        type: CART_ACTION_TYPES.APP_IS_LOADING,
-        payload: { isLoading: false },
+        type: CART_ACTION_TYPES.CLEAR_OPERATION_FLAGS,
+        payload: { 
+          isLoading: false, 
+          isPendingReload: false, 
+          recentOperation: false 
+        },
       });
-
-      setReloandCart(true);
-
-      // Auto-open CheckoutSideMenu only when adding products to an empty cart
-      if (filterOrderLines.length > 0 && previousCartCount === 0) {
-        setShowSideCart(true);
-      }
-
+      return;
     }
+
+    // No finally block - let fetchOrder handle the loading false
+    setReloandCart(true);
+
+    // Handle auto-opening side cart for first product
+    handleAutoOpenSideCart(filterOrderLines, previousCartCount, user, setShowSideCart);
   };
 
   const deleteItemFromCart = async (id: string | number, quantity: number) => {
     const orderLines = [{ id, quantity }];
 
     try {
+      // Start operation with all flags
       dispatch({
-        type: CART_ACTION_TYPES.APP_IS_LOADING,
-        payload: { isLoading: true },
+        type: CART_ACTION_TYPES.START_OPERATION,
+        payload: { 
+          isLoading: true, 
+          isPendingReload: true, 
+          recentOperation: true 
+        },
       });
 
       (await orderService.deleteOrderLine(
         getDate(location.search)!,
         orderLines
       )) as SuccessResponse;
-      setReloandCart(true);
+
     } catch (error) {
       enqueueSnackbar((error as Error).message, {
         variant: "error",
         autoHideDuration: configuration.toast.duration,
       });
-    } finally {
+      
+      // Clear all operation flags on error
       dispatch({
-        type: CART_ACTION_TYPES.APP_IS_LOADING,
-        payload: { isLoading: false },
+        type: CART_ACTION_TYPES.CLEAR_OPERATION_FLAGS,
+        payload: { 
+          isLoading: false, 
+          isPendingReload: false, 
+          recentOperation: false 
+        },
       });
+      return;
     }
+
+    // No finally block - let fetchOrder handle the loading false
+    setReloandCart(true);
   };
 
   const updateOrderStatus = async (status: string) => {
     try {
+      // Start operation with all flags
       dispatch({
-        type: CART_ACTION_TYPES.APP_IS_LOADING,
-        payload: { isLoading: true },
+        type: CART_ACTION_TYPES.START_OPERATION,
+        payload: { 
+          isLoading: true, 
+          isPendingReload: true, 
+          recentOperation: true 
+        },
       });
 
       (await orderService.updateOrderStatus(
         getDate(location.search)!,
         status
       )) as SuccessResponse;
-      setReloandCart(true);
+
     } catch (error) {
       console.error(error);
       enqueueSnackbar((error as Error).message, {
         variant: "error",
         autoHideDuration: configuration.toast.duration,
       });
-    } finally {
+      
+      // Clear all operation flags on error
       dispatch({
-        type: CART_ACTION_TYPES.APP_IS_LOADING,
-        payload: { isLoading: false },
+        type: CART_ACTION_TYPES.CLEAR_OPERATION_FLAGS,
+        payload: { 
+          isLoading: false, 
+          isPendingReload: false, 
+          recentOperation: false 
+        },
       });
+      return;
     }
+
+    // No finally block - let fetchOrder handle the loading false
+    setReloandCart(true);
   };
 
   const partiallyScheduleOrder = async (status: string) => {
     try {
+      // Start operation with all flags
       dispatch({
-        type: CART_ACTION_TYPES.APP_IS_LOADING,
-        payload: { isLoading: true },
+        type: CART_ACTION_TYPES.START_OPERATION,
+        payload: { 
+          isLoading: true, 
+          isPendingReload: true, 
+          recentOperation: true 
+        },
       });
 
       (await orderService.partiallyScheduleOrder(
         getDate(location.search)!,
         status
       )) as SuccessResponse;
-      setReloandCart(true);
+
     } catch (error) {
       console.error(error);
       enqueueSnackbar((error as Error).message, {
         variant: "error",
         autoHideDuration: configuration.toast.duration,
       });
-    } finally {
+      
+      // Clear all operation flags on error
       dispatch({
-        type: CART_ACTION_TYPES.APP_IS_LOADING,
-        payload: { isLoading: false },
+        type: CART_ACTION_TYPES.CLEAR_OPERATION_FLAGS,
+        payload: { 
+          isLoading: false, 
+          isPendingReload: false, 
+          recentOperation: false 
+        },
       });
+      return;
     }
+
+    // No finally block - let fetchOrder handle the loading false
+    setReloandCart(true);
   };
 
   useEffect(() => {
@@ -403,7 +480,8 @@ export function OrderProvider({ children }: GlobalProviderProps) {
     getOrders,
     modalState,
     setShowProductDetail,
-    closeModal
+    closeModal,
+    recentOperation
   };
 
   return (

@@ -51,16 +51,19 @@ export const LoginForm = () => {
         type: "manual",
         message: (error as Error).message,
       });
-      enqueueSnackbar((error as Error).message, { variant: "error", autoHideDuration: configuration.toast.duration });
+      const errorMessage = `${(error as Error).message}. Si tiene algún problema comuníquese a través del número ${configuration.support.phone} o del correo ${configuration.support.email}`;
+      enqueueSnackbar(errorMessage, { variant: "error", autoHideDuration: configuration.toast.duration });
     }
   };
 
   useEffect(() => {
     if (errors.email) {
-      enqueueSnackbar(errors.email.message, { variant: "error", autoHideDuration: configuration.toast.duration });
+      const errorMessage = `${errors.email.message}. Si tiene algún problema comuníquese a través del número ${configuration.support.phone} o del correo ${configuration.support.email}`;
+      enqueueSnackbar(errorMessage, { variant: "error", autoHideDuration: configuration.toast.duration });
     }
     if (errors.password) {
-      enqueueSnackbar(errors.password.message, { variant: "error", autoHideDuration: configuration.toast.duration });
+      const errorMessage = `${errors.password.message}. Si tiene algún problema comuníquese a través del número ${configuration.support.phone} o del correo ${configuration.support.email}`;
+      enqueueSnackbar(errorMessage, { variant: "error", autoHideDuration: configuration.toast.duration });
     }
   }, [errors, enqueueSnackbar]);
 
@@ -91,7 +94,7 @@ export const LoginForm = () => {
               <input
                 type="text"
                 id="email"
-                className="w-full h-8 md:h-16 py-4 md:py-0 px-3 md:px-6 bg-white border-0 rounded-lg md:rounded-2xl text-[#CCCCCC] placeholder-[#CCCCCC] focus:outline-none focus:ring-2 focus:ring-green-100 shadow-sm font-cera-regular text-xs md:text-xl tracking-tighter"
+                className="w-full h-8 md:h-16 py-4 md:py-0 px-3 md:px-6 bg-white border-0 rounded-lg md:rounded-2xl text-[#333333] placeholder-[#CCCCCC] focus:outline-none focus:ring-2 focus:ring-green-100 shadow-sm font-cera-regular text-xs md:text-xl tracking-tighter"
                 placeholder={textMessages.LOGIN_FORM.EMAIL_PLACEHOLDER}
                 {...register("email")}
                 defaultValue=""
@@ -104,7 +107,7 @@ export const LoginForm = () => {
                 type={showPassword ? "text" : "password"}
                 id="password"
                 placeholder={textMessages.LOGIN_FORM.PASSWORD_PLACEHOLDER}
-                className="w-full h-8 md:h-16 py-4 md:py-0 px-3 md:px-6 pr-10 md:pr-14 bg-white border-0 rounded-lg md:rounded-2xl text-[#CCCCCC] placeholder-[#CCCCCC] focus:outline-none focus:ring-2 focus:ring-green-100 shadow-sm font-cera-regular text-xs md:text-xl tracking-tighter"
+                className="w-full h-8 md:h-16 py-4 md:py-0 px-3 md:px-6 pr-10 md:pr-14 bg-white border-0 rounded-lg md:rounded-2xl text-[#333333] placeholder-[#CCCCCC] focus:outline-none focus:ring-2 focus:ring-green-100 shadow-sm font-cera-regular text-xs md:text-xl tracking-tighter"
                 {...register("password")}
                 defaultValue=""
               />

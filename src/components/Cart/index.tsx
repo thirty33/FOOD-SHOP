@@ -61,11 +61,25 @@ export const CartItem = ({
       <div 
         className="h-28 w-28 md:h-36 lg:h-36 md:w-36 lg:w-36 flex-shrink-0"
       >
-        <img
-          className="h-full w-full rounded-md object-cover"
-          src={image ?? configuration.product.image}
-          alt={name}
-        />
+        {image ? (
+          <img
+            className="h-full w-full rounded-md object-cover"
+            src={image}
+            alt={name}
+          />
+        ) : (
+          <div 
+            className="h-full w-full rounded-md flex items-center justify-center text-center p-2"
+            style={{ backgroundColor: '#E6E6E6' }}
+          >
+            <span 
+              className="text-xs md:text-sm font-cera-bold leading-tight"
+              style={{ color: '#CCCCCC' }}
+            >
+              Imagen no disponible
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Product Details */}
@@ -91,7 +105,7 @@ export const CartItem = ({
           </h3>
           {showPrices && (
             <p 
-              className="text-sm md:text-xl lg:text-base text-green-100 font-cera-regular tracking-tighter leading-4 md:leading-4 truncate"
+              className="text-sm md:text-xl lg:text-base text-green-100 font-cera-medium tracking-tighter leading-4 md:leading-4 truncate"
             >
               {price}
             </p>

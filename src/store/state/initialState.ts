@@ -17,5 +17,7 @@ export const InitialState: globalState = {
         permission: null
     },
     orders: null,
-    showModal: false
+    showModal: false,
+    isPendingReload: false,
+    recentOperation: false
 };

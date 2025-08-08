@@ -100,6 +100,36 @@ const UPDATE_STATE_BY_ACTION = {
             showModal: (action.payload as Pick<globalState, 'showModal'>).showModal,
         };
     },
+    [CART_ACTION_TYPES.SET_PENDING_RELOAD]: (state: globalState, action: Action) => {
+        return {
+            ...state,
+            isPendingReload: (action.payload as Pick<globalState, 'isPendingReload'>).isPendingReload,
+        };
+    },
+    [CART_ACTION_TYPES.SET_RECENT_OPERATION]: (state: globalState, action: Action) => {
+        return {
+            ...state,
+            recentOperation: (action.payload as Pick<globalState, 'recentOperation'>).recentOperation,
+        };
+    },
+    [CART_ACTION_TYPES.START_OPERATION]: (state: globalState, action: Action) => {
+        const payload = action.payload as Pick<globalState, 'isLoading' | 'isPendingReload' | 'recentOperation'>;
+        return {
+            ...state,
+            isLoading: payload.isLoading,
+            isPendingReload: payload.isPendingReload,
+            recentOperation: payload.recentOperation,
+        };
+    },
+    [CART_ACTION_TYPES.CLEAR_OPERATION_FLAGS]: (state: globalState, action: Action) => {
+        const payload = action.payload as Pick<globalState, 'isLoading' | 'isPendingReload' | 'recentOperation'>;
+        return {
+            ...state,
+            isLoading: payload.isLoading,
+            isPendingReload: payload.isPendingReload,
+            recentOperation: payload.recentOperation,
+        };
+    },
 }
 
 export const menuReducer = (state: globalState, action: Action & { type: keyof typeof UPDATE_STATE_BY_ACTION }): globalState => {

@@ -6,6 +6,10 @@ export const configuration = {
     toast: {
         duration: Number(import.meta.env.VITE_TOAST_DURATION) || 20000,
     },
+    support: {
+        email: import.meta.env.VITE_SUPPORT_EMAIL,
+        phone: import.meta.env.VITE_SUPPORT_PHONE,
+    },
     menu: {
         image: import.meta.env.VITE_MENU_LOGO
     },

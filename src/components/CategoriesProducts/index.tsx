@@ -69,27 +69,34 @@ const CategorySection = ({
         <div className="mb-2 flex justify-start font-cera-bold">
           <p className="text-4xl md:text-5xl font-bold font-cera-bold tracking-tighter text-green-100 leading-[0.8] md:leading-tight">
             {/* <strong>Categorías:</strong>{" "} */}
-            {subcategories.map((subcategory) => subcategory.name).join(" ")}
+            {subcategories.map((subcategory) => 
+              subcategory.name.charAt(0).toUpperCase() + subcategory.name.slice(1).toLowerCase()
+            ).join(" ")}
           </p>
         </div>
         
       )}
 
-      <div
-        className={`flex flex-col justify-start content-start items-start ${
-          showSubcategories ? "mb-1" : "mb-3 md:mb-6"
-        }`}
-      >
-        <h2 className={`${showSubcategories ? 'text-3xl md:text-4xl' : 'text-4xl md:text-5xl'} font-bold font-cera-bold tracking-tighter text-green-100 leading-[0.8] md:leading-tight`}>
-          {(() => {
-            const name = category?.category?.name || "";
-            return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-          })()}
-        </h2>
-        <p className="text-green-100 font-cera-regular tracking-normal text-sm md:text-base">
-          {maximumOrderTime}
-        </p>
-      </div>
+      {/* Show category name unless user is convenio individual with subcategories */}
+      {!(isAgreementIndividual(user) && subcategories.length > 0) && (
+        <div
+          className={`flex flex-col justify-start content-start items-start ${
+            showSubcategories ? "mb-1" : "mb-3 md:mb-6"
+          }`}
+        >
+          <h2 className={`${showSubcategories ? 'text-3xl md:text-4xl' : 'text-4xl md:text-5xl'} font-bold font-cera-bold tracking-tighter text-green-100 leading-[0.8] md:leading-tight`}>
+            {(() => {
+              const name = category?.category?.name || "";
+              return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+            })()}
+          </h2>
+        </div>
+      )}
+      
+      {/* Always show availability text */}
+      <p className="text-green-100 font-cera-regular tracking-normal text-sm md:text-base mb-3 md:mb-6">
+        {maximumOrderTime}
+      </p>
 
       {products && <ProductList products={products} />}
     </div>
@@ -98,7 +105,7 @@ const CategorySection = ({
 
 export const CategoriesProducts = () => {
   const { user } = useAuth();
-  const { showSideCart, setShowSideCart } = useOrder();
+  const { showSideCart, setShowSideCart, isLoading: isOrderLoading, recentOperation } = useOrder();
   const categoriesRef = useRef<HTMLDivElement>(null);
   const { categories, isLoading, hasMore, loadMoreCategories } =
     useCategories();
@@ -109,6 +116,8 @@ export const CategoriesProducts = () => {
     elementRef: categoriesRef,
     isOpen: showSideCart,
     onClose: () => setShowSideCart(false),
+    isLoading: isOrderLoading,
+    recentOperation,
   });
 
   const allCategoriesNull = categories.every(

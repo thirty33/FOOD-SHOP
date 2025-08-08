@@ -6,6 +6,8 @@ import { configuration } from "../../config/config";
 import { useOrder } from "../../hooks/useCurrentOrder";
 import AddToCartIcon from "../Icons/AddToCartIcon";
 import DeleteIcon from "../Icons/DeleteIcon";
+import { SpinnerLoading } from "../SpinnerLoading";
+import { capitalizeAfterHyphen } from "../../helpers/texts";
 
 interface ProductItemProps {
   id: string | number;
@@ -33,7 +35,7 @@ export const ProductItem = ({
     showPrices,
   } = useQuantityChange();
   
-  const { setShowProductDetail, deleteItemFromCart } = useOrder();
+  const { setShowProductDetail, deleteItemFromCart, isLoading } = useOrder();
 
   const currentQuantity = useMemo(() => {
     return (
@@ -86,11 +88,29 @@ export const ProductItem = ({
       <div 
         className="relative h-16 w-16 md:h-36 md:w-full md:mx-auto max-h-36 max-w-full overflow-hidden rounded-lg md:rounded-2xl flex-shrink-0 bg-gray-100"
       >
-        <img
-          className="absolute top-[-1rem] md:top-[-2.9rem] w-full h-24 md:h-64 object-cover object-center"
-          src={imageLight ?? configuration.product.image}
-          alt=""
-        />
+        {imageLight ? (
+          <img
+            className={`absolute top-[-1rem] w-full h-24 object-cover object-center ${
+              !imageLight
+                ? 'md:h-44 md:top-[-0.9rem]' 
+                : 'md:top-[-2.9rem] md:h-64'
+            }`}
+            src={imageLight}
+            alt=""
+          />
+        ) : (
+          <div 
+            className="absolute inset-0 flex items-center justify-center text-center p-1 md:p-2"
+            style={{ backgroundColor: '#E6E6E6' }}
+          >
+            <span 
+              className="text-xs md:text-base font-cera-bold leading-tight"
+              style={{ color: '#CCCCCC' }}
+            >
+              Imagen no disponible
+            </span>
+          </div>
+        )}
       </div>
       <div 
         className="pt-1 md:pt-4 px-2 md:px-0 pb-1 md:pb-5 flex-1 flex flex-col md:justify-between"
@@ -100,7 +120,8 @@ export const ProductItem = ({
             className="text-sm md:text-2xl font-semibold font-cera-bold tracking-tighter leading-[1.1] md:leading-tight text-green-100 py-0"
           >
             {(() => {
-              return title.charAt(0).toUpperCase() + title.slice(1).toLowerCase();
+              const basicCapitalized = title.charAt(0).toUpperCase() + title.slice(1).toLowerCase();
+              return capitalizeAfterHyphen(basicCapitalized);
             })()}
           </div>
 
@@ -141,19 +162,24 @@ export const ProductItem = ({
             <div className="">
               <button
                 type="button"
-                className="inline-flex items-center rounded-md bg-green-50 px-3 py-1 text-xs md:text-md font-medium font-cera-bold text-white hover:bg-green-100 focus:outline-none focus:ring-4"
+                disabled={isLoading}
+                className="inline-flex items-center rounded-md bg-green-50 px-3 py-1 text-xs md:text-md font-medium font-cera-bold text-white hover:bg-green-100 focus:outline-none focus:ring-4 disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={(e) => {
                   e.stopPropagation();
                   addProductToCart(id, 1);
                 }}
               >
-                <AddToCartIcon                   
-                  width="12"
-                  height="12"
-                  size="14"
-                  color="white"
-                  className="stroke-white fill-white" 
-                />
+                {isLoading ? (
+                  <SpinnerLoading show={true} size={3} />
+                ) : (
+                  <AddToCartIcon                   
+                    width="12"
+                    height="12"
+                    size="14"
+                    color="white"
+                    className="stroke-white fill-white" 
+                  />
+                )}
                 <span className="ml-1">Agregar</span>
               </button>
             </div>
@@ -179,21 +205,26 @@ export const ProductItem = ({
                   />
                 )}
                 <div 
-                  className="flex items-center justify-center gap-1 cursor-pointer"
+                  className={`flex items-center justify-center gap-1 ${isLoading ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    deleteItemFromCart(id, 1);
+                    if (!isLoading) {
+                      deleteItemFromCart(id, 1);
+                    }
                   }}
                 >
                   <DeleteIcon
                     size="16"
                     color="#FF6A41"
                     strokeWidth="2"
-                    className="cursor-pointer"
+                    className={isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}
                   />
-                  <span className="text-xs text-gray-400 font-cera-light cursor-pointer">
+                  <span className={`text-xs text-gray-400 font-cera-light ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
                     eliminar
                   </span>
+                  <div className="ml-2">
+                    <SpinnerLoading show={isLoading} size={4} />
+                  </div>
                 </div>
               </div>
             )}

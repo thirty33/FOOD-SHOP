@@ -68,6 +68,8 @@ export interface globalState {
     }
     orders: OrderData[] | null;
     showModal: boolean;
+    isPendingReload: boolean;
+    recentOperation: boolean;
 }
 
 export type signOutState = Pick<globalState, 
@@ -90,3 +92,7 @@ export type Action =
     | { type: typeof CART_ACTION_TYPES.SET_USER_INFO, payload: Pick<globalState, 'user'> }
     | { type: typeof CART_ACTION_TYPES.SET_ORDERS, payload: Pick<globalState, 'orders'> }
     | { type: typeof CART_ACTION_TYPES.SET_SHOW_MODAL, payload: Pick<globalState, 'showModal'> }
+    | { type: typeof CART_ACTION_TYPES.SET_PENDING_RELOAD, payload: Pick<globalState, 'isPendingReload'> }
+    | { type: typeof CART_ACTION_TYPES.SET_RECENT_OPERATION, payload: Pick<globalState, 'recentOperation'> }
+    | { type: typeof CART_ACTION_TYPES.START_OPERATION, payload: Pick<globalState, 'isLoading' | 'isPendingReload' | 'recentOperation'> }
+    | { type: typeof CART_ACTION_TYPES.CLEAR_OPERATION_FLAGS, payload: Pick<globalState, 'isLoading' | 'isPendingReload' | 'recentOperation'> }

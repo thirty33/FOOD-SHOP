@@ -5,9 +5,11 @@ interface UseScrollToCloseOptions {
   elementRef: RefObject<HTMLElement>;
   isOpen: boolean;
   onClose: () => void;
+  isLoading?: boolean;
+  recentOperation?: boolean;
 }
 
-export const useScrollToClose = ({ elementRef, isOpen, onClose }: UseScrollToCloseOptions) => {
+export const useScrollToClose = ({ elementRef, isOpen, onClose, isLoading = false, recentOperation = false }: UseScrollToCloseOptions) => {
   useEffect(() => {
     let mouseX = 0;
     let mouseY = 0;
@@ -19,7 +21,9 @@ export const useScrollToClose = ({ elementRef, isOpen, onClose }: UseScrollToClo
 
     const handleScroll = () => {
       const element = elementRef.current;
-      if (!element || !isOpen) return;
+      if (!element || !isOpen || isLoading || recentOperation) {
+        return;
+      }
 
       // Get element bounds
       const rect = element.getBoundingClientRect();
@@ -46,7 +50,7 @@ export const useScrollToClose = ({ elementRef, isOpen, onClose }: UseScrollToClo
       }
 
       const shouldClose = isMouseWithinElement && !isMouseWithinCheckoutSideMenu;
-      
+
       if (shouldClose) {
         onClose();
       }
@@ -59,5 +63,5 @@ export const useScrollToClose = ({ elementRef, isOpen, onClose }: UseScrollToClo
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [isOpen, onClose, elementRef]);
+  }, [isOpen, isLoading, recentOperation, onClose, elementRef]);
 };
