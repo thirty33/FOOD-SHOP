@@ -4,7 +4,6 @@ import { QuantitySelector } from "../QuantitySelector";
 import { useQuantityChange } from "../../hooks/useQuantityChange";
 import { ORDER_STATUS, ORDER_STATUS_TEXT } from "../../config/constant";
 import XIcon from "../../components/Icons/XIcon";
-import { configuration } from "../../config/config";
 import CloseButton from "../Icons/CloseButton";
 
 export interface CartItemProps {

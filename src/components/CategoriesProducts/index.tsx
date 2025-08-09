@@ -1,6 +1,9 @@
 import { useCategories } from "../../hooks/useCategories";
 import { ProductItem } from "../Products";
-import { Product, Category } from "../../types/categories";
+import { Product, Category
+  // , Subcategory
+} from "../../types/categories";
+import { ExtendedCategory } from "../../helpers/categoryGrouping";
 import { SpinnerLoading } from "../SpinnerLoading";
 import { useOrder } from "../../hooks/useCurrentOrder";
 import { isAgreementIndividual } from "../../helpers/permissions";
@@ -12,9 +15,55 @@ import { useScrollToTop } from "../../hooks/useScrollToTop";
 import ArrowUpIcon from "../Icons/ArrowUpIcon";
 import { textMessages } from "../../config/textMessages";
 
-// Componente para la lista de productos de una categoría
-const ProductList = ({ products }: { products: Product[] }) => {
+// Component for product list of a category
+const ProductList = ({ 
+  products, 
+  maximumOrderTime, 
+  category, 
+  user 
+}: { 
+  products: Product[], 
+  maximumOrderTime: string,
+  category: Category | ExtendedCategory,
+  user: User
+}) => {
   const { addProductToCart } = useOrder();
+  
+  // Function to calculate maximumOrderTime per product
+  const getProductMaximumOrderTime = useMemo(() => {
+    return (product: Product): string => {
+      // For individual agreement users, calculate per product
+      if (isAgreementIndividual(user) && category.category) {
+        // Find the correct category_line for this product using its category_id
+        const productCategoryLine = category.category.category_lines.find(
+          (line: any) => line.source_category_id === product.category_id
+        );
+        
+        if (productCategoryLine) {
+          return productCategoryLine.maximum_order_time;
+        }
+      }
+      
+      // For all other users, use the category's maximumOrderTime
+      return maximumOrderTime;
+    };
+  }, [user, category, maximumOrderTime]);
+  
+  // Function to get subcategories for a product
+  const getProductSubcategories = useMemo(() => {
+    return (product: Product): any[] => {
+      // Only for individual agreement users
+      if (isAgreementIndividual(user) && category.category && category.category.subcategories) {
+        // Filter subcategories that match the product's category_id
+        return category.category.subcategories.filter(
+          (sub: any) => sub.source_category_id === product.category_id
+        );
+      }
+      
+      return [];
+    };
+  }, [user, category]);
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 2xl:gap-8">
       {products.map((product) => (
@@ -26,25 +75,34 @@ const ProductList = ({ products }: { products: Product[] }) => {
           title={product.name}
           ingredients={product.ingredients}
           addProductToCart={addProductToCart}
+          maximumOrderTime={getProductMaximumOrderTime(product)}
+          productSubcategories={getProductSubcategories(product)}
         />
       ))}
     </div>
   );
 };
 
-// Componente para una categoría
+// Component for a category section
 const CategorySection = ({
   category,
   user,
 }: {
-  category: Category;
+  category: Category | ExtendedCategory;
   user: User;
 }): JSX.Element => {
   const completeCategory = category.show_all_products;
 
-  const products = !completeCategory
-    ? category.products
-    : category?.category?.products;
+  // Determine where to get products based on user type
+  const products = useMemo(() => {
+    // For individual agreement users with subcategories: always get from category?.category?.products
+    if (isAgreementIndividual(user) && category?.category?.subcategories && category.category.subcategories.length > 0) {
+      return category?.category?.products;
+    }
+    
+    // For other users: maintain original logic with show_all_products
+    return !completeCategory ? category.products : category?.category?.products;
+  }, [user, category, completeCategory]);
 
   // Get the maximum_order_time from the first category_lines entry, or "Not available" if empty
   const maximumOrderTime =
@@ -68,10 +126,13 @@ const CategorySection = ({
       {showSubcategories && (
         <div className="mb-2 flex justify-start font-cera-bold">
           <p className="text-4xl md:text-5xl font-bold font-cera-bold tracking-tighter text-green-100 leading-[0.8] md:leading-tight">
-            {/* <strong>Categorías:</strong>{" "} */}
-            {subcategories.map((subcategory) => 
+            {/* {subcategories.map((subcategory) => 
               subcategory.name.charAt(0).toUpperCase() + subcategory.name.slice(1).toLowerCase()
-            ).join(" ")}
+            ).join(" ")} */}
+            {(() => {
+              const name = category?.category?.name || "";
+              return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+            })()}
           </p>
         </div>
         
@@ -93,12 +154,14 @@ const CategorySection = ({
         </div>
       )}
       
-      {/* Always show availability text */}
-      <p className="text-green-100 font-cera-regular tracking-normal text-sm md:text-base mb-3 md:mb-6">
-        {maximumOrderTime}
-      </p>
+      {/* Show availability text only for non-convenio individual users */}
+      {!isAgreementIndividual(user) && (
+        <p className="text-green-100 font-cera-regular tracking-normal text-sm md:text-base mb-3 md:mb-6">
+          {maximumOrderTime}
+        </p>
+      )}
 
-      {products && <ProductList products={products} />}
+      {products && <ProductList products={products} maximumOrderTime={maximumOrderTime} category={category} user={user} />}
     </div>
   );
 };
@@ -107,7 +170,7 @@ export const CategoriesProducts = () => {
   const { user } = useAuth();
   const { showSideCart, setShowSideCart, isLoading: isOrderLoading, recentOperation } = useOrder();
   const categoriesRef = useRef<HTMLDivElement>(null);
-  const { categories, isLoading, hasMore, loadMoreCategories } =
+  const { categories, groupedCategories, isLoading, hasMore, loadMoreCategories } =
     useCategories();
   const { isVisible, scrollToTop } = useScrollToTop();
 
@@ -124,12 +187,18 @@ export const CategoriesProducts = () => {
     (category) => category.category === null
   );
 
+
+  // Decide which categories to use based on user type
+  const categoriesToRender = useMemo(() => {
+    return isAgreementIndividual(user) ? groupedCategories : categories;
+  }, [user, groupedCategories, categories]);
+
   return (
     <>
       <div ref={categoriesRef} className="2xl:px-80 lg:px-48">
         <div className="container mx-auto px-4">
           {!allCategoriesNull &&
-            categories.map((category) => (
+            categoriesToRender.map((category: Category | ExtendedCategory) => (
               <CategorySection
                 key={category.id}
                 category={category}

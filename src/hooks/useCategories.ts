@@ -6,6 +6,7 @@ import { useSnackbar } from "notistack";
 import { useParams } from "react-router-dom";
 import { Category } from "../types/categories";
 import { configuration } from "../config/config";
+import { groupCategoriesBySubcategory, ExtendedCategory } from "../helpers/categoryGrouping";
 
 export function useCategories() {
 
@@ -83,8 +84,12 @@ export function useCategories() {
         setCurrentPage(prev => prev + 1);
     };
 
+    // Group categories by specific subcategories
+    const groupedCategories: ExtendedCategory[] = groupCategoriesBySubcategory(categories);
+
     return {
         categories,
+        groupedCategories,
         isLoading,
         hasMore,
         loadMoreCategories

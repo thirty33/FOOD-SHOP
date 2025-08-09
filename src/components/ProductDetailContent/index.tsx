@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { Product } from "../../types/categories";
-import { configuration } from "../../config/config";
 import MonkeyIcon from "../Icons/MonkeyIcon";
 import { useQuantityChange } from "../../hooks/useQuantityChange";
 

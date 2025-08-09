@@ -33,6 +33,12 @@ export const PERMISSION_TYPES = {
     NONE: null
 } as const
 
+export const GROUPING_SUBCATEGORIES = {
+    MAIN_COURSE: 'PLATO DE FONDO',
+    BREAD: 'PAN DE ACOMPAÑAMIENTO',
+    APPETIZER: 'ENTRADA'
+} as const
+
 export const ORDER_STATUS = {
     PENDING: 'PENDING',
     PROCESSED: 'PROCESSED',

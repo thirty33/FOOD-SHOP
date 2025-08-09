@@ -2,12 +2,13 @@ import { useMemo } from "react";
 import { useQuantityChange } from "../../hooks/useQuantityChange";
 import { Ingredients } from "../../types/categories";
 import { QuantitySelector } from "../QuantitySelector";
-import { configuration } from "../../config/config";
 import { useOrder } from "../../hooks/useCurrentOrder";
 import AddToCartIcon from "../Icons/AddToCartIcon";
 import DeleteIcon from "../Icons/DeleteIcon";
 import { SpinnerLoading } from "../SpinnerLoading";
 import { capitalizeAfterHyphen } from "../../helpers/texts";
+import { useAuth } from "../../hooks/useAuth";
+import { isAgreementIndividual } from "../../helpers/permissions";
 
 interface ProductItemProps {
   id: string | number;
@@ -16,6 +17,8 @@ interface ProductItemProps {
   price: string | number;
   ingredients: Ingredients[];
   addProductToCart: (id: string | number, quantity: number) => void;
+  maximumOrderTime?: string;
+  productSubcategories?: any[];
 }
 
 export const ProductItem = ({
@@ -25,6 +28,8 @@ export const ProductItem = ({
   price,
   ingredients,
   addProductToCart,
+  maximumOrderTime,
+  productSubcategories,
 }: ProductItemProps): JSX.Element => {
   const {
     handleQuantityChange,
@@ -36,6 +41,7 @@ export const ProductItem = ({
   } = useQuantityChange();
   
   const { setShowProductDetail, deleteItemFromCart, isLoading } = useOrder();
+  const { user } = useAuth();
 
   const currentQuantity = useMemo(() => {
     return (
@@ -86,7 +92,7 @@ export const ProductItem = ({
       onClick={handleProductClick}
     >
       <div 
-        className="relative h-16 w-16 md:h-36 md:w-full md:mx-auto max-h-36 max-w-full overflow-hidden rounded-lg md:rounded-2xl flex-shrink-0 bg-gray-100"
+        className="relative h-16 w-16 md:h-36 md:w-full md:mx-auto max-h-36 max-w-full overflow-hidden rounded-lg md:rounded-2xl flex-shrink-0 bg-gray-100 self-center md:self-auto"
       >
         {imageLight ? (
           <img
@@ -100,12 +106,10 @@ export const ProductItem = ({
           />
         ) : (
           <div 
-            className="absolute inset-0 flex items-center justify-center text-center p-1 md:p-2"
-            style={{ backgroundColor: '#E6E6E6' }}
+            className="absolute inset-0 flex items-center justify-center text-center p-1 md:p-2 bg-gray-200"
           >
             <span 
-              className="text-xs md:text-base font-cera-bold leading-tight"
-              style={{ color: '#CCCCCC' }}
+              className="text-xs md:text-base font-cera-bold leading-tight text-gray-600"
             >
               Imagen no disponible
             </span>
@@ -159,7 +163,7 @@ export const ProductItem = ({
             </div>
           )}
           {typeof currentQuantity === "number" && currentQuantity === 0 && (
-            <div className="">
+            <div>
               <button
                 type="button"
                 disabled={isLoading}
@@ -225,6 +229,31 @@ export const ProductItem = ({
                   <div className="ml-2">
                     <SpinnerLoading show={isLoading} size={4} />
                   </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Show availability text only for convenio individual users */}
+            {isAgreementIndividual(user) && maximumOrderTime && (
+              <div className="mt-2">
+                <p className="text-green-100 font-cera-regular tracking-normal text-xs md:text-sm">
+                  {maximumOrderTime}
+                </p>
+              </div>
+            )}
+            
+            {/* Show subcategories only for convenio individual users */}
+            {isAgreementIndividual(user) && productSubcategories && productSubcategories.length > 0 && (
+              <div className="mt-2">
+                <div className="flex flex-wrap gap-1">
+                  {productSubcategories.map((subcategory, index) => (
+                    <span 
+                      key={`${subcategory.id}-${index}`}
+                      className="inline-block px-2 py-0.5 text-xs rounded-full bg-green-50 text-white font-cera-medium"
+                    >
+                      {subcategory.name.charAt(0).toUpperCase() + subcategory.name.slice(1).toLowerCase()}
+                    </span>
+                  ))}
                 </div>
               </div>
             )}

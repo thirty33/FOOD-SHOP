@@ -18,7 +18,7 @@ export function truncateString(text: string, maxChars: number): string {
  * capitalizeAfterHyphen("ensalada-cesar-premium") => "ensalada-Cesar-Premium"
  */
 export function capitalizeAfterHyphen(text: string): string {
-  return text.replace(/-(\s*)([a-zA-Z])/g, (match, spaces, letter) => {
+  return text.replace(/-(\s*)([a-zA-Z])/g, (_, spaces, letter) => {
     return `-${spaces}${letter.toUpperCase()}`;
   });
 }
