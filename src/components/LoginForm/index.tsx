@@ -5,13 +5,12 @@ import { useAuth } from "../../hooks/useAuth";
 import { SuccessResponse, UserInputs } from "../../types/user";
 import { ActionButton } from "../ActionButton";
 import { useNotification } from "../../hooks/useNotification";
-import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../../config/routes";
 import { configuration } from "../../config/config";
 import { textMessages } from "../../config/textMessages";
 import { useEffect, useState } from "react";
 import EyeOpenIcon from "../Icons/EyeOpenIcon";
 import EyeClosedIcon from "../Icons/EyeClosedIcon";
+import { useManageInitNavigation } from "../../hooks/useManageInitNavigation";
 
 const schema = yup
   .object({
@@ -25,7 +24,7 @@ const schema = yup
 export const LoginForm = () => {
   const { setShowHeader, authUser, isLoading, setToken, setUser } = useAuth();
   const { enqueueSnackbar } = useNotification();
-  const navigate = useNavigate();
+  const { handleInitialNavigation } = useManageInitNavigation();
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -44,8 +43,15 @@ export const LoginForm = () => {
       const response = await authUser({ ...data, device_name: "app" });
       setShowHeader(true);
       setToken((response as SuccessResponse).data.token);
-      setUser(response.data.role, response.data.permission);
-      navigate(ROUTES.MENUS);
+      setUser(response.data.role, response.data.permission, response.data.master_user);
+      
+      const user = {
+        role: response.data.role,
+        permission: response.data.permission,
+        master_user: response.data.master_user
+      };
+      
+      handleInitialNavigation(user);
     } catch (error) {
       setError("email", {
         type: "manual",

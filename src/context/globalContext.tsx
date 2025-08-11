@@ -59,6 +59,7 @@ export const GlobalContext = createContext<globalContextState>({
   user: {
     role: null,
     permission: null,
+    master_user: false,
   },
   showModal: false,
   setShowModal: () => {},
@@ -80,11 +81,12 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
     showModal,
   } = state;
 
-  const setUser = (role: Role, permission: Permission) => {
+  const setUser = (role: Role, permission: Permission, master_user: boolean) => {
 
     const user =  {
       role,
       permission,
+      master_user,
     };
 
     dispatch({

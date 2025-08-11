@@ -14,7 +14,8 @@ export const InitialState: globalState = {
     showSideCart: false,
     user: {
         role: null,
-        permission: null
+        permission: null,
+        master_user: false
     },
     orders: null,
     showModal: false,

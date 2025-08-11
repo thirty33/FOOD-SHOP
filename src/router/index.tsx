@@ -9,6 +9,7 @@ import { Checkout } from "../components/Checkout";
 import { OrderSummary } from "../components/OrderSummary";
 import { Orders } from "../components/Orders";
 import { CategoriesProducts } from "../components/CategoriesProducts";
+import { SubordinatesUser } from "../components/SubordinatesUser";
 
 export const AppRouter = () => {
   
@@ -67,6 +68,14 @@ export const AppRouter = () => {
       element: (
         <ProtectedRoute>
           <Orders />
+        </ProtectedRoute>
+      )
+    },
+    {
+      path: ROUTES.SUBORDINATES_USER,
+      element: (
+        <ProtectedRoute>
+          <SubordinatesUser />
         </ProtectedRoute>
       )
     }

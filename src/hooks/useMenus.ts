@@ -3,6 +3,7 @@ import { menuService } from "../services/menu";
 import { MenuItemPagination } from "../types/menus";
 import { useInfiniteScroll } from "./useInfiniteScroll";
 import { useOrder } from "./useCurrentOrder";
+import { useQueryParams } from "./useQueryParams";
 
 export function useMenus() {
 
@@ -23,13 +24,18 @@ export function useMenus() {
         // setCurrentOrder
     } = useOrder();
 
+    const queryParams = useQueryParams(['delegate_user']);
+
     const fetchMenus = async () => {
         try {
             setIsLoading(true);
 
             if(currentPage > lastPage) return;
 
-            const { last_page, current_page, data } = await menuService.list({ page: currentPage }) as MenuItemPagination;
+            const { last_page, current_page, data } = await menuService.list({ 
+                page: currentPage,
+                ...queryParams
+            }) as MenuItemPagination;
 
             setHasMore(current_page < last_page);
             setLastPage(last_page);

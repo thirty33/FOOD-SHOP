@@ -34,9 +34,10 @@ export interface state {
     cartItemsCount: number;
     user: {
         role: Role;
-        permission: Permission
+        permission: Permission;
+        master_user: boolean;
     };
-    setUser: (role: Role, permission: Permission) => void;
+    setUser: (role: Role, permission: Permission, master_user: boolean) => void;
     updateCurrentOrder: (orderLines: Array<{id: string | number, quantity: number | string, partiallyScheduled?: boolean }>) => void;
     updateOrderStatus: (status: string) => void;
     partiallyScheduleOrder: (status: string) => void;
@@ -64,7 +65,8 @@ export interface globalState {
     showSideCart: boolean;
     user: {
         role: Role;
-        permission: Permission
+        permission: Permission;
+        master_user: boolean;
     }
     orders: OrderData[] | null;
     showModal: boolean;

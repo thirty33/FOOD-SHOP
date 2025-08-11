@@ -12,7 +12,8 @@ export const ROUTES = {
     CHECKOUT_ROUTE: 'checkout',
     ORDER_SUMMARY_ROUTE: 'order-detail/:orderId',
     GET_ORDER_SUMMARY_ROUTE: (orderId: number | string) => `order-detail/${orderId}`,
-    GET_ORDERS_ROUTE: 'orders'
+    GET_ORDERS_ROUTE: 'orders',
+    SUBORDINATES_USER: '/subordinates-user'
 }
 
 export const API_ROUTES = {
@@ -53,6 +54,12 @@ export const API_ROUTES = {
             partiallyScheduleOrder: 'partially-schedule-order',
             getOrders: 'get-orders',
             updateUserComment: 'update-user-comment',
+        }
+    },
+    users: {
+        base: 'users',
+        paths: {
+            subordinates: 'subordinates',
         }
     },
 }

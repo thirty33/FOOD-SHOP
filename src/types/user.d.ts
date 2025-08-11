@@ -12,6 +12,7 @@ export type Permission = typeof PERMISSION_TYPES[keyof typeof PERMISSION_TYPES];
 export interface User {
     role: Role;
     permission: Permission;
+    master_user: boolean;
 }
 
 export interface SuccessResponse {
@@ -22,6 +23,7 @@ export interface SuccessResponse {
         token_type: string;
         role: Role;
         permission: Permission;
+        master_user: boolean;
     };
 }
 
