@@ -175,13 +175,13 @@ export const CategoriesProducts = () => {
   const { isVisible, scrollToTop } = useScrollToTop();
 
   // Use custom hook for scroll to close functionality
-  useScrollToClose({
-    elementRef: categoriesRef,
-    isOpen: showSideCart,
-    onClose: () => setShowSideCart(false),
-    isLoading: isOrderLoading,
-    recentOperation,
-  });
+  // useScrollToClose({
+  //   elementRef: categoriesRef,
+  //   isOpen: showSideCart,
+  //   onClose: () => setShowSideCart(false),
+  //   isLoading: isOrderLoading,
+  //   recentOperation,
+  // });
 
   const allCategoriesNull = categories.every(
     (category) => category.category === null
