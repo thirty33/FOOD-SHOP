@@ -1,6 +1,5 @@
 import "./styles.css";
 import { useContext } from "react";
-import { Link } from "react-router-dom";
 import { CartItem } from "../Cart";
 import { useOrder } from "../../hooks/useCurrentOrder";
 import { SpinnerLoading } from "../SpinnerLoading";
@@ -17,6 +16,7 @@ import MonkeyIcon from "../Icons/MonkeyIcon";
 import CloseButton from "../Icons/CloseButton";
 import { GlobalContext } from "../../context/globalContext";
 import { ProductDetailContent } from "../ProductDetailContent";
+import { LinkWithQueryParams } from "../LinkWithQueryParams";
 
 export const CheckoutSideMenu = () => {
   const {
@@ -165,12 +165,12 @@ export const CheckoutSideMenu = () => {
                     Completar orden
                   </button>
                 ) : (
-                  <Link
+                  <LinkWithQueryParams
                     to={`/${ROUTES.GET_ORDER_SUMMARY_ROUTE(currentOrder.id)}`}
                     className="bg-blue-600 font-cera-bold text-xl md:text-2xl lg:text-2xl tracking-tighter py-3 text-white w-full rounded-lg text-center block no-underline hover:bg-blue-700"
                   >
                     Detalle de pedido
-                  </Link>
+                  </LinkWithQueryParams>
                 )}
               </>
             )}

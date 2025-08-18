@@ -22,7 +22,7 @@ export const SubordinatesUser = () => {
         {subordinates.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-base md:text-xl text-gray-500">
-              <span className="font-medium font-cera-regular">¡ No hay usuarios subordinados disponibles !</span>
+              <span className="font-medium font-cera-regular">¡ No hay usuarios delegados disponibles !</span>
             </p>
           </div>
         ) : (

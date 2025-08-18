@@ -1,16 +1,15 @@
 import { useGetOrderById } from "../../hooks/useGetOrderById";
 import { SpinnerLoading } from "../../components/SpinnerLoading";
-import { Link, useNavigate } from "react-router-dom";
 import { ORDER_STATUS_TEXT, ORDER_STATUS_COLOR } from "../../config/constant";
-import { configuration } from "../../config/config";
 import { isAdminOrCafe } from "../../helpers/permissions";
 import { useAuth } from "../../hooks/useAuth";
 import CloseButton from "../Icons/CloseButton";
 import { ROUTES } from "../../config/routes";
+import { LinkWithQueryParams } from "../LinkWithQueryParams";
+import { NavigateWithDelegate } from "../NavigateWithDelegate";
 
 export const OrderSummary = (): JSX.Element => {
   const { order, isLoading } = useGetOrderById();
-  const navigate = useNavigate();
   const { user } = useAuth();
   const canViewPrices = isAdminOrCafe(user);
 
@@ -28,12 +27,12 @@ export const OrderSummary = (): JSX.Element => {
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white tracking-tighter">
           No se encontró el pedido
         </h2>
-        <Link
+        <LinkWithQueryParams
           to="/"
           className="mt-4 rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 tracking-tighter"
         >
           Ir al inicio
-        </Link>
+        </LinkWithQueryParams>
       </div>
     );
   }
@@ -44,11 +43,12 @@ export const OrderSummary = (): JSX.Element => {
         <div className="mx-auto max-w-screen-xl 2xl:px-0 md:px-8">
           <div className="mx-auto max-w-3xl">
             <div className="bg-white rounded-2xl md:rounded-3xl border border-gray-state md:border-2 shadow-sm p-6 md:px-8 md:py-8 mb-6 relative">
-              <CloseButton
-                className="absolute top-[-1rem] right-[-1rem] w-8 h-8 md:w-10 md:h-10 cursor-pointer"
-                size="32"
-                onClick={() => navigate(`/${ROUTES.GET_ORDERS_ROUTE}`)}
-              />
+              <NavigateWithDelegate to={`/${ROUTES.GET_ORDERS_ROUTE}`}>
+                <CloseButton
+                  className="absolute top-[-1rem] right-[-1rem] w-8 h-8 md:w-10 md:h-10 cursor-pointer"
+                  size="32"
+                />
+              </NavigateWithDelegate>
               <h2 className="text-4xl md:text-5xl tracking-tighter text-nowrap font-cera-bold text-green-100 mb-3 pr-12 md:px-4">
                 Detalle del pedido
               </h2>
@@ -102,11 +102,19 @@ export const OrderSummary = (): JSX.Element => {
                       <div className="bg-white rounded-lg border border-gray-state p-4 mb-4">
                         <div className="flex items-center gap-4">
                           <div className="flex-shrink-0">
-                            <img
-                              className="h-10 w-16 md:h-16 md:w-20 lg:h-20 lg:w-24 object-cover rounded-lg"
-                              src={line?.product?.image ?? configuration.product.image}
-                              alt={line?.product?.name ?? "product_image"} 
-                            />
+                            {line?.product?.image ? (
+                              <img
+                                className="h-10 w-16 md:h-16 md:w-20 lg:h-20 lg:w-24 object-cover rounded-lg"
+                                src={line.product.image}
+                                alt={line?.product?.name ?? "product_image"} 
+                              />
+                            ) : (
+                              <div className="h-11 w-16 md:h-16 md:w-20 lg:h-20 lg:w-24 rounded-lg bg-gray-200 flex items-center justify-center">
+                                <span className="text-xs md:text-xs lg:text-sm font-cera-bold text-gray-600 text-center leading-tight px-1">
+                                  Imagen no disponible
+                                </span>
+                              </div>
+                            )}
                           </div>
                           <div className="flex-1 flex flex-col justify-center">
                             <h5 className="text-lg font-cera-bold text-green-100 tracking-tighter leading-tight md:leading-snug lg:leading-normal mb-0 text-wrap break-words">
@@ -156,11 +164,19 @@ export const OrderSummary = (): JSX.Element => {
                         <div className="bg-white rounded-lg md:rounded-2xl border border-gray-state p-4 w-full max-w-md">
                           <div className="flex items-center gap-4">
                             <div className="flex-shrink-0">
-                              <img
-                                className="h-14 w-28 md:h-20 md:w-32 lg:h-24 lg:w-36 object-cover rounded-lg md:rounded-2xl"
-                                src={line?.product?.image ?? configuration.product.image}
-                                alt={line?.product?.name ?? "product_image"} 
-                              />
+                              {line?.product?.image ? (
+                                <img
+                                  className="h-14 w-28 md:h-20 md:w-32 lg:h-24 lg:w-36 object-cover rounded-lg md:rounded-2xl"
+                                  src={line.product.image}
+                                  alt={line?.product?.name ?? "product_image"} 
+                                />
+                              ) : (
+                                <div className="h-14 w-28 md:h-20 md:w-32 lg:h-24 lg:w-36 rounded-lg md:rounded-2xl bg-gray-200 flex items-center justify-center">
+                                  <span className="text-xs md:text-xs lg:text-sm font-cera-bold text-gray-600 text-center leading-tight px-2">
+                                    Imagen no disponible
+                                  </span>
+                                </div>
+                              )}
                             </div>
                             <div className="flex-1 flex flex-col justify-center min-w-0">
                               <h5 className="text-xl font-cera-bold text-green-100 tracking-tighter leading-tight md:leading-snug lg:leading-normal mb-0 break-words overflow-hidden">

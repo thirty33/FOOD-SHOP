@@ -15,6 +15,7 @@ export const textMessages = {
 		OPEN_MAIN_MENU_SR: 'Open main menu'
 	},
 	BREADCRUMBS: {
-		MENUS: 'Menús'
+		MENU: 'menú',
+		MENUS: 'menús'
 	}
 }

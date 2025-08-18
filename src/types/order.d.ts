@@ -48,6 +48,13 @@ export interface OrderLine {
 	partially_scheduled: boolean;
 }
 
+export interface UserData {
+	nickname: string;
+	email: string;
+	branch_name: string | null;
+	branch_address: string | null;
+}
+
 export interface OrderData {
 	id: number;
 	total: number | string;
@@ -63,6 +70,7 @@ export interface OrderData {
 	order_lines: OrderLine[];
 	menu?: MenuData;
 	user_comment: string | null;
+	user?: UserData;
 }
 
 export interface SuccessResponse {

@@ -43,12 +43,20 @@ export const LoginForm = () => {
       const response = await authUser({ ...data, device_name: "app" });
       setShowHeader(true);
       setToken((response as SuccessResponse).data.token);
-      setUser(response.data.role, response.data.permission, response.data.master_user);
+      setUser(
+        response.data.role, 
+        response.data.permission, 
+        response.data.master_user,
+        response.data.nickname,
+        response.data.name
+      );
       
       const user = {
         role: response.data.role,
         permission: response.data.permission,
-        master_user: response.data.master_user
+        master_user: response.data.master_user,
+        nickname: response.data.nickname,
+        name: response.data.name
       };
       
       handleInitialNavigation(user);

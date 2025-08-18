@@ -79,6 +79,8 @@ export const ORDER_FILTER_DATES_TEXT = {
 export const ORDERS_QUERY_PARAMS = {
     ORDER_STATUS: 'order_status',
     TIME_PERIOD: 'time_period',
+    USER_SEARCH: 'user_search',
+    BRANCH_SEARCH: 'branch_search',
 }
 
 export const CHECKOUT_SIDE_MENU_CLASS = "checkout-side-menu";

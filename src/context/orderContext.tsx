@@ -20,6 +20,7 @@ import { Product } from "../types/categories";
 import { configuration } from "../config/config";
 import { handleAutoOpenSideCart } from "../helpers/sideCart";
 import { useAuth } from "../hooks/useAuth";
+import { useQueryParams } from "../hooks/useQueryParams";
 
 // Modal state interface
 interface ModalState {
@@ -76,6 +77,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
   const [reloadCart, setReloandCart] = useState(true);
   const { enqueueSnackbar } = useNotification();
   const { user } = useAuth();
+  const queryParams = useQueryParams(['delegate_user']);
 
   const prevDateRef = useRef<string | null>(null);
   const location = useLocation();
@@ -126,7 +128,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
         });
       }
 
-      const { data } = (await orderService.get(date)) as SuccessResponse;
+      const { data } = (await orderService.get(date, queryParams)) as SuccessResponse;
 
       dispatch({
         type: CART_ACTION_TYPES.SET_CURRENT_ORDER,
@@ -217,7 +219,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
       ) => {
         addProductToCart(orderLines);
       },
-      500
+      1000
     ),
     [location.search]
   );
@@ -253,7 +255,8 @@ export function OrderProvider({ children }: GlobalProviderProps) {
 
       (await orderService.createOrUpdate(
         getDate(location.search)!,
-        filterOrderLines
+        filterOrderLines,
+        queryParams
       )) as SuccessResponse;
 
     } catch (error) {
@@ -298,7 +301,8 @@ export function OrderProvider({ children }: GlobalProviderProps) {
 
       (await orderService.deleteOrderLine(
         getDate(location.search)!,
-        orderLines
+        orderLines,
+        queryParams
       )) as SuccessResponse;
 
     } catch (error) {
@@ -337,7 +341,8 @@ export function OrderProvider({ children }: GlobalProviderProps) {
 
       (await orderService.updateOrderStatus(
         getDate(location.search)!,
-        status
+        status,
+        queryParams
       )) as SuccessResponse;
 
     } catch (error) {
@@ -404,17 +409,18 @@ export function OrderProvider({ children }: GlobalProviderProps) {
   };
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const date = queryParams.get("date");
+    const urlQueryParams = new URLSearchParams(location.search);
+    const date = urlQueryParams.get("date");
+    const delegateUser = urlQueryParams.get("delegate_user");
 
-    if (date && (date !== prevDateRef.current || reloadCart)) {
+    if (date && (date !== prevDateRef.current || reloadCart || delegateUser)) {
       fetchOrder(date);
 
       prevDateRef.current = date;
 
       setReloandCart(false);
     }
-  }, [location.search, reloadCart]);
+  }, [location.search, reloadCart, queryParams.delegate_user]);
 
   // Reset modal to cart view when route changes
   useEffect(() => {

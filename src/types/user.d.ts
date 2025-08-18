@@ -13,6 +13,8 @@ export interface User {
     role: Role;
     permission: Permission;
     master_user: boolean;
+    nickname: string;
+    name: string;
 }
 
 export interface SuccessResponse {
@@ -24,6 +26,8 @@ export interface SuccessResponse {
         role: Role;
         permission: Permission;
         master_user: boolean;
+        nickname: string;
+        name: string;
     };
 }
 

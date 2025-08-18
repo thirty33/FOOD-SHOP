@@ -2,17 +2,36 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../config/routes";
 import { textMessages } from "../../config/textMessages";
 import { useMemo } from "react";
+import { useAuth } from "../../hooks/useAuth";
+import { useQueryParams } from "../../hooks/useQueryParams";
+
+// Reusable arrow component
+const ArrowIcon = () => (
+  <svg
+    className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1"
+    aria-hidden="true"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 6 10"
+  >
+    <path
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="m1 9 4-4-4-4"
+    />
+  </svg>
+);
 
 export const BreadCrumbsNavigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
-  const queryParams = useMemo(() => {
-    return new URLSearchParams(location.search);
-  }, [location.search]);
+  const { user } = useAuth();
+  const queryParams = useQueryParams(['date', 'delegate_user']);
 
   const dateFromQuery = useMemo(() => {
-    const dateParam = queryParams.get("date");
+    const dateParam = queryParams.date;
     if (dateParam) {
       try {
 
@@ -31,14 +50,14 @@ export const BreadCrumbsNavigation = () => {
 
         return formatter.format(dateObj);
       } catch (e) {
-        console.error("Error al parsear la fecha del query param:", e);
-        return "fecha no disponible";
+        console.error("Error parsing date from query param:", e);
+        return "date not available";
       }
     }
-    return "fecha no disponible";
+    return "date not available";
   }, [queryParams]);
 
-  const { isMenuRoute, isCartRoute, isCategoryRoute, showCategoryRoute, isOrdersRoute, isOrderDetailRoute } =
+  const { isMenuRoute, isCartRoute, isCategoryRoute, showCategoryRoute, isOrdersRoute, isOrderDetailRoute, isSubordinatesRoute } =
     useMemo(() => {
       const isMenuRoute = location.pathname === ROUTES.MENUS;
       const isCartRoute = location.pathname === `/${ROUTES.CART_ROUTE}`;
@@ -47,6 +66,7 @@ export const BreadCrumbsNavigation = () => {
       const isOrdersRoute = location.pathname.includes(`/${ROUTES.GET_ORDERS_ROUTE}`) || 
                            location.pathname.includes(ROUTES.ORDER_SUMMARY_ROUTE.split(':')[0]);
       const isOrderDetailRoute = location.pathname.includes("order-detail/");
+      const isSubordinatesRoute = location.pathname === ROUTES.SUBORDINATES_USER;
 
       return {
         isMenuRoute,
@@ -55,13 +75,31 @@ export const BreadCrumbsNavigation = () => {
         showCategoryRoute,
         isOrdersRoute,
         isOrderDetailRoute,
+        isSubordinatesRoute,
       };
     }, [location.pathname, location.search]);
 
   const renderMenuMessage = useMemo(() => {
     if (isMenuRoute) {
+      const delegateUser = queryParams.delegate_user;
+      const isMasterUser = user?.master_user;
+      
       return (
         <section className="flex flex-col justify-center text-center text-green-100">
+          {delegateUser && isMasterUser && (
+            <div className="mb-4 flex justify-center items-center">
+              <Link 
+                to={ROUTES.SUBORDINATES_USER}
+                className="font-cera-light text-xl md:text-2xl text-gray-400 hover:text-yellow-active"
+              >
+                {delegateUser.toLowerCase()}
+              </Link>
+              <div className="mx-2 flex items-center">
+                <ArrowIcon />
+              </div>
+              <span className="font-cera-light text-xl md:text-2xl text-gray-400">menús</span>
+            </div>
+          )}
           <p className="font-cera-bold text-3xl md:text-5xl lg:text-6xl tracking-tight">
             Selecciona día de entrega
           </p>
@@ -71,25 +109,55 @@ export const BreadCrumbsNavigation = () => {
         </section>
       );
     }
-  }, [isMenuRoute]);
+  }, [isMenuRoute, queryParams, user]);
 
   const renderMenuLink = useMemo(() => {
+    const delegateUser = queryParams.delegate_user;
+    const isMasterUser = user?.master_user;
+    const toPath = delegateUser 
+      ? { pathname: ROUTES.MENUS, search: `?delegate_user=${delegateUser}` }
+      : { pathname: ROUTES.MENUS };
+    
+    // If there's a delegate user and the user is master, show special format
+    if (delegateUser && isMasterUser) {
+      return (
+        <div className="flex items-center">
+          <Link
+            to={ROUTES.SUBORDINATES_USER}
+            className="font-cera-light tracking-tight text-md md:text-xl font-medium text-gray-400 hover:text-yellow-active"
+          >
+            {delegateUser.toLowerCase()}
+          </Link>
+          <div className="flex items-center">
+            <ArrowIcon />
+          </div>
+          <Link
+            to={toPath}
+            className="font-cera-light tracking-tight text-md md:text-xl font-medium text-gray-400 hover:text-yellow-active"
+          >
+            {textMessages.BREADCRUMBS.MENUS}
+          </Link>
+        </div>
+      );
+    }
+    
+    // Normal behavior when there's no delegate user or user is not master
     return (
       <Link
-        to={{ pathname: ROUTES.MENUS }}
+        to={toPath}
         className="font-cera-light tracking-tight inline-flex items-center text-md md:text-xl font-medium text-gray-400 hover:text-yellow-active dark:text-gray-400 dark:hover:text-white"
       >
         {textMessages.BREADCRUMBS.MENUS}
       </Link>
     );
-  }, []);
+  }, [queryParams, user]);
 
   const renderCategoryLink = useMemo(() => {
     if (!showCategoryRoute) {
       return null;
     }
 
-    const title = `Menú ${dateFromQuery}`;
+    const title = `${textMessages.BREADCRUMBS.MENU} ${dateFromQuery}`;
 
     const handleNavigate = () => {
       navigate(-1);
@@ -98,21 +166,7 @@ export const BreadCrumbsNavigation = () => {
     return (
       <li>
         <div className="flex items-center justify-center font-cera-light tracking-tight">
-          <svg
-            className="rtl:rotate-180 w-3 h-3 text-gray-400 ml-2"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 6 10"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="m1 9 4-4-4-4"
-            />
-          </svg>
+          <ArrowIcon />
           {isCategoryRoute ? (
             <span className="ms-1 text-md md:text-xl font-medium text-gray-400 md:ms-2 cursor-default">
               {title}
@@ -145,21 +199,7 @@ export const BreadCrumbsNavigation = () => {
     return (
       <li aria-current="page">
         <div className="flex items-center">
-          <svg
-            className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 6 10"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="m1 9 4-4-4-4"
-            />
-          </svg>
+          <ArrowIcon />
           <span className="ms-1 text-lg font-medium text-gray-500 md:ms-2 dark:text-gray-400 cursor-default">
             Cart
           </span>
@@ -173,31 +213,22 @@ export const BreadCrumbsNavigation = () => {
       return null;
     }
 
+    const delegateUser = queryParams.delegate_user;
+    const ordersPath = delegateUser 
+      ? `/${ROUTES.GET_ORDERS_ROUTE}?delegate_user=${delegateUser}`
+      : `/${ROUTES.GET_ORDERS_ROUTE}`;
+
     return (
       <>
         <Link
-          to={`/${ROUTES.GET_ORDERS_ROUTE}`}
+          to={ordersPath}
           className="font-cera-light tracking-tight inline-flex items-center text-md md:text-xl font-medium text-gray-400 hover:text-yellow-active dark:text-gray-400 dark:hover:text-white"
         >
           Mis pedidos
         </Link>
         <li aria-current="page">
           <div className="flex items-center">
-            <svg
-              className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 6 10"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="m1 9 4-4-4-4"
-              />
-            </svg>
+            <ArrowIcon />
             <span className="ms-1 text-md md:text-xl font-cera-light tracking-tight text-gray-400 md:ms-2 cursor-default">
               Detalle del pedido
             </span>
@@ -205,11 +236,24 @@ export const BreadCrumbsNavigation = () => {
         </li>
       </>
     );
-  }, [isOrderDetailRoute]);
+  }, [isOrderDetailRoute, queryParams]);
 
   // Don't render anything if on orders routes (except order detail)
   if (isOrdersRoute && !isOrderDetailRoute) {
     return null;
+  }
+
+  // Handle subordinates route - show only "Company Users"
+  if (isSubordinatesRoute) {
+    return (
+      <section className="mt-8 px-1 md:px-0 2xl:px-[21rem] lg:px-52">
+        <nav className="flex pt-2.5 pb-5 justify-center content-center" aria-label="Breadcrumb">
+          <span className="font-cera-light tracking-tight text-md md:text-xl font-medium text-gray-400">
+            Usuarios de la empresa
+          </span>
+        </nav>
+      </section>
+    );
   }
 
   return (

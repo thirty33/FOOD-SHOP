@@ -51,6 +51,7 @@ describe("Menus Component", () => {
       menuItems: mockMenuItems,
       isLoading: false,
       setSelectedMenu: vi.fn(),
+      handleMenuClick: vi.fn(),
     }));
 
     // Render the component within Router context since it uses navigation
@@ -127,6 +128,7 @@ describe("Menus Component", () => {
       menuItems: transformedMenuItems,
       isLoading: false,
       setSelectedMenu: vi.fn(),
+      handleMenuClick: vi.fn(),
     }));
     
     // Render the component

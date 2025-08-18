@@ -1,17 +1,13 @@
-import { useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
 import { orderService } from "../services/order"
 import { OrderData } from "../types/order"
-import { Pagination } from "../types/responses"
 import { menuReducer } from "../store/reducers/menuReducer";
 import { InitialState } from "../store/state/initialState";
 import { CART_ACTION_TYPES, ORDERS_QUERY_PARAMS } from "../config/constant";
-import { useNotification } from "./useNotification";
-import { useInfiniteScroll } from "./useInfiniteScroll";
-import { configuration } from "../config/config";
+import { useManualPagination } from "./useManualPagination";
 
 export function useCurrentList() {
 
-	const { enqueueSnackbar } = useNotification();
 	const [state, dispatch] = useReducer(menuReducer, InitialState);
 
 	const [filters, setFilters] = useState({
@@ -26,91 +22,63 @@ export function useCurrentList() {
 		})
 	};
 
-	const {
-		currentPage,
-		isLoading,
-		setIsLoading,
-		setHasMore,
-		setLastPage,
-		setCurrenPage
-	} = useInfiniteScroll();
+	const onSearch = (search: string) => {
+		setFilters({
+			...filters,
+			[ORDERS_QUERY_PARAMS.USER_SEARCH]: search,
+			[ORDERS_QUERY_PARAMS.BRANCH_SEARCH]: search,
+		})
+	};
 
 	const { orders } = state;
 
-	const fetchOrders = async (filteredFilters?: Record<string, string | number>) => {
-
-		try {
-
-			setIsLoading(true);
-
-			const { last_page, current_page, data } = await orderService.getOrders({
-				...filteredFilters,
-				page: currentPage,
-			}) as Pagination<OrderData>;
-
-			setHasMore(current_page < last_page);
-			setLastPage(last_page);
-
-			const finalOrders = currentPage === 1 ? [...data] : [...orders || [], ...data];
-
-			dispatch({
-				type: CART_ACTION_TYPES.SET_ORDERS,
-				payload: { orders: finalOrders },
-			});
-
-		} catch (error) {
-			console.error(error);
-			enqueueSnackbar((error as Error).message, {
-				variant: "error",
-				autoHideDuration: configuration.toast.duration,
-			});
-		} finally {
-			setIsLoading(false);
-		}
-
-	}
+	// Create fetch function for useManualPagination
+	const fetchOrders = async (page: number, filters: Record<string, string | number>) => {
+		const response = await orderService.getOrders({
+			...filters,
+			page,
+		});
+		return response;
+	};
 
 	const filteredFilters = useMemo(() => {
-
-		setCurrenPage(1)
-
 		return Object.entries(filters).reduce((acc, [key, value]) => {
 			if (typeof value === 'string' && value.trim() !== '') {
 				acc[key] = value;
 			}
 			return acc;
-		}, {
-			page: 1
-		} as Record<string, string | number>)
-
+		}, {} as Record<string, string | number>)
 	}, [filters]);
 
-	useEffect(() => {
-		if (currentPage > 1) {
-			fetchOrders(filteredFilters)
-		}
-	}, [currentPage, filteredFilters])
+	// ✅ NEW - Use the generic manual pagination hook
+	const {
+		items: paginatedOrders,
+		isLoading,
+		hasMore,
+		loadMore,
+		// reset
+	} = useManualPagination<OrderData>({
+		fetchFunction: fetchOrders,
+		resetTrigger: filteredFilters, // Reset when filters change
+		fetchArgs: [filteredFilters]
+	});
 
-	const hasFetched = useRef(false);
+	// Sync paginated orders with global state
 	useEffect(() => {
-		if (!hasFetched.current && (!orders || orders?.length === 0) && currentPage === 1) {
-			fetchOrders();
-			hasFetched.current = true;
-		}
-	}, [orders, currentPage])
-
-	useEffect(() => {
-		
-		if (Object.entries(filteredFilters).length > 0) {
-			fetchOrders(filteredFilters);
-		}
-
-	}, [filteredFilters]);
+		// Always update state, even with empty arrays to clear previous data
+		dispatch({
+			type: CART_ACTION_TYPES.SET_ORDERS,
+			payload: { orders: paginatedOrders },
+		});
+	}, [paginatedOrders]);
 
 	return {
 		orders,
 		isLoading,
+		hasMore, // ✅ NEW - Expose hasMore for load more functionality
+		loadMore, // ✅ NEW - Expose loadMore function
 		filters,
 		changeFilter,
+		onSearch
 	}
 }

@@ -6,7 +6,7 @@ import { OrdersFilters } from "./OrdersFilters";
 
 export const Orders = () => {
 
-  const { orders, isLoading, changeFilter } = useCurrentList();
+  const { orders, isLoading, hasMore, loadMore, changeFilter, onSearch } = useCurrentList();
   const { user } = useAuth();
 
   return (
@@ -15,11 +15,14 @@ export const Orders = () => {
         <div className="mx-auto max-w-5xl">
           <OrdersFilters
             changeFilter={changeFilter}
+            onSearch={onSearch}
           />
           <OrderLines
             showTotalPrice={isAdminOrCafe(user)}
             orders={orders}
             isLoading={isLoading}
+            hasMore={hasMore}
+            loadMore={loadMore}
           />
         </div>
       </div>

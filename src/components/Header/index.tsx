@@ -1,8 +1,5 @@
-import { useAuth } from "../../hooks/useAuth";
 import { useState, useRef } from "react";
-import { useNotification } from "../../hooks/useNotification";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { ROUTES } from "../../config/routes";
+import { NavLinkWithQueryParams } from "../NavLinkWithQueryParams";
 import { configuration } from "../../config/config";
 import { useOrder } from "../../hooks/useCurrentOrder";
 import CartIcon from "../Icons/CartIcon";
@@ -10,6 +7,8 @@ import BurgerButton from "../Icons/BurgerButton";
 import CloseButton from "../Icons/CloseButton";
 import { textMessages } from "../../config/textMessages";
 import { useOutsideClickAndScroll } from "../../hooks/useOutsideClickAndScroll";
+import { LinkWithQueryParams } from "../LinkWithQueryParams";
+import { useMenuLinks } from "../../hooks/useMenuLinks";
 
 interface NavItemProps {
   menuName: string;
@@ -36,10 +35,10 @@ export const NavItem = ({ menuName, route, onClick, onNavClick }: NavItemProps) 
     );
   }
 
-  // Si tiene route, renderizar como NavLink normal
+  // Si tiene route, renderizar como NavLinkWithQueryParams
   return (
     <li>
-      <NavLink
+      <NavLinkWithQueryParams
         to={route!}
         className={({ isActive }) =>
           `${baseClasses} md:text-3xl font-cera-bold ml-4 ${
@@ -50,17 +49,15 @@ export const NavItem = ({ menuName, route, onClick, onNavClick }: NavItemProps) 
         onClick={onNavClick}
       >
         {menuName}
-      </NavLink>
+      </NavLinkWithQueryParams>
     </li>
   );
 };
 
 export const Header = () => {
-  const { logOut, setToken, signOut } = useAuth();
   const { setShowSideCart, showSideCart, cartItemsCount, isAtCategoriesRoute } =
     useOrder();
-  const { enqueueSnackbar } = useNotification();
-  const navigate = useNavigate();
+  const { menuLinks, getMainNavLinks, getSignOutLink } = useMenuLinks();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
@@ -91,35 +88,6 @@ export const Header = () => {
     setShowSideCart(!currentState)
   }
 
-  const SignOut = async (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  ) => {
-    try {
-      await logOut();
-      setToken(null);
-      signOut();
-      navigate(ROUTES.LOGIN);
-    } catch (error) {
-      enqueueSnackbar((error as Error).message, { variant: "error", autoHideDuration: configuration.toast.duration });
-    }
-    event.preventDefault();
-  };
-
-  const menuLinks = [
-    {
-      menuName: textMessages.HEADER.MENUS,
-      route: ROUTES.MENUS,
-    },
-    {
-      menuName: textMessages.HEADER.ORDERS,
-      route: `/${ROUTES.GET_ORDERS_ROUTE}`,
-    },
-    {
-      menuName: textMessages.HEADER.SIGN_OUT,
-      onClick: SignOut,
-    },
-  ];
-
   return (
     <>
       <header className="sticky top-0 z-50 overflow-x-hidden">
@@ -129,21 +97,19 @@ export const Header = () => {
 
             <section className="bg-green-50 hidden md:flex basis-1/3 flex-row justify-end md:h-20 lg:pr-8">
               <ul className="flex flex-row items-center justify-center h-full">
-                {menuLinks
-                  .filter((link) => link.menuName !== textMessages.HEADER.SIGN_OUT)
-                  .map((link, index) => (
-                    <NavItem
-                      key={index}
-                      menuName={link.menuName}
-                      route={link.route}
-                      onClick={link.onClick}
-                      onNavClick={closeMenu}
-                    />
-                  ))}
+                {getMainNavLinks.map((link, index) => (
+                  <NavItem
+                    key={index}
+                    menuName={link.menuName}
+                    route={link.route}
+                    onClick={link.onClick}
+                    onNavClick={closeMenu}
+                  />
+                ))}
               </ul>
             </section>
 
-            <Link
+            <LinkWithQueryParams
               to={"/"}
               className="basis-4/6 shrink-0 flex items-center md:justify-center md:h-28"
             >
@@ -154,7 +120,7 @@ export const Header = () => {
                   alt={configuration.company.name}
                 />
               </div>
-            </Link>
+            </LinkWithQueryParams>
 
             <div className="basis-2/6 md:basis-1/3 shrink-0 grid gap-0 grid-cols-2 md:grid-cols-[1fr_6.4fr_17fr] lg:grid-cols-[64px_64px_128px_64px] content-start pr-2 bg-green-50 md:h-20 md:content-center">
               {isAtCategoriesRoute() && (
@@ -177,16 +143,13 @@ export const Header = () => {
               )}
 
               <section className="hidden md:flex items-center justify-center col-start-3">
-                {menuLinks
-                  .filter((link) => link.menuName === textMessages.HEADER.SIGN_OUT)
-                  .map((link, index) => (
-                    <NavItem
-                      key={index}
-                      menuName={link.menuName}
-                      route={link.route}
-                      onClick={link.onClick}
-                    />
-                  ))}
+                {getSignOutLink && (
+                  <NavItem
+                    menuName={getSignOutLink.menuName}
+                    route={getSignOutLink.route}
+                    onClick={getSignOutLink.onClick}
+                  />
+                )}
               </section>
 
               <button
@@ -217,7 +180,7 @@ export const Header = () => {
             className={`
               md:hidden lg:flex 
               flex flex-col mt-4 font-medium 
-              bg-green-100 mx-6 rounded-xl py-4 h-36
+              bg-green-100 mx-6 rounded-xl py-4 h-40
             `}
           >
             {menuLinks.map((link, index) => (
@@ -231,7 +194,7 @@ export const Header = () => {
             ))}
           </ul>
           <CloseButton
-            className="w-10 h-10 cursor-pointer z-10 absolute bottom-2 left-[45%]"
+            className="w-10 h-10 cursor-pointer z-10 absolute bottom-0 left-[45%]"
             color="white"
             width="20"
             height="20"

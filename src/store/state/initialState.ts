@@ -15,7 +15,9 @@ export const InitialState: globalState = {
     user: {
         role: null,
         permission: null,
-        master_user: false
+        master_user: false,
+        nickname: '',
+        name: '',
     },
     orders: null,
     showModal: false,

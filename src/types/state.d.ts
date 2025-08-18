@@ -36,8 +36,10 @@ export interface state {
         role: Role;
         permission: Permission;
         master_user: boolean;
+        nickname: string;
+        name: string;
     };
-    setUser: (role: Role, permission: Permission, master_user: boolean) => void;
+    setUser: (role: Role, permission: Permission, master_user: boolean, nickname: string, name: string) => void;
     updateCurrentOrder: (orderLines: Array<{id: string | number, quantity: number | string, partiallyScheduled?: boolean }>) => void;
     updateOrderStatus: (status: string) => void;
     partiallyScheduleOrder: (status: string) => void;
@@ -67,6 +69,8 @@ export interface globalState {
         role: Role;
         permission: Permission;
         master_user: boolean;
+        nickname: string;
+        name: string;
     }
     orders: OrderData[] | null;
     showModal: boolean;

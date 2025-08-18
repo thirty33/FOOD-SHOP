@@ -1,11 +1,14 @@
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { menuService } from "../services/menu";
 import { MenuItemPagination } from "../types/menus";
 import { useInfiniteScroll } from "./useInfiniteScroll";
 import { useOrder } from "./useCurrentOrder";
 import { useQueryParams } from "./useQueryParams";
+import { ROUTES } from "../config/routes";
 
 export function useMenus() {
+    const navigate = useNavigate();
 
     const {
         currentPage,
@@ -71,9 +74,30 @@ export function useMenus() {
         }
     }, [menuItems, currentPage])
 
+    const handleMenuClick = (menuId: string | number, date: string) => {
+        const menuSelected = menuItems.find((item) => item.id === menuId);
+        if (menuSelected) {
+            setSelectedMenu(menuSelected);
+        }
+        
+        // Construir los search params preservando delegate_user si existe
+        const searchParams = new URLSearchParams();
+        searchParams.set('date', date);
+        
+        if (queryParams.delegate_user) {
+            searchParams.set('delegate_user', queryParams.delegate_user);
+        }
+        
+        navigate({
+            pathname: ROUTES.GET_CATEGORY_ROUTE(menuId),
+            search: searchParams.toString()
+        });
+    };
+
     return {
         menuItems,
         isLoading,
-        setSelectedMenu
+        setSelectedMenu,
+        handleMenuClick
     }
 }

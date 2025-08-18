@@ -3,16 +3,18 @@ import { orderService } from "../services/order";
 import { useNotification } from "./useNotification";
 import { OrderContext } from "../context/orderContext";
 import { configuration } from "../config/config";
+import { useQueryParams } from "./useQueryParams";
 
 export function useUpdateUserComment() {
     const [isLoading, setIsLoading] = useState(false);
     const { enqueueSnackbar } = useNotification();
     const { currentOrder, setCurrentOrder } = useContext(OrderContext);
+    const queryParams = useQueryParams(['delegate_user']);
 
     const updateUserComment = async (orderId: string | number, userComment: string) => {
         try {
             setIsLoading(true);
-            const response = await orderService.updateUserComment(orderId, userComment);
+            const response = await orderService.updateUserComment(orderId, userComment, queryParams);
             
             // Update currentOrder with new comment
             if (currentOrder && currentOrder.id === orderId) {

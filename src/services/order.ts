@@ -9,14 +9,14 @@ import {
 import { Pagination, SuccessResponse } from "../types/responses";
 
 export interface OrderService {
-	get(date: string): Promise<OrderResponse> | OrderResponse;
-	getById(date: string): Promise<OrderResponse> | OrderResponse;
-	createOrUpdate(date: string, orderLines: { id: number; quantity: number }[]): Promise<OrderResponse> | OrderResponse;
-	deleteOrderLine(date: string, orderLines: { id: number; quantity: number }[]): Promise<OrderResponse> | OrderResponse;
-	updateOrderStatus(date: string, statusOrder: string): Promise<OrderResponse> | OrderResponse;
+	get(date: string, params?: { [key: string]: string | number }): Promise<OrderResponse> | OrderResponse;
+	getById(id: string | number, params?: { [key: string]: string | number }): Promise<OrderResponse> | OrderResponse;
+	createOrUpdate(date: string, orderLines: { id: number; quantity: number }[], params?: { [key: string]: string | number }): Promise<OrderResponse> | OrderResponse;
+	deleteOrderLine(date: string, orderLines: { id: number; quantity: number }[], params?: { [key: string]: string | number }): Promise<OrderResponse> | OrderResponse;
+	updateOrderStatus(date: string, statusOrder: string, params?: { [key: string]: string | number }): Promise<OrderResponse> | OrderResponse;
 	partiallyScheduleOrder(date: string, statusOrder: string): Promise<OrderResponse> | OrderResponse;
 	getOrders(params?: { [key: string]: string | number }): Promise<Pagination<OrderData>> | Pagination<OrderData>;
-	updateUserComment(id: string | number, userComment: string): Promise<OrderResponse> | OrderResponse;
+	updateUserComment(id: string | number, userComment: string, params?: { [key: string]: string | number }): Promise<OrderResponse> | OrderResponse;
 }
 
 export const orderService = new (
@@ -44,9 +44,9 @@ export const orderService = new (
 			}
 		}
 
-		async get(date: string) {
+		async get(date: string, params?: { [key: string]: string | number }) {
 			try {
-				const { data, status } = await this.http.get(`${API_ROUTES.orders.paths.getItem}/${date}`);
+				const { data, status } = await this.http.get(`${API_ROUTES.orders.paths.getItem}/${date}`, { params });
 
 				const response = this.handleResponse<OrderResponse>(status, data);
 
@@ -62,9 +62,9 @@ export const orderService = new (
 			}
 		}
 
-		async getById(id: string | number) {
+		async getById(id: string | number, params?: { [key: string]: string | number }) {
 			try {
-				const { data, status } = await this.http.get(`${API_ROUTES.orders.paths.getItemById}/${id}`);
+				const { data, status } = await this.http.get(`${API_ROUTES.orders.paths.getItemById}/${id}`, { params });
 
 				const response = this.handleResponse<OrderResponse>(status, data);
 
@@ -80,11 +80,11 @@ export const orderService = new (
 			}
 		}
 
-		async createOrUpdate(date: string, orderLines: { id: number | string; quantity: number }[]) {
+		async createOrUpdate(date: string, orderLines: { id: number | string; quantity: number }[], params?: { [key: string]: string | number }) {
 			try {
 				const { data, status } = await this.http.post(`${API_ROUTES.orders.paths.createOrUpdateOrder}/${date}`, {
 					order_lines: orderLines
-				});
+				}, { params });
 
 				const response = this.handleResponse<OrderResponse>(status, data);
 
@@ -100,14 +100,15 @@ export const orderService = new (
 			}
 		}
 
-		async deleteOrderLine(date: string, orderLines: { id: number | string; quantity: number }[]) {
+		async deleteOrderLine(date: string, orderLines: { id: number | string; quantity: number }[], params?: { [key: string]: string | number }) {
 
 			try {
 
 				const { data, status } = await this.http.delete(`${API_ROUTES.orders.paths.deleteOrderLine}/${date}`, {
 					data: {
 						order_lines: orderLines
-					}
+					},
+					params
 				});
 
 				const response = this.handleResponse<OrderResponse>(status, data);
@@ -124,13 +125,13 @@ export const orderService = new (
 			}
 		}
 
-		async updateOrderStatus(date: string, statusOrder: string) {
+		async updateOrderStatus(date: string, statusOrder: string, params?: { [key: string]: string | number }) {
 
 			try {
 
 				const { data, status } = await this.http.post(`${API_ROUTES.orders.paths.updateOrderStatus}/${date}`, {
 					status: statusOrder
-				});
+				}, { params });
 
 				const response = this.handleResponse<OrderResponse>(status, data);
 
@@ -168,13 +169,13 @@ export const orderService = new (
 			}
 		}
 
-		async updateUserComment(id: string | number, userComment: string) {
+		async updateUserComment(id: string | number, userComment: string, params?: { [key: string]: string | number }) {
 
 			try {
 
 				const { data, status } = await this.http.patch(`${API_ROUTES.orders.paths.updateUserComment}/${id}`, {
 					user_comment: userComment
-				});
+				}, { params });
 
 				const response = this.handleResponse<OrderResponse>(status, data);
 

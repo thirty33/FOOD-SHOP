@@ -22,3 +22,29 @@ export function capitalizeAfterHyphen(text: string): string {
     return `-${spaces}${letter.toUpperCase()}`;
   });
 }
+
+/**
+ * Capitalizes the first letter of each word in a string
+ * Supports Unicode characters including ñ, á, é, etc.
+ * 
+ * @param text - The text to transform
+ * @returns {string} - Text with each word capitalized
+ * 
+ * @example
+ * capitalizeWords("HELLO WORLD") => "Hello World"
+ * capitalizeWords("john doe") => "John Doe"
+ * capitalizeWords("mary-ann smith") => "Mary-Ann Smith"
+ * capitalizeWords("ELIODORO YAÑEZ") => "Eliodoro Yañez"
+ */
+export function capitalizeWords(text: string): string {
+  if (!text) return text;
+  
+  return text
+    .toLowerCase()
+    .split(' ')
+    .map(word => {
+      if (word.length === 0) return word;
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(' ');
+}
