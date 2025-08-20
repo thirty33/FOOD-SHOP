@@ -9,6 +9,7 @@ import { Checkout } from "../components/Checkout";
 import { OrderSummary } from "../components/OrderSummary";
 import { Orders } from "../components/Orders";
 import { CategoriesProducts } from "../components/CategoriesProducts";
+import { CategoryGroupFilters } from "../components/CategoryGroupFilters";
 import { SubordinatesUser } from "../components/SubordinatesUser";
 
 export const AppRouter = () => {
@@ -27,7 +28,10 @@ export const AppRouter = () => {
       path: ROUTES.CATEGORY_ROUTE,
       element: (
         <ProtectedRoute>
-          <CategoriesProducts />
+          <>
+            <CategoryGroupFilters />
+            <CategoriesProducts />
+          </>
         </ProtectedRoute>
       ),
     },

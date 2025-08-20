@@ -77,3 +77,14 @@ export interface Category {
 export type MenuApiResponse = SuccessResponse<Pagination<Category>> | UnauthorizedResponse | RateLimitResponse;
 
 export type CategoryItemPagination = Pagination<Category>;
+
+// Category Group types
+export interface CategoryGroup {
+    id: number;
+    name: string;
+    description: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export type CategoryGroupResponse = SuccessResponse<CategoryGroup[]> | UnauthorizedResponse | RateLimitResponse;

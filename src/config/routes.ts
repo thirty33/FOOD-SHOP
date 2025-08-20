@@ -35,6 +35,7 @@ export const API_ROUTES = {
         base: 'categories',
         paths: {
             list: '',
+            groups: 'groups',
         }
     },
     products: {

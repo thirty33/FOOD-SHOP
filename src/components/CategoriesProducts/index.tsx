@@ -10,7 +10,7 @@ import { isAgreementIndividual } from "../../helpers/permissions";
 import { useAuth } from "../../hooks/useAuth";
 import { User } from "../../types/user";
 import { useMemo, useRef } from "react";
-import { useScrollToClose } from "../../hooks/useScrollToClose";
+// import { useScrollToClose } from "../../hooks/useScrollToClose";
 import { useScrollToTop } from "../../hooks/useScrollToTop";
 import ArrowUpIcon from "../Icons/ArrowUpIcon";
 import { textMessages } from "../../config/textMessages";
@@ -168,7 +168,7 @@ const CategorySection = ({
 
 export const CategoriesProducts = () => {
   const { user } = useAuth();
-  const { showSideCart, setShowSideCart, isLoading: isOrderLoading, recentOperation } = useOrder();
+  // const { showSideCart, setShowSideCart, isLoading: isOrderLoading, recentOperation } = useOrder();
   const categoriesRef = useRef<HTMLDivElement>(null);
   const { categories, groupedCategories, isLoading, hasMore, loadMoreCategories } =
     useCategories();
