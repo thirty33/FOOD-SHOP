@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { categoryService } from '../services/category';
 import { CategoryGroup } from '../types/categories';
 import { useQueryParams } from './useQueryParams';
+import { useCategoryFilter } from '../context/CategoryFilterContext';
 
 export const useCategoryGroupFilters = () => {
   const { menuId } = useParams<{ menuId: string }>();
@@ -13,8 +14,8 @@ export const useCategoryGroupFilters = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  // State to track active filter (null means no filter active)
-  const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  // Use context for active filter state
+  const { activeFilter, setActiveFilter } = useCategoryFilter();
 
   // Fetch category groups from API
   useEffect(() => {

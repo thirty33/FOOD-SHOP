@@ -11,6 +11,7 @@ import { Orders } from "../components/Orders";
 import { CategoriesProducts } from "../components/CategoriesProducts";
 import { CategoryGroupFilters } from "../components/CategoryGroupFilters";
 import { SubordinatesUser } from "../components/SubordinatesUser";
+import { CategoryFilterProvider } from "../context/CategoryFilterContext";
 
 export const AppRouter = () => {
   
@@ -28,10 +29,10 @@ export const AppRouter = () => {
       path: ROUTES.CATEGORY_ROUTE,
       element: (
         <ProtectedRoute>
-          <>
+          <CategoryFilterProvider>
             <CategoryGroupFilters />
             <CategoriesProducts />
-          </>
+          </CategoryFilterProvider>
         </ProtectedRoute>
       ),
     },

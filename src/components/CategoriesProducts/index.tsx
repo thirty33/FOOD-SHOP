@@ -66,9 +66,9 @@ const ProductList = ({
   
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 2xl:gap-8">
-      {products.map((product) => (
+      {products.map((product, index) => (
         <ProductItem
-          key={product.id}
+          key={`product-${product.id}-${product.category_id}-${index}`}
           id={product.id}
           imageLight={product.image}
           price={product.price_list_lines[0].unit_price}
@@ -198,9 +198,9 @@ export const CategoriesProducts = () => {
       <div ref={categoriesRef} className="2xl:px-80 lg:px-48">
         <div className="container mx-auto px-4">
           {!allCategoriesNull &&
-            categoriesToRender.map((category: Category | ExtendedCategory) => (
+            categoriesToRender.map((category: Category | ExtendedCategory, index) => (
               <CategorySection
-                key={category.id}
+                key={`category-${category.id}-${category.category?.id || 'null'}-${category.menu_id || 'no-menu'}-${index}`}
                 category={category}
                 user={user}
               />

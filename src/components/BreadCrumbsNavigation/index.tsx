@@ -90,14 +90,14 @@ export const BreadCrumbsNavigation = () => {
             <div className="mb-4 flex justify-center items-center">
               <Link 
                 to={ROUTES.SUBORDINATES_USER}
-                className="font-cera-light text-xl md:text-2xl text-gray-400 hover:text-yellow-active"
+                className="font-cera-light text-lg md:text-2xl text-gray-400 hover:text-yellow-active"
               >
                 {delegateUser.toLowerCase()}
               </Link>
               <div className="mx-2 flex items-center">
                 <ArrowIcon />
               </div>
-              <span className="font-cera-light text-xl md:text-2xl text-gray-400">menús</span>
+              <span className="font-cera-light text-lg md:text-2xl text-gray-400">menús</span>
             </div>
           )}
           <p className="font-cera-bold text-3xl md:text-5xl lg:text-6xl tracking-tight">
@@ -124,7 +124,7 @@ export const BreadCrumbsNavigation = () => {
         <div className="flex items-center">
           <Link
             to={ROUTES.SUBORDINATES_USER}
-            className="font-cera-light tracking-tight text-md md:text-xl font-medium text-gray-400 hover:text-yellow-active"
+            className="font-cera-light tracking-tight text-sm md:text-xl font-medium text-gray-400 hover:text-yellow-active"
           >
             {delegateUser.toLowerCase()}
           </Link>
@@ -133,7 +133,7 @@ export const BreadCrumbsNavigation = () => {
           </div>
           <Link
             to={toPath}
-            className="font-cera-light tracking-tight text-md md:text-xl font-medium text-gray-400 hover:text-yellow-active"
+            className="font-cera-light tracking-tight text-sm md:text-xl font-medium text-gray-400 hover:text-yellow-active"
           >
             {textMessages.BREADCRUMBS.MENUS}
           </Link>
@@ -145,7 +145,7 @@ export const BreadCrumbsNavigation = () => {
     return (
       <Link
         to={toPath}
-        className="font-cera-light tracking-tight inline-flex items-center text-md md:text-xl font-medium text-gray-400 hover:text-yellow-active dark:text-gray-400 dark:hover:text-white"
+        className="font-cera-light tracking-tight inline-flex items-center text-sm md:text-xl font-medium text-gray-400 hover:text-yellow-active dark:text-gray-400 dark:hover:text-white"
       >
         {textMessages.BREADCRUMBS.MENUS}
       </Link>
@@ -168,14 +168,14 @@ export const BreadCrumbsNavigation = () => {
         <div className="flex items-center justify-center font-cera-light tracking-tight">
           <ArrowIcon />
           {isCategoryRoute ? (
-            <span className="ms-1 text-md md:text-xl font-medium text-gray-400 md:ms-2 cursor-default">
+            <span className="ms-1 text-sm md:text-xl font-medium text-gray-400 md:ms-2 cursor-default">
               {title}
             </span>
           ) : (
             <Link
               onClick={handleNavigate}
               to={"#"}
-              className="ms-1 text-lg md:text-xl font-medium text-gray-700 hover:text-blue-600 md:ms-2"
+              className="ms-1 text-sm md:text-xl font-medium text-gray-700 hover:text-blue-600 md:ms-2"
             >
               Categorías del {title}
             </Link>
@@ -222,14 +222,14 @@ export const BreadCrumbsNavigation = () => {
       <>
         <Link
           to={ordersPath}
-          className="font-cera-light tracking-tight inline-flex items-center text-md md:text-xl font-medium text-gray-400 hover:text-yellow-active dark:text-gray-400 dark:hover:text-white"
+          className="font-cera-light tracking-tight inline-flex items-center text-sm md:text-xl font-medium text-gray-400 hover:text-yellow-active dark:text-gray-400 dark:hover:text-white"
         >
           Mis pedidos
         </Link>
         <li aria-current="page">
           <div className="flex items-center">
             <ArrowIcon />
-            <span className="ms-1 text-md md:text-xl font-cera-light tracking-tight text-gray-400 md:ms-2 cursor-default">
+            <span className="ms-1 text-sm md:text-xl font-cera-light tracking-tight text-gray-400 md:ms-2 cursor-default">
               Detalle del pedido
             </span>
           </div>
@@ -248,7 +248,7 @@ export const BreadCrumbsNavigation = () => {
     return (
       <section className="mt-8 px-1 md:px-0 2xl:px-[21rem] lg:px-52">
         <nav className="flex pt-2.5 pb-5 justify-center content-center" aria-label="Breadcrumb">
-          <span className="font-cera-light tracking-tight text-md md:text-xl font-medium text-gray-400">
+          <span className="font-cera-light tracking-tight text-sm md:text-xl font-medium text-gray-400">
             Usuarios de la empresa
           </span>
         </nav>
