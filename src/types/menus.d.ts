@@ -7,6 +7,7 @@ export interface MenuItem {
     imageUrl: string;
     id: string | number;
     publication_date: string;
+    has_order: number;
 }
 
 //Api object
@@ -16,6 +17,7 @@ export interface MenuData {
     description: string;
     publication_date: string;
     id: string | number;
+    has_order: number;
 }
 
 export type MenuApiResponse = SuccessResponse<Pagination<MenuData>> | UnauthorizedResponse | RateLimitResponse;

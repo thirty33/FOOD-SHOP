@@ -1,17 +1,28 @@
-import { LoginForm } from "../components/LoginForm";
-import { Menus } from "../components/Menus";
+import { lazy, Suspense } from "react";
 import { useRoutes } from "react-router-dom";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import { ROUTES } from "../config/routes";
-import { ProductDetail } from "../components/ProductDetail";
-import { Cart } from "../components/Cart";
-import { Checkout } from "../components/Checkout";
-import { OrderSummary } from "../components/OrderSummary";
-import { Orders } from "../components/Orders";
-import { CategoriesProducts } from "../components/CategoriesProducts";
-import { CategoryGroupFilters } from "../components/CategoryGroupFilters";
-import { SubordinatesUser } from "../components/SubordinatesUser";
 import { CategoryFilterProvider } from "../context/CategoryFilterContext";
+import { SpinnerLoading } from "../components/SpinnerLoading";
+
+// Lazy load all route components
+const LoginForm = lazy(() => import("../components/LoginForm").then(module => ({ default: module.LoginForm })));
+const Menus = lazy(() => import("../components/Menus").then(module => ({ default: module.Menus })));
+const ProductDetail = lazy(() => import("../components/ProductDetail").then(module => ({ default: module.ProductDetail })));
+const Cart = lazy(() => import("../components/Cart").then(module => ({ default: module.Cart })));
+const Checkout = lazy(() => import("../components/Checkout").then(module => ({ default: module.Checkout })));
+const OrderSummary = lazy(() => import("../components/OrderSummary").then(module => ({ default: module.OrderSummary })));
+const Orders = lazy(() => import("../components/Orders").then(module => ({ default: module.Orders })));
+const CategoriesProducts = lazy(() => import("../components/CategoriesProducts").then(module => ({ default: module.CategoriesProducts })));
+const CategoryGroupFilters = lazy(() => import("../components/CategoryGroupFilters").then(module => ({ default: module.CategoryGroupFilters })));
+const SubordinatesUser = lazy(() => import("../components/SubordinatesUser").then(module => ({ default: module.SubordinatesUser })));
+
+// Loading component for Suspense fallback
+const LoadingFallback = () => (
+  <div className="flex justify-center items-center min-h-screen">
+    <SpinnerLoading show={true} size={12} />
+  </div>
+);
 
 export const AppRouter = () => {
   
@@ -86,5 +97,9 @@ export const AppRouter = () => {
     }
   ]);
 
-  return routes;
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      {routes}
+    </Suspense>
+  );
 };

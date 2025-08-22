@@ -1,6 +1,6 @@
 import "./styles.css";
 import { useContext } from "react";
-import { CartItem } from "../Cart";
+import { CartItem } from "../CartItem";
 import { useOrder } from "../../hooks/useCurrentOrder";
 import { SpinnerLoading } from "../SpinnerLoading";
 import { useAuth } from "../../hooks/useAuth";

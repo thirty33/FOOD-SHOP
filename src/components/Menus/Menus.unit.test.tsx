@@ -36,6 +36,7 @@ describe("Menus Component", () => {
         description: "Special menu for Monday",
         imageUrl: "test-image-url",
         publication_date: "2024-10-28",
+        has_order: 0,
       },
       {
         id: 2,
@@ -43,6 +44,7 @@ describe("Menus Component", () => {
         description: "Special menu for Tuesday",
         imageUrl: "test-image-url",
         publication_date: "2024-10-28",
+        has_order: 1,
       },
     ];
 
@@ -91,6 +93,7 @@ describe("Menus Component", () => {
             title: "menu test 1",
             description: "description test 1",
             publication_date: "2024-10-28",
+            has_order: 0,
           },
           {
             id: 2,
@@ -98,6 +101,7 @@ describe("Menus Component", () => {
             title: "menu test 2",
             description: "description test 2",
             publication_date: "2024-10-29",
+            has_order: 1,
           },
         ],
         first_page_url: "http://test.api/menus?page=1",
@@ -121,6 +125,7 @@ describe("Menus Component", () => {
       description: menu.description,
       imageUrl: "test-image-url",
       publication_date: menu.publication_date,
+      has_order: menu.has_order,
     }));
 
     // Mock the useMenus hook to return the transformed data

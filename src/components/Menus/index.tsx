@@ -7,10 +7,15 @@ const MenuCard: React.FC<{
   imageUrl: string;
   menuId: string | number;
   date: string;
+  has_order: number;
   handleClick: (menuId: string | number, date: string) => void;
-}> = ({ menuId, date, handleClick }) => {
+}> = ({ menuId, date, has_order, handleClick }) => {
+  const isDisabled = has_order === 1;
+  
   const onCardClick = () => {
-    handleClick(menuId, date);
+    if (!isDisabled) {
+      handleClick(menuId, date);
+    }
   };
 
   // Función para extraer y formatear la fecha usando la zona horaria de Santiago
@@ -59,7 +64,11 @@ const MenuCard: React.FC<{
   return (
     <div
       onClick={onCardClick}
-      className="bg-green-100 w-28 h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64 text-white cursor-pointer hover:bg-yellow-active transition-colors rounded-md md:rounded-xl pt-2 pb-8 overflow-hidden"
+      className={`bg-green-100 w-28 h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64 text-white transition-colors rounded-md md:rounded-xl pt-2 pb-8 overflow-hidden ${
+        isDisabled 
+          ? 'opacity-50 cursor-not-allowed' 
+          : 'cursor-pointer hover:bg-yellow-active'
+      }`}
     >
       <div className="w-full flex justify-end content-end font-cera-light tracking-normal text-xs md:text-lg lg:text-xl pt-1 md:leading-3 md:mt-2">
         <span className="mr-2 md:mr-3">
@@ -98,6 +107,7 @@ export const Menus = (): JSX.Element => {
               imageUrl={item.imageUrl}
               menuId={item.id}
               date={item.publication_date}
+              has_order={item.has_order}
               handleClick={handleMenuClick}
             />
           ))}
