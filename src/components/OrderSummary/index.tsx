@@ -228,11 +228,19 @@ export const OrderSummary = (): JSX.Element => {
                         <span className="text-lg md:text-xl font-cera-bold text-green-100 tracking-tighter">{order.total}</span>
                       </div>
                     </div>
+                    {order?.dispatch_cost && order.dispatch_cost !== "$0" && order.dispatch_cost !== "0" && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-base md:text-lg font-cera-regular text-green-100 tracking-tighter">Costo de despacho</span>
+                        <div className="flex justify-start w-24">
+                          <span className="text-lg md:text-xl font-cera-bold text-green-100 tracking-tighter">{order.dispatch_cost}</span>
+                        </div>
+                      </div>
+                    )}
                     <div className="flex justify-between items-center">
                       <span className="text-base md:text-lg font-cera-regular text-green-100 tracking-tighter">IVA 19%</span>
                       <div className="flex justify-start w-24">
                         <span className="text-lg md:text-xl font-cera-bold text-green-100 tracking-tighter">
-                          {(parseFloat(String(order.total_with_tax).replace('$', '').replace('.', '')) - parseFloat(String(order.total).replace('$', '').replace('.', ''))).toLocaleString('es-CL', {style: 'currency', currency: 'CLP'})}
+                          {order.tax_amount}
                         </span>
                       </div>
                     </div>

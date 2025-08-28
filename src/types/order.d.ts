@@ -59,6 +59,8 @@ export interface OrderData {
 	id: number;
 	total: number | string;
 	total_with_tax: number | string;
+	dispatch_cost: number | string;
+	tax_amount: number | string;
 	status: typeof ORDER_STATUS[keyof typeof ORDER_STATUS];
 	user_id: number;
 	price_list_min: number;

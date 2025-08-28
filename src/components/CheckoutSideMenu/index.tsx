@@ -141,6 +141,14 @@ export const CheckoutSideMenu = () => {
                     {currentOrder ? currentOrder?.total : "$0"}
                   </span>
                 </p>
+                {currentOrder?.dispatch_cost && currentOrder.dispatch_cost !== "$0" && currentOrder.dispatch_cost !== "0" && (
+                  <p className="flex justify-end justify-items-end items-center mb-0 mt-0 p-0">
+                    <span className="font-cera-regular text-lg md:text-xl lg:text-xl text-white tracking-tighter text-nowrap mr-2">Costo de despacho:</span>
+                    <span className="font-cera-regular text-lg md:text-xl lg:text-xl text-white tracking-tighter text-nowrap">
+                      {currentOrder.dispatch_cost}
+                    </span>
+                  </p>
+                )}
                 <p className="flex justify-end justify-items-end items-center mb-2 mt-0 p-0">
                   <span className="font-cera-regular text-lg md:text-xl lg:text-xl text-white tracking-tighter text-nowrap mr-2">Total con IVA</span>
                   <span className="font-cera-regular text-lg md:text-xl lg:text-xl text-white tracking-tighter text-nowrap">
