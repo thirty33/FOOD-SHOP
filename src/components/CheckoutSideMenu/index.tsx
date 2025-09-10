@@ -14,6 +14,7 @@ import { ROUTES } from "../../config/routes";
 import { isAdminOrCafe, isAgreementIndividual } from "../../helpers/permissions";
 import MonkeyIcon from "../Icons/MonkeyIcon";
 import CloseButton from "../Icons/CloseButton";
+import TruckIcon from "../Icons/TruckIcon";
 import { GlobalContext } from "../../context/globalContext";
 import { ProductDetailContent } from "../ProductDetailContent";
 import { LinkWithQueryParams } from "../LinkWithQueryParams";
@@ -104,7 +105,7 @@ export const CheckoutSideMenu = () => {
                   <CartItem
                     key={`${currentOrder.id}-${line.id}-${line.product.id}`}
                     name={line.product.name}
-                    price={line.total_price}
+                    price={line.unit_price}
                     quantity={line.quantity}
                     image={line.product.image}
                     id={line.product.id}
@@ -146,6 +147,17 @@ export const CheckoutSideMenu = () => {
                     <span className="font-cera-regular text-lg md:text-xl lg:text-xl text-white tracking-tighter text-nowrap mr-2">Costo de despacho:</span>
                     <span className="font-cera-regular text-lg md:text-xl lg:text-xl text-white tracking-tighter text-nowrap">
                       {currentOrder.dispatch_cost}
+                    </span>
+                  </p>
+                )}
+                {currentOrder?.shipping_threshold?.has_better_rate && (
+                  <p className="flex justify-end items-center mb-2 mt-1 p-2 bg-green-800 rounded-lg">
+                    <TruckIcon 
+                      className="w-4 h-4 mr-2 flex-shrink-0" 
+                      color="white" 
+                    />
+                    <span className="font-cera-regular text-xs md:text-sm lg:text-sm text-white tracking-tighter text-right">
+                      Estás a {currentOrder.shipping_threshold.amount_to_reach} de obtener envío por solo {currentOrder.shipping_threshold.next_threshold_cost}
                     </span>
                   </p>
                 )}

@@ -55,6 +55,15 @@ export interface UserData {
 	branch_address: string | null;
 }
 
+export interface ShippingThreshold {
+	has_better_rate: boolean;
+	next_threshold_amount: string | null;
+	next_threshold_cost: string | null;
+	amount_to_reach: string | null;
+	current_cost: string | null;
+	savings: string | null;
+}
+
 export interface OrderData {
 	id: number;
 	total: number | string;
@@ -73,6 +82,7 @@ export interface OrderData {
 	menu?: MenuData;
 	user_comment: string | null;
 	user?: UserData;
+	shipping_threshold: ShippingThreshold;
 }
 
 export interface SuccessResponse {
