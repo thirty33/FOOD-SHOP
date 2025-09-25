@@ -3,6 +3,7 @@ import CloseButton from '../Icons/CloseButton';
 import { useCategoryGroupFilters } from '../../hooks/useCategoryGroupFilters';
 import { useAuth } from '../../hooks/useAuth';
 import { ROLES_TYPES } from '../../config/constant';
+import { capitalizeFirstLetter } from '../../helpers/texts';
 
 interface CategoryGroupFiltersProps {
   onFilterSelect?: (groupName: string | null) => void;
@@ -94,7 +95,7 @@ export const CategoryGroupFilters: React.FC<CategoryGroupFiltersProps> = ({
                     : 'bg-green-50 text-green-100 hover:bg-yellow-active hover:text-white px-4'
                 }`}
               >
-                <span>{group.name}</span>
+                <span>{capitalizeFirstLetter(group.name)}</span>
                 {activeFilter === group.name && (
                   <CloseButton 
                     size="20" 
@@ -120,7 +121,7 @@ export const CategoryGroupFilters: React.FC<CategoryGroupFiltersProps> = ({
         
         {activeFilter && (
           <div className="text-xs font-cera-regular text-gray-text-state text-center">
-            Mostrando resultados para: <span className="font-cera-medium text-green-100">{activeFilter}</span>
+            Mostrando resultados para: <span className="font-cera-medium text-green-100">{capitalizeFirstLetter(activeFilter)}</span>
           </div>
         )}
       </div>

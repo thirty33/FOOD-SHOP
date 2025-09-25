@@ -88,8 +88,7 @@ export const ProductItem = ({
   return (
     <div
       key={id}
-      className="rounded-lg md:rounded-2xl border-2 border-gray-200 px-3 md:px-6 pt-3 md:pt-8 lg:pt-6 pb-2 md:pb-0 shadow-sm mx-6 lg:mx-0 lg:lg:max-w-96 cursor-pointer flex md:flex-col items-start"
-      onClick={handleProductClick}
+      className="rounded-lg md:rounded-2xl border-2 border-gray-200 px-3 md:px-6 pt-3 md:pt-8 lg:pt-6 pb-2 md:pb-0 shadow-sm mx-6 lg:mx-0 lg:lg:max-w-96 flex md:flex-col items-start"
     >
       <div 
         className="relative h-16 w-16 md:h-36 md:w-full md:mx-auto max-h-36 max-w-full overflow-hidden rounded-lg md:rounded-2xl flex-shrink-0 bg-gray-100 self-center md:self-auto"

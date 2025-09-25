@@ -168,7 +168,7 @@ export const BreadCrumbsNavigation = () => {
         <div className="flex items-center justify-center font-cera-light tracking-tight">
           <ArrowIcon />
           {isCategoryRoute ? (
-            <span className="ms-1 text-sm md:text-xl font-medium text-gray-400 md:ms-2 cursor-default">
+            <span className="ms-1 text-sm md:text-xl font-bold text-gray-800 md:ms-2 cursor-default">
               {title}
             </span>
           ) : (

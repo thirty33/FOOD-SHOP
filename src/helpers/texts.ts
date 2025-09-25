@@ -26,10 +26,10 @@ export function capitalizeAfterHyphen(text: string): string {
 /**
  * Capitalizes the first letter of each word in a string
  * Supports Unicode characters including ñ, á, é, etc.
- * 
+ *
  * @param text - The text to transform
  * @returns {string} - Text with each word capitalized
- * 
+ *
  * @example
  * capitalizeWords("HELLO WORLD") => "Hello World"
  * capitalizeWords("john doe") => "John Doe"
@@ -38,7 +38,7 @@ export function capitalizeAfterHyphen(text: string): string {
  */
 export function capitalizeWords(text: string): string {
   if (!text) return text;
-  
+
   return text
     .toLowerCase()
     .split(' ')
@@ -47,4 +47,20 @@ export function capitalizeWords(text: string): string {
       return word.charAt(0).toUpperCase() + word.slice(1);
     })
     .join(' ');
+}
+
+/**
+ * Capitalizes only the first letter of a string
+ *
+ * @param text - The text to transform
+ * @returns {string} - Text with only the first letter capitalized
+ *
+ * @example
+ * capitalizeFirstLetter("hello world") => "Hello world"
+ * capitalizeFirstLetter("HELLO WORLD") => "Hello world"
+ * capitalizeFirstLetter("desayunos") => "Desayunos"
+ */
+export function capitalizeFirstLetter(text: string): string {
+  if (!text) return text;
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 }
