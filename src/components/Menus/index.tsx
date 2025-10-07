@@ -1,5 +1,6 @@
 import { useMenus } from "../../hooks/useMenus";
 import { SpinnerLoading } from "../SpinnerLoading";
+import { formatMenuDate } from "../../helpers/dates";
 
 const MenuCard: React.FC<{
   title: string;
@@ -11,55 +12,14 @@ const MenuCard: React.FC<{
   handleClick: (menuId: string | number, date: string) => void;
 }> = ({ menuId, date, has_order, handleClick }) => {
   const isDisabled = has_order === 1;
-  
+
   const onCardClick = () => {
     if (!isDisabled) {
       handleClick(menuId, date);
     }
   };
 
-  // Función para extraer y formatear la fecha usando la zona horaria de Santiago
-  const formatDate = (dateString: string) => {
-    // Crear la fecha usando la zona horaria de Santiago
-    const date = new Date(dateString + "T12:00:00");
-
-    // Obtener la zona horaria desde las variables de entorno
-    const timezone = import.meta.env.VITE_TIMEZONE || "America/Santiago";
-
-    // Formatear usando la zona horaria específica
-    const year = date.toLocaleDateString("es-CL", {
-      year: "numeric",
-      timeZone: timezone,
-    });
-
-    const dayNumber = date.toLocaleDateString("es-CL", {
-      day: "numeric",
-      timeZone: timezone,
-    });
-
-    const dayName = date.toLocaleDateString("es-CL", {
-      weekday: "long",
-      timeZone: timezone,
-    });
-
-    const monthName = date.toLocaleDateString("es-CL", {
-      month: "long",
-      timeZone: timezone,
-    });
-
-    // Capitalizar la primera letra del día de la semana
-    const capitalizedDayName =
-      dayName.charAt(0).toUpperCase() + dayName.slice(1);
-
-    return {
-      year: parseInt(year),
-      dayNumber: parseInt(dayNumber),
-      dayName: capitalizedDayName,
-      monthName,
-    };
-  };
-
-  const { year, dayNumber, dayName, monthName } = formatDate(date);
+  const { year, dayNumber, dayName, monthName } = formatMenuDate(date);
 
   return (
     <div

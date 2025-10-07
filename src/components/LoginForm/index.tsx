@@ -21,6 +21,13 @@ const schema = yup
   })
   .required();
 
+const formatErrorMessage = (message: string): string => {
+  const supportContact = textMessages.ERRORS.SUPPORT_CONTACT
+    .replace('{phone}', configuration.support.phone)
+    .replace('{email}', configuration.support.email);
+  return `${message}. ${supportContact}`;
+};
+
 export const LoginForm = () => {
   const { setShowHeader, authUser, isLoading, setToken, setUser } = useAuth();
   const { enqueueSnackbar } = useNotification();
@@ -65,18 +72,18 @@ export const LoginForm = () => {
         type: "manual",
         message: (error as Error).message,
       });
-      const errorMessage = `${(error as Error).message}. Si tiene algún problema comuníquese a través del número ${configuration.support.phone} o del correo ${configuration.support.email}`;
+      const errorMessage = formatErrorMessage((error as Error).message);
       enqueueSnackbar(errorMessage, { variant: "error", autoHideDuration: configuration.toast.duration });
     }
   };
 
   useEffect(() => {
     if (errors.email) {
-      const errorMessage = `${errors.email.message}. Si tiene algún problema comuníquese a través del número ${configuration.support.phone} o del correo ${configuration.support.email}`;
+      const errorMessage = formatErrorMessage(errors.email.message || '');
       enqueueSnackbar(errorMessage, { variant: "error", autoHideDuration: configuration.toast.duration });
     }
     if (errors.password) {
-      const errorMessage = `${errors.password.message}. Si tiene algún problema comuníquese a través del número ${configuration.support.phone} o del correo ${configuration.support.email}`;
+      const errorMessage = formatErrorMessage(errors.password.message || '');
       enqueueSnackbar(errorMessage, { variant: "error", autoHideDuration: configuration.toast.duration });
     }
   }, [errors, enqueueSnackbar]);

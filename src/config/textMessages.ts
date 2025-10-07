@@ -7,6 +7,9 @@ export const textMessages = {
 		REMEMBER_ME: 'Recuérdame',
 		SUBMIT_BUTTON: 'Iniciar sesión'
 	},
+	ERRORS: {
+		SUPPORT_CONTACT: 'Si tiene algún problema comuníquese a través del número {phone} o del correo {email}'
+	},
 	HEADER: {
 		MENUS: 'Menús',
 		ORDERS: 'Pedidos',

@@ -1,8 +1,10 @@
 import { useSubordinates } from "../../hooks/useSubordinates";
 import { SpinnerLoading } from "../SpinnerLoading";
+import { MenuCardSubordinate } from "./MenuCardSubordinate";
+import { formatMenuDateShort } from "../../helpers/dates";
 
 export const SubordinatesUser = () => {
-  const { subordinates, isLoading, handleMakeOrder } = useSubordinates();
+  const { subordinates, isLoading, handleMakeOrder, handleMenuCardClick } = useSubordinates();
 
   if (isLoading) {
     return (
@@ -36,7 +38,7 @@ export const SubordinatesUser = () => {
                   <h2 className="text-xl font-cera-bold text-gray-800 mb-2">
                     {user.nickname}
                   </h2>
-                  
+
                   <div className="space-y-2">
                     <div className="flex flex-col">
                       <span className="text-sm text-gray-500 font-cera-regular">Email:</span>
@@ -44,14 +46,14 @@ export const SubordinatesUser = () => {
                         {user.email || "No registrado"}
                       </span>
                     </div>
-                    
+
                     <div className="flex flex-col">
                       <span className="text-sm text-gray-500 font-cera-regular">Sucursal:</span>
                       <span className="text-sm text-gray-700 font-cera-medium">
                         {user.branch_name}
                       </span>
                     </div>
-                    
+
                     <div className="flex flex-col">
                       <span className="text-sm text-gray-500 font-cera-regular">Dirección:</span>
                       <span className="text-sm text-gray-700 font-cera-medium">
@@ -60,7 +62,36 @@ export const SubordinatesUser = () => {
                     </div>
                   </div>
                 </div>
-                
+
+                <div className="mb-4">
+                  <h3 className="text-sm font-cera-bold text-gray-700 mb-2">Menús disponibles:</h3>
+                  <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+                    {user.available_menus && user.available_menus.length > 0 ? (
+                      user.available_menus.map((menu) => {
+                        const { dayName, dayNumber, month } = formatMenuDateShort(menu.publication_date);
+                        return (
+                          <MenuCardSubordinate
+                            key={menu.id}
+                            dayName={dayName}
+                            dayNumber={dayNumber}
+                            month={month}
+                            isCompleted={menu.has_order === 1}
+                            onClick={() => handleMenuCardClick(
+                              menu.id,
+                              menu.publication_date,
+                              menu.has_order,
+                              menu.order_id,
+                              user.nickname
+                            )}
+                          />
+                        );
+                      })
+                    ) : (
+                      <p className="text-xs text-gray-500 font-cera-regular">No hay menús disponibles</p>
+                    )}
+                  </div>
+                </div>
+
                 <button
                   type="button"
                   onClick={() => handleMakeOrder(user.nickname)}

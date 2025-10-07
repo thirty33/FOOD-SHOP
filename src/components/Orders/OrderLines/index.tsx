@@ -21,6 +21,20 @@ interface OrderLinesProps {
   loadMore?: () => void;
 }
 
+const getPriceFontSize = (price: string): string => {
+  const length = price.length;
+
+  if (length <= 8) {
+    return 'text-xs md:text-base lg:text-lg';
+  } else if (length <= 10) {
+    return 'text-[10px] md:text-sm lg:text-sm';
+  } else if (length <= 12) {
+    return 'text-[9px] md:text-xs lg:text-xs';
+  } else {
+    return 'text-[8px] md:text-[10px] lg:text-[10px]';
+  }
+};
+
 export const OrderLines = ({
   orders,
   isLoading,
@@ -92,7 +106,7 @@ export const OrderLines = ({
                     <dt className="text-lg md:text-2xl lg:text-3xl tracking-tight font-cera-bold text-green-100">
                       Neto:
                     </dt>
-                    <dd className="mt-1.5 text-xs md:text-base lg:text-lg font-cera-light text-green-100">
+                    <dd className={`mt-1.5 ${getPriceFontSize(String(order.total))} font-cera-light text-green-100`}>
                       {order.total}
                     </dd>
                   </dl>
@@ -102,7 +116,7 @@ export const OrderLines = ({
                     <dt className="text-lg md:text-2xl lg:text-3xl tracking-tight font-cera-bold text-green-100">
                       Total:
                     </dt>
-                    <dd className="mt-1.5 text-xs md:text-base lg:text-lg font-cera-light text-green-100">
+                    <dd className={`mt-1.5 ${getPriceFontSize(String(order.total_with_tax))} font-cera-light text-green-100`}>
                       {order.total_with_tax}
                     </dd>
                   </dl>

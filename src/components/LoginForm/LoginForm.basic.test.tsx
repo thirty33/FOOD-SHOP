@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { GlobalProvider } from "../../context/globalContext.tsx";
 import { LoginForm } from "./index";
 import { textMessages } from "../../config/textMessages";
+import { configuration } from "../../config/config";
 
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
@@ -81,10 +82,17 @@ describe("<Login />", () => {
       fireEvent.click(submitButton);
     });
 
+    const expectedErrorMessage = `Invalid credentials. ${textMessages.ERRORS.SUPPORT_CONTACT
+      .replace('{phone}', configuration.support.phone)
+      .replace('{email}', configuration.support.email)}`;
+
     await waitFor(
       () => {
         // Error is displayed via notification system, not in DOM
-        expect(mockEnqueueSnackbar).toHaveBeenCalledWith("Invalid credentials", { variant: "error" });
+        expect(mockEnqueueSnackbar).toHaveBeenCalledWith(
+          expectedErrorMessage,
+          { variant: "error", autoHideDuration: configuration.toast.duration }
+        );
       },
       {
         timeout: 2000,

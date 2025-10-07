@@ -38,6 +38,26 @@ export function useSubordinates() {
         });
     };
 
+    const handleMenuCardClick = (menuId: string | number, publicationDate: string, hasOrder: number, orderId: number | null | undefined, delegateUser: string) => {
+        const searchParams = new URLSearchParams();
+        searchParams.set('delegate_user', delegateUser);
+
+        if (hasOrder === 1 && orderId) {
+            // Navigate to order detail
+            navigate({
+                pathname: `/${ROUTES.GET_ORDER_SUMMARY_ROUTE(orderId)}`,
+                search: searchParams.toString()
+            });
+        } else {
+            // Navigate to menu categories
+            searchParams.set('date', publicationDate);
+            navigate({
+                pathname: `/${ROUTES.GET_CATEGORY_ROUTE(menuId)}`,
+                search: searchParams.toString()
+            });
+        }
+    };
+
     useEffect(() => {
         fetchSubordinates();
     }, []);
@@ -46,6 +66,7 @@ export function useSubordinates() {
         subordinates,
         isLoading,
         refetch: fetchSubordinates,
-        handleMakeOrder
+        handleMakeOrder,
+        handleMenuCardClick
     };
 }
