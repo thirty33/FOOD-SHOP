@@ -8,7 +8,7 @@ import DeleteIcon from "../Icons/DeleteIcon";
 import { SpinnerLoading } from "../SpinnerLoading";
 import { capitalizeAfterHyphen } from "../../helpers/texts";
 import { useAuth } from "../../hooks/useAuth";
-import { isAgreementIndividual } from "../../helpers/permissions";
+import { isAgreementIndividual, isAgreementConsolidated } from "../../helpers/permissions";
 
 interface ProductItemProps {
   id: string | number;
@@ -232,8 +232,8 @@ export const ProductItem = ({
               </div>
             )}
             
-            {/* Show availability text only for convenio individual users */}
-            {isAgreementIndividual(user) && maximumOrderTime && (
+            {/* Show availability text for agreement users (individual or consolidated) */}
+            {(isAgreementIndividual(user) || isAgreementConsolidated(user)) && maximumOrderTime && (
               <div className="mt-2">
                 <p className="text-green-100 font-cera-regular tracking-normal text-xs md:text-sm">
                   {maximumOrderTime}
@@ -241,12 +241,12 @@ export const ProductItem = ({
               </div>
             )}
             
-            {/* Show subcategories only for convenio individual users */}
-            {isAgreementIndividual(user) && productSubcategories && productSubcategories.length > 0 && (
+            {/* Show subcategories for agreement users (individual or consolidated) */}
+            {(isAgreementIndividual(user) || isAgreementConsolidated(user)) && productSubcategories && productSubcategories.length > 0 && (
               <div className="mt-2">
                 <div className="flex flex-wrap gap-1">
                   {productSubcategories.map((subcategory, index) => (
-                    <span 
+                    <span
                       key={`${subcategory.id}-${index}`}
                       className="inline-block px-2 py-0.5 text-xs rounded-full bg-green-50 text-white font-cera-medium"
                     >

@@ -6,7 +6,7 @@ import { Product, Category
 import { ExtendedCategory } from "../../helpers/categoryGrouping";
 import { SpinnerLoading } from "../SpinnerLoading";
 import { useOrder } from "../../hooks/useCurrentOrder";
-import { isAgreementIndividual } from "../../helpers/permissions";
+import { isAgreementIndividual, isAgreementConsolidated } from "../../helpers/permissions";
 import { useAuth } from "../../hooks/useAuth";
 import { User } from "../../types/user";
 import { useMemo, useRef } from "react";
@@ -32,18 +32,18 @@ const ProductList = ({
   // Function to calculate maximumOrderTime per product
   const getProductMaximumOrderTime = useMemo(() => {
     return (product: Product): string => {
-      // For individual agreement users, calculate per product
-      if (isAgreementIndividual(user) && category.category) {
+      // For agreement users (individual or consolidated), calculate per product
+      if ((isAgreementIndividual(user) || isAgreementConsolidated(user)) && category.category) {
         // Find the correct category_line for this product using its category_id
         const productCategoryLine = category.category.category_lines.find(
           (line: any) => line.source_category_id === product.category_id
         );
-        
+
         if (productCategoryLine) {
           return productCategoryLine.maximum_order_time;
         }
       }
-      
+
       // For all other users, use the category's maximumOrderTime
       return maximumOrderTime;
     };
@@ -52,14 +52,14 @@ const ProductList = ({
   // Function to get subcategories for a product
   const getProductSubcategories = useMemo(() => {
     return (product: Product): any[] => {
-      // Only for individual agreement users
-      if (isAgreementIndividual(user) && category.category && category.category.subcategories) {
+      // For agreement users (individual or consolidated)
+      if ((isAgreementIndividual(user) || isAgreementConsolidated(user)) && category.category && category.category.subcategories) {
         // Filter subcategories that match the product's category_id
         return category.category.subcategories.filter(
           (sub: any) => sub.source_category_id === product.category_id
         );
       }
-      
+
       return [];
     };
   }, [user, category]);
@@ -95,13 +95,23 @@ const CategorySection = ({
 
   // Determine where to get products based on user type
   const products = useMemo(() => {
-    // For individual agreement users with subcategories: always get from category?.category?.products
-    if (isAgreementIndividual(user) && category?.category?.subcategories && category.category.subcategories.length > 0) {
+    console.log(`[RENDER] Category: ${category?.category?.name}`);
+    console.log(`[RENDER] isAgreementIndividual: ${isAgreementIndividual(user)}`);
+    console.log(`[RENDER] Has subcategories: ${category?.category?.subcategories?.length || 0}`);
+    console.log(`[RENDER] completeCategory (show_all_products): ${completeCategory}`);
+    console.log(`[RENDER] category.products length: ${category.products?.length || 0}`);
+    console.log(`[RENDER] category.category.products length: ${category?.category?.products?.length || 0}`);
+
+    // For agreement users (individual or consolidated) with subcategories: always get from category?.category?.products
+    if ((isAgreementIndividual(user) || isAgreementConsolidated(user)) && category?.category?.subcategories && category.category.subcategories.length > 0) {
+      console.log(`[RENDER] Using category.category.products (agreement user with subcategories)`);
       return category?.category?.products;
     }
-    
+
     // For other users: maintain original logic with show_all_products
-    return !completeCategory ? category.products : category?.category?.products;
+    const result = !completeCategory ? category.products : category?.category?.products;
+    console.log(`[RENDER] Using ${!completeCategory ? 'category.products' : 'category.category.products'} (other logic)`);
+    return result;
   }, [user, category, completeCategory]);
 
   // Get the maximum_order_time from the first category_lines entry, or "Not available" if empty
@@ -114,7 +124,7 @@ const CategorySection = ({
   const subcategories = category?.category?.subcategories || [];
 
   const showSubcategories = useMemo(
-    () => isAgreementIndividual(user) && subcategories.length > 0,
+    () => (isAgreementIndividual(user) || isAgreementConsolidated(user)) && subcategories.length > 0,
     [subcategories, user]
   );
 
@@ -138,8 +148,8 @@ const CategorySection = ({
         
       )}
 
-      {/* Show category name unless user is convenio individual with subcategories */}
-      {!(isAgreementIndividual(user) && subcategories.length > 0) && (
+      {/* Show category name unless user is agreement (individual or consolidated) with subcategories */}
+      {!((isAgreementIndividual(user) || isAgreementConsolidated(user)) && subcategories.length > 0) && (
         <div
           className={`flex flex-col justify-start content-start items-start ${
             showSubcategories ? "mb-1" : "mb-3 md:mb-6"
@@ -154,8 +164,8 @@ const CategorySection = ({
         </div>
       )}
       
-      {/* Show availability text only for non-convenio individual users */}
-      {!isAgreementIndividual(user) && (
+      {/* Show availability text only for non-convenio users */}
+      {!isAgreementIndividual(user) && !isAgreementConsolidated(user) && (
         <p className="text-green-100 font-cera-regular tracking-normal text-sm md:text-base mb-3 md:mb-6">
           {maximumOrderTime}
         </p>
@@ -189,8 +199,11 @@ export const CategoriesProducts = () => {
 
 
   // Decide which categories to use based on user type
+  // Use grouped categories for both Individual and Consolidated agreement users
   const categoriesToRender = useMemo(() => {
-    return isAgreementIndividual(user) ? groupedCategories : categories;
+    return (isAgreementIndividual(user) || isAgreementConsolidated(user))
+      ? groupedCategories
+      : categories;
   }, [user, groupedCategories, categories]);
 
   return (
