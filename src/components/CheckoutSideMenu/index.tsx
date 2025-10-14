@@ -11,7 +11,7 @@ import {
   CHECKOUT_SIDE_MENU_CLASS,
 } from "../../config/constant";
 import { ROUTES } from "../../config/routes";
-import { isAdminOrCafe, isAgreementIndividual } from "../../helpers/permissions";
+import { isAdminOrCafe, isAgreementConsolidated, isAgreementIndividual } from "../../helpers/permissions";
 import MonkeyIcon from "../Icons/MonkeyIcon";
 import CloseButton from "../Icons/CloseButton";
 import TruckIcon from "../Icons/TruckIcon";
@@ -115,7 +115,7 @@ export const CheckoutSideMenu = () => {
                     canSchedulePartially={isAdminOrCafe(user)}
                     subcategories={line.product?.category?.subcategories || []}
                     categoryName={line.product?.category?.name || ''}
-                    showSubcategories={isAgreementIndividual(user)}
+                    showSubcategories={isAgreementIndividual(user) || isAgreementConsolidated(user)}
                   />
                 );
               })}
