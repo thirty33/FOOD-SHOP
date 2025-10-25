@@ -83,12 +83,12 @@ export const BreadCrumbsNavigation = () => {
     if (isMenuRoute) {
       const delegateUser = queryParams.delegate_user;
       const isMasterUser = user?.master_user;
-      
+
       return (
         <section className="flex flex-col justify-center text-center text-green-100">
           {delegateUser && isMasterUser && (
             <div className="mb-4 flex justify-center items-center">
-              <Link 
+              <Link
                 to={ROUTES.SUBORDINATES_USER}
                 className="font-cera-light text-lg md:text-2xl text-gray-400 hover:text-yellow-active"
               >
@@ -98,6 +98,13 @@ export const BreadCrumbsNavigation = () => {
                 <ArrowIcon />
               </div>
               <span className="font-cera-light text-lg md:text-2xl text-gray-400">menús</span>
+            </div>
+          )}
+          {!isMasterUser && user?.branch_fantasy_name && (
+            <div className="mb-4 flex justify-center items-center">
+              <span className="font-cera-light text-lg md:text-2xl text-gray-400">
+                {user.branch_fantasy_name}
+              </span>
             </div>
           )}
           <p className="font-cera-bold text-3xl md:text-5xl lg:text-6xl tracking-tight">
@@ -114,10 +121,10 @@ export const BreadCrumbsNavigation = () => {
   const renderMenuLink = useMemo(() => {
     const delegateUser = queryParams.delegate_user;
     const isMasterUser = user?.master_user;
-    const toPath = delegateUser 
+    const toPath = delegateUser
       ? { pathname: ROUTES.MENUS, search: `?delegate_user=${delegateUser}` }
       : { pathname: ROUTES.MENUS };
-    
+
     // If there's a delegate user and the user is master, show special format
     if (delegateUser && isMasterUser) {
       return (
@@ -140,7 +147,27 @@ export const BreadCrumbsNavigation = () => {
         </div>
       );
     }
-    
+
+    // If user is not master, show branch name before menus
+    if (!isMasterUser && user?.branch_fantasy_name) {
+      return (
+        <div className="flex items-center">
+          <span className="font-cera-light tracking-tight text-sm md:text-xl font-medium text-gray-400 leading-none">
+            {user.branch_fantasy_name}
+          </span>
+          <div className="inline-flex items-center">
+            <ArrowIcon />
+          </div>
+          <Link
+            to={toPath}
+            className="font-cera-light tracking-tight text-sm md:text-xl font-medium text-gray-400 hover:text-yellow-active leading-none"
+          >
+            {textMessages.BREADCRUMBS.MENUS}
+          </Link>
+        </div>
+      );
+    }
+
     // Normal behavior when there's no delegate user or user is not master
     return (
       <Link
@@ -165,17 +192,19 @@ export const BreadCrumbsNavigation = () => {
 
     return (
       <li>
-        <div className="flex items-center justify-center font-cera-light tracking-tight">
-          <ArrowIcon />
+        <div className="flex items-center font-cera-light tracking-tight">
+          <div>
+            <ArrowIcon />
+          </div>
           {isCategoryRoute ? (
-            <span className="ms-1 text-sm md:text-xl font-bold text-gray-800 md:ms-2 cursor-default">
+            <span className="ms-1 text-sm md:text-xl font-bold text-gray-800 md:ms-2 cursor-default leading-none">
               {title}
             </span>
           ) : (
             <Link
               onClick={handleNavigate}
               to={"#"}
-              className="ms-1 text-sm md:text-xl font-medium text-gray-700 hover:text-blue-600 md:ms-2"
+              className="ms-1 text-sm md:text-xl font-medium text-gray-700 hover:text-blue-600 md:ms-2 leading-none"
             >
               Categorías del {title}
             </Link>
@@ -238,7 +267,33 @@ export const BreadCrumbsNavigation = () => {
     );
   }, [isOrderDetailRoute, queryParams]);
 
-  // Don't render anything if on orders routes (except order detail)
+  // Handle orders route for master users
+  if (isOrdersRoute && !isOrderDetailRoute && user?.master_user) {
+    return (
+      <section className="mt-8 px-1 md:px-0 2xl:px-[21rem] lg:px-52">
+        <nav className="flex pt-2.5 pb-5 justify-center content-center" aria-label="Breadcrumb">
+          <span className="font-cera-light tracking-tight text-sm md:text-xl font-medium text-gray-400">
+            Pedidos de la empresa: {user.branch_fantasy_name || ''}
+          </span>
+        </nav>
+      </section>
+    );
+  }
+
+  // Handle orders route for non-master users - show branch name only
+  if (isOrdersRoute && !isOrderDetailRoute && !user?.master_user && user?.branch_fantasy_name) {
+    return (
+      <section className="mt-8 px-1 md:px-0 2xl:px-[21rem] lg:px-52">
+        <nav className="flex pt-2.5 pb-5 justify-center content-center" aria-label="Breadcrumb">
+          <span className="font-cera-light tracking-tight text-sm md:text-xl font-medium text-gray-400">
+            {user.branch_fantasy_name}
+          </span>
+        </nav>
+      </section>
+    );
+  }
+
+  // Don't render anything if on orders routes (except order detail) and no branch name
   if (isOrdersRoute && !isOrderDetailRoute) {
     return null;
   }
@@ -249,7 +304,7 @@ export const BreadCrumbsNavigation = () => {
       <section className="mt-8 px-1 md:px-0 2xl:px-[21rem] lg:px-52">
         <nav className="flex pt-2.5 pb-5 justify-center content-center" aria-label="Breadcrumb">
           <span className="font-cera-light tracking-tight text-sm md:text-xl font-medium text-gray-400">
-            Usuarios de la empresa
+            Usuarios de la empresa: {user.branch_fantasy_name || ''}
           </span>
         </nav>
       </section>

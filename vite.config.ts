@@ -11,6 +11,17 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Separate vendor libraries for better caching
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'notistack-vendor': ['notistack'],
+        }
+      }
+    }
+  },
   test: {
     globals: true,
     environment: 'jsdom',

@@ -95,11 +95,13 @@ export const CheckoutSideMenu = () => {
             </div>
 
           </div>
-          <div 
+          <div
             className="overflow-y-auto overflow-x-hidden px-3 md:px-4 lg:px-6 flex flex-col gap-y-5 md:gap-y-6 lg:gap-y-5 max-h-[19rem] md:max-h-[55%] xl:max-h-[90%] 2xl:max-h-[55%] pt-6 md:pt-5 lg:pt-6"
           >
             {currentOrder &&
-              currentOrder.order_lines.map((line) => {
+              currentOrder.order_lines
+                .filter((line) => line.product && typeof line.quantity === 'number' && line.quantity > 0)
+                .map((line) => {
                 if (!line.product) return null;
                 return (
                   <CartItem

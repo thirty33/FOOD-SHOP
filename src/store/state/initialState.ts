@@ -18,6 +18,7 @@ export const InitialState: globalState = {
         master_user: false,
         nickname: '',
         name: '',
+        branch_fantasy_name: null,
     },
     orders: null,
     showModal: false,

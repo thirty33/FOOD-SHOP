@@ -38,8 +38,9 @@ export interface state {
         master_user: boolean;
         nickname: string;
         name: string;
+        branch_fantasy_name: string | null;
     };
-    setUser: (role: Role, permission: Permission, master_user: boolean, nickname: string, name: string) => void;
+    setUser: (role: Role, permission: Permission, master_user: boolean, nickname: string, name: string, branch_fantasy_name: string | null) => void;
     updateCurrentOrder: (orderLines: Array<{id: string | number, quantity: number | string, partiallyScheduled?: boolean }>) => void;
     updateOrderStatus: (status: string) => void;
     partiallyScheduleOrder: (status: string) => void;
@@ -71,6 +72,7 @@ export interface globalState {
         master_user: boolean;
         nickname: string;
         name: string;
+        branch_fantasy_name: string | null;
     }
     orders: OrderData[] | null;
     showModal: boolean;

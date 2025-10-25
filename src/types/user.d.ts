@@ -15,6 +15,7 @@ export interface User {
     master_user: boolean;
     nickname: string;
     name: string;
+    branch_fantasy_name: string | null;
 }
 
 export interface SuccessResponse {
@@ -28,6 +29,7 @@ export interface SuccessResponse {
         master_user: boolean;
         nickname: string;
         name: string;
+        branch_fantasy_name: string | null;
     };
 }
 

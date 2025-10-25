@@ -51,21 +51,23 @@ export const LoginForm = () => {
       setShowHeader(true);
       setToken((response as SuccessResponse).data.token);
       setUser(
-        response.data.role, 
-        response.data.permission, 
+        response.data.role,
+        response.data.permission,
         response.data.master_user,
         response.data.nickname,
-        response.data.name
+        response.data.name,
+        response.data.branch_fantasy_name
       );
-      
+
       const user = {
         role: response.data.role,
         permission: response.data.permission,
         master_user: response.data.master_user,
         nickname: response.data.nickname,
-        name: response.data.name
+        name: response.data.name,
+        branch_fantasy_name: response.data.branch_fantasy_name
       };
-      
+
       handleInitialNavigation(user);
     } catch (error) {
       setError("email", {

@@ -1,10 +1,12 @@
 import { useSubordinates } from "../../hooks/useSubordinates";
+import { useAuth } from "../../hooks/useAuth";
 import { SpinnerLoading } from "../SpinnerLoading";
 import { MenuCardSubordinate } from "./MenuCardSubordinate";
 import { formatMenuDateShort } from "../../helpers/dates";
 
 export const SubordinatesUser = () => {
   const { subordinates, isLoading, handleMakeOrder, handleMenuCardClick } = useSubordinates();
+  const { user } = useAuth();
 
   if (isLoading) {
     return (
@@ -18,7 +20,7 @@ export const SubordinatesUser = () => {
     <div className="min-h-screen py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-cera-bold text-green-100 mb-8">
-          Usuarios de la empresa:
+          Usuarios de la empresa: {user.branch_fantasy_name || ''}
         </h1>
         
         {subordinates.length === 0 ? (

@@ -13,11 +13,26 @@ export function useQuantityChange() {
 	} = useOrder()
 
 	const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>, id: string | number, partiallyScheduled?: boolean) => {
-		if (!event.target.value) {
+		const value = event.target.value;
+
+		// Allow temporary empty state while typing (user is deleting to type new number)
+		if (!value) {
 			updateOrderLineItem(id, "", partiallyScheduled || false)
-			return
+			return;
 		}
-		const newQuantity = parseInt(event.target.value, 10);
+
+		// Block pure zero "0"
+		if (value === "0") {
+			return;
+		}
+
+		const newQuantity = parseInt(value, 10);
+
+		// Don't update if parsed value is 0 or NaN
+		if (!newQuantity || newQuantity === 0) {
+			return;
+		}
+
 		updateOrderLineItem(id, newQuantity, partiallyScheduled || false)
 	};
 

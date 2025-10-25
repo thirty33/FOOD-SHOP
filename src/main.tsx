@@ -10,12 +10,13 @@ loadFonts();
 
 createRoot(document.getElementById("root")!).render(
   <GlobalProvider>
-    <SnackbarProvider 
+    <SnackbarProvider
       maxSnack={3}
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'center',
       }}
+      hideIconVariant
       action={(snackbarId) => (
         <button
           onClick={() => closeSnackbar(snackbarId)}

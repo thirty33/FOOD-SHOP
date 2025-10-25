@@ -1,4 +1,4 @@
-import { QuantitySelector } from "../QuantitySelector";
+import { CartQuantitySelector } from "../CartQuantitySelector";
 import { useQuantityChange } from "../../hooks/useQuantityChange";
 import { ORDER_STATUS, ORDER_STATUS_TEXT } from "../../config/constant";
 import XIcon from "../../components/Icons/XIcon";
@@ -109,7 +109,7 @@ export const CartItem = ({
           )}
           {showQuantitySelector && (
             <div className="w-full max-w-full">
-              <QuantitySelector
+              <CartQuantitySelector
               quantity={initialQuantity}
               handleQuantityChange={(ev) =>
                 handleQuantityChange(ev, id, showPartialiSheduledTag)

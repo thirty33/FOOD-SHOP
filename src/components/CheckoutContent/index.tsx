@@ -69,7 +69,9 @@ export const CheckoutContent = () => {
 
       <div className="overflow-y-auto px-0 flex flex-col gap-y-5 md:gap-y-8 max-h-[19rem] md:max-h-[55%] xl:max-h-[90%] 2xl:max-h-[55%] pt-4 md:pt-6 flex-1">
         {currentOrder &&
-          currentOrder.order_lines.map((line) => {
+          currentOrder.order_lines
+            .filter((line) => line.product && typeof line.quantity === 'number' && line.quantity > 0)
+            .map((line) => {
             if (!line.product) return null;
             return (
               <CartItem

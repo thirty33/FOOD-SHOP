@@ -219,7 +219,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
       ) => {
         addProductToCart(orderLines);
       },
-      1000
+      2000
     ),
     [location.search]
   );
