@@ -95,22 +95,13 @@ const CategorySection = ({
 
   // Determine where to get products based on user type
   const products = useMemo(() => {
-    console.log(`[RENDER] Category: ${category?.category?.name}`);
-    console.log(`[RENDER] isAgreementIndividual: ${isAgreementIndividual(user)}`);
-    console.log(`[RENDER] Has subcategories: ${category?.category?.subcategories?.length || 0}`);
-    console.log(`[RENDER] completeCategory (show_all_products): ${completeCategory}`);
-    console.log(`[RENDER] category.products length: ${category.products?.length || 0}`);
-    console.log(`[RENDER] category.category.products length: ${category?.category?.products?.length || 0}`);
-
     // For agreement users (individual or consolidated) with subcategories: always get from category?.category?.products
     if ((isAgreementIndividual(user) || isAgreementConsolidated(user)) && category?.category?.subcategories && category.category.subcategories.length > 0) {
-      console.log(`[RENDER] Using category.category.products (agreement user with subcategories)`);
       return category?.category?.products;
     }
 
     // For other users: maintain original logic with show_all_products
     const result = !completeCategory ? category.products : category?.category?.products;
-    console.log(`[RENDER] Using ${!completeCategory ? 'category.products' : 'category.category.products'} (other logic)`);
     return result;
   }, [user, category, completeCategory]);
 

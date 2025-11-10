@@ -83,5 +83,4 @@ export function loadFonts(): void {
   // Inject into document head
   document.head.appendChild(styleElement);
   
-  console.log('✅ CERA fonts loaded dynamically from CloudFront');
 }

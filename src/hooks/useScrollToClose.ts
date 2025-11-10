@@ -22,17 +22,9 @@ export const useScrollToClose = ({ elementRef, isOpen, onClose, isLoading = fals
     const handleScroll = () => {
 
       const checkoutSideMenu = document.querySelector(`.${CHECKOUT_SIDE_MENU_CLASS}`);
-      console.log('checkoutSideMenu', checkoutSideMenu)
 
       const element = elementRef.current;
-
-      console.log('data', {
-        element,
-        isOpen,
-        isLoading,
-        recentOperation,
-      })
-
+      
       if (!element || !isOpen || isLoading || recentOperation) {
         return;
       }
@@ -64,10 +56,6 @@ export const useScrollToClose = ({ elementRef, isOpen, onClose, isLoading = fals
       const shouldClose = isMouseWithinElement && !isMouseWithinCheckoutSideMenu;
 
       if (shouldClose) {
-        console.log('shouldClose', {
-          isMouseWithinElement,
-          isMouseWithinCheckoutSideMenu,
-        })
         onClose();
       }
     };

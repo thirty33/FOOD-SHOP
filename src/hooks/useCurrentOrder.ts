@@ -25,7 +25,8 @@ export function useOrder() {
         modalState,
         setShowProductDetail,
         closeModal,
-        recentOperation
+        recentOperation,
+        loadingStates
     } = useContext(OrderContext);
 
     const modifyOrder = async (id: string | number, quantity: number | string) => {
@@ -68,6 +69,7 @@ export function useOrder() {
         modalState,
         setShowProductDetail,
         closeModal,
-        recentOperation
+        recentOperation,
+        loadingStates
     }
 }

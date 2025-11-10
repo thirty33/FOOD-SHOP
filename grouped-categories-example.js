@@ -530,5 +530,3 @@ const groupedCategories = [
     ]
   }
 ];
-
-console.log('Grouped Categories:', groupedCategories);

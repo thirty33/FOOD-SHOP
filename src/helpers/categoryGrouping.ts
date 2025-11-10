@@ -81,19 +81,10 @@ export const groupCategoriesBySubcategory = (
       const productsToAdd = !completeCategory
         ? category.products
         : category?.category?.products;
-
-      console.log(`[GROUPING] Category: ${category.category.name}, Subcategory: ${groupKey}`);
-      console.log(`[GROUPING] show_all_products: ${completeCategory}`);
-      console.log(`[GROUPING] category.products length: ${category.products.length}`);
-      console.log(`[GROUPING] category.category.products length: ${category?.category?.products?.length || 0}`);
-      console.log(`[GROUPING] productsToAdd length: ${productsToAdd?.length || 0}`);
-
+      
       if (productsToAdd && productsToAdd.length > 0) {
-        console.log(`[GROUPING] Adding ${productsToAdd.length} products to ${groupKey} group`);
         groups[groupKey].category!.products.push(...productsToAdd);
-      } else {
-        console.log(`[GROUPING] NO PRODUCTS TO ADD for ${groupKey} group`);
-      }
+      } 
       
       // Add category_lines with source category identifier
       const categoryLinesWithSource: ExtendedCategoryLine[] = category.category.category_lines.map((line: CategoryLine) => ({
@@ -118,12 +109,7 @@ export const groupCategoriesBySubcategory = (
   // Convert groups to array and combine with ungrouped categories
   const groupedArray = Object.values(groups);
   const result = [...groupedArray, ...ungroupedCategories];
-
-  console.log('[GROUPING] === FINAL RESULT ===');
-  groupedArray.forEach(group => {
-    console.log(`[GROUPING] Group: ${group.category?.name}, Products: ${group.category?.products?.length || 0}`);
-  });
-
+  
   // Sort by order
   return result.sort((a: ExtendedCategory, b: ExtendedCategory) => (a.order || 999) - (b.order || 999));
 };

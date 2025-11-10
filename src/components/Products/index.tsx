@@ -39,9 +39,12 @@ export const ProductItem = ({
     showQuantityInput,
     showPrices,
   } = useQuantityChange();
-  
-  const { setShowProductDetail, deleteItemFromCart, isLoading } = useOrder();
+
+  const { setShowProductDetail, deleteItemFromCart, loadingStates } = useOrder();
   const { user } = useAuth();
+
+  // Get loading state for this specific product
+  const isLoading = loadingStates[typeof id === 'string' ? parseInt(id) : id] || false;
 
   const currentQuantity = useMemo(() => {
     return (
@@ -165,8 +168,7 @@ export const ProductItem = ({
             <div>
               <button
                 type="button"
-                disabled={isLoading}
-                className="inline-flex items-center rounded-md bg-green-50 px-3 py-1 text-xs md:text-md font-medium font-cera-bold text-white hover:bg-green-100 focus:outline-none focus:ring-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center rounded-md bg-green-50 px-3 py-1 text-xs md:text-md font-medium font-cera-bold text-white hover:bg-green-100 focus:outline-none focus:ring-4"
                 onClick={(e) => {
                   e.stopPropagation();
                   addProductToCart(id, 1);
@@ -175,12 +177,12 @@ export const ProductItem = ({
                 {isLoading ? (
                   <SpinnerLoading show={true} size={3} />
                 ) : (
-                  <AddToCartIcon                   
+                  <AddToCartIcon
                     width="12"
                     height="12"
                     size="14"
                     color="white"
-                    className="stroke-white fill-white" 
+                    className="stroke-white fill-white"
                   />
                 )}
                 <span className="ml-1">Agregar</span>
