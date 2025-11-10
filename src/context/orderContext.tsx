@@ -489,6 +489,50 @@ export function OrderProvider({ children }: GlobalProviderProps) {
 
     // Add request to queue to prevent race conditions
     await requestQueueRef.current.add(async () => {
+      console.log('🔵 [DELETE QUEUE START] Deleting product:', productId);
+
+      // ⚡ GET FRESH STATE: Use ref function to get current state at execution time
+      const freshCurrentOrder = getCurrentOrderRef.current();
+
+      console.log('🔵 [DELETE - CURRENT ORDER BEFORE BACKUP]:', freshCurrentOrder ? {
+        id: freshCurrentOrder.id,
+        lines_count: freshCurrentOrder.order_lines.length,
+        lines: freshCurrentOrder.order_lines.map(l => ({ product_id: l.product?.id, qty: l.quantity }))
+      } : 'null');
+
+      // 💾 BACKUP: Take backup INSIDE the queue to capture the real current state
+      const previousOrderState = freshCurrentOrder
+        ? JSON.parse(JSON.stringify(freshCurrentOrder)) as OrderData
+        : null;
+
+      console.log('💾 [DELETE - BACKUP TAKEN]:', previousOrderState ? {
+        id: previousOrderState.id,
+        lines_count: previousOrderState.order_lines.length,
+        lines: previousOrderState.order_lines.map(l => ({ product_id: l.product?.id, qty: l.quantity }))
+      } : 'null');
+
+      // ✅ OPTIMISTIC DELETE: Remove item from local state immediately for instant UI feedback
+      if (freshCurrentOrder) {
+        const optimisticOrder: OrderData = {
+          ...freshCurrentOrder,
+          order_lines: freshCurrentOrder.order_lines.filter(
+            line => line.product?.id !== productId
+          )
+        };
+
+        console.log('✅ [DELETE - OPTIMISTIC UPDATE APPLIED]:', {
+          id: optimisticOrder.id,
+          lines_count: optimisticOrder.order_lines.length,
+          removed_product_id: productId
+        });
+
+        // Update state immediately for instant UI feedback
+        dispatch({
+          type: CART_ACTION_TYPES.SET_CURRENT_ORDER,
+          payload: { currentOrder: optimisticOrder },
+        });
+      }
+
       try {
         // Start operation with flags (NOT isLoading - we use per-product loadingStates)
         dispatch({
@@ -500,12 +544,19 @@ export function OrderProvider({ children }: GlobalProviderProps) {
           },
         });
 
+        console.log('🚀 [DELETE - API CALL START]');
+
         // 🚀 OPTIMIZATION: Use response from DELETE directly (no additional GET needed)
         const response = (await orderService.deleteOrderLine(
           getDate(location.search)!,
           orderLines,
           queryParams
         )) as SuccessResponse;
+
+        console.log('✅ [DELETE - API SUCCESS]:', {
+          id: response.data.id,
+          lines_count: response.data.order_lines.length
+        });
 
         // ✅ Update order state with response data from DELETE
         dispatch({
@@ -537,11 +588,28 @@ export function OrderProvider({ children }: GlobalProviderProps) {
           });
         }, 2000);
 
+        console.log('🏁 [DELETE - QUEUE END - SUCCESS]');
+
       } catch (error) {
+        console.error('❌ [DELETE - API ERROR]:', error);
+
         enqueueSnackbar((error as Error).message, {
           variant: "error",
           autoHideDuration: configuration.toast.duration,
         });
+
+        // 🔄 ROLLBACK: Restore previous order state on error
+        console.log('🔄 [DELETE - ROLLBACK START]:', previousOrderState ? {
+          id: previousOrderState.id,
+          lines_count: previousOrderState.order_lines.length
+        } : 'null');
+
+        dispatch({
+          type: CART_ACTION_TYPES.SET_CURRENT_ORDER,
+          payload: { currentOrder: previousOrderState },
+        });
+
+        console.log('🔄 [DELETE - ROLLBACK COMPLETE]');
 
         // Clear all operation flags on error
         dispatch({
@@ -552,6 +620,8 @@ export function OrderProvider({ children }: GlobalProviderProps) {
             recentOperation: false
           },
         });
+
+        console.log('🏁 [DELETE - QUEUE END - ERROR]');
       } finally {
         // Clear loading state for this product
         setLoadingStates(prev => {
