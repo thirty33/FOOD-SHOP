@@ -27,7 +27,15 @@ export interface state {
     setCurrenPage: (page: number) => void;
     signOut: () => void;
     currentOrder: OrderData | null;
-    addProductToCart: (orderLines: Array<{id: string | number, quantity: number | string}>) => void;
+    addProductToCart: (orderLines: Array<{
+        id: string | number,
+        quantity: number | string,
+        productInfo?: {
+            name: string,
+            price: string,
+            image: string | null
+        }
+    }>) => void;
     deleteItemFromCart: (id: string | number, quantity: number) => void;
     showSideCart: boolean;
     setShowSideCart: (value: boolean) => void;

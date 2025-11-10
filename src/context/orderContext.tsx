@@ -259,6 +259,11 @@ export function OrderProvider({ children }: GlobalProviderProps) {
       id: string | number;
       quantity: number | string;
       partiallyScheduled?: boolean;
+      productInfo?: {
+        name: string;
+        price: string;
+        image: string | null;
+      };
     }>
   ) => {
 
@@ -320,37 +325,43 @@ export function OrderProvider({ children }: GlobalProviderProps) {
             }
           };
 
-      filterOrderLines.forEach(newLine => {
+      // Use filterOrderLines for processing (only valid numeric quantities)
+      // But access original orderLines to get productInfo
+      filterOrderLines.forEach(filteredLine => {
+        // Find the original line to get productInfo
+        const originalLine = orderLines.find(ol => Number(ol.id) === Number(filteredLine.id));
+
         const existingLineIndex = optimisticOrder.order_lines.findIndex(
-          line => line.product?.id === Number(newLine.id)
+          line => line.product?.id === Number(filteredLine.id)
         );
 
         if (existingLineIndex >= 0) {
           // Update existing line
           optimisticOrder.order_lines[existingLineIndex] = {
             ...optimisticOrder.order_lines[existingLineIndex],
-            quantity: newLine.quantity,
-            partially_scheduled: newLine.partially_scheduled
+            quantity: filteredLine.quantity,
+            partially_scheduled: filteredLine.partially_scheduled
           };
         } else {
-          // For new product, we don't have full product details yet
-          // Just add a placeholder that will be replaced by server response
+          // For new product, create placeholder with available product info
           // This ensures currentQuantity !== 0 so QuantitySelector appears immediately
+          const productInfo = originalLine?.productInfo;
+
           const placeholderLine: OrderLine = {
             id: 0,
-            quantity: newLine.quantity,
-            unit_price: '0',
-            unit_price_with_tax: '0',
+            quantity: filteredLine.quantity,
+            unit_price: productInfo?.price || '0',
+            unit_price_with_tax: productInfo?.price || '0',
             order_id: optimisticOrder.id || 0,
-            product_id: Number(newLine.id),
-            total_price: '0',
-            total_price_with_tax: '0',
+            product_id: Number(filteredLine.id),
+            total_price: productInfo?.price || '0',
+            total_price_with_tax: productInfo?.price || '0',
             product: {
-              id: Number(newLine.id),
-              name: '',
+              id: Number(filteredLine.id),
+              name: productInfo?.name || '',
               description: '',
-              price: '0',
-              image: '',
+              price: productInfo?.price || '0',
+              image: productInfo?.image || '',
               category_id: 0,
               code: '',
               active: 1,
@@ -368,7 +379,7 @@ export function OrderProvider({ children }: GlobalProviderProps) {
               },
               ingredients: []
             },
-            partially_scheduled: newLine.partially_scheduled
+            partially_scheduled: filteredLine.partially_scheduled
           };
           optimisticOrder.order_lines.push(placeholderLine);
         }
@@ -489,27 +500,14 @@ export function OrderProvider({ children }: GlobalProviderProps) {
 
     // Add request to queue to prevent race conditions
     await requestQueueRef.current.add(async () => {
-      console.log('🔵 [DELETE QUEUE START] Deleting product:', productId);
 
       // ⚡ GET FRESH STATE: Use ref function to get current state at execution time
       const freshCurrentOrder = getCurrentOrderRef.current();
-
-      console.log('🔵 [DELETE - CURRENT ORDER BEFORE BACKUP]:', freshCurrentOrder ? {
-        id: freshCurrentOrder.id,
-        lines_count: freshCurrentOrder.order_lines.length,
-        lines: freshCurrentOrder.order_lines.map(l => ({ product_id: l.product?.id, qty: l.quantity }))
-      } : 'null');
 
       // 💾 BACKUP: Take backup INSIDE the queue to capture the real current state
       const previousOrderState = freshCurrentOrder
         ? JSON.parse(JSON.stringify(freshCurrentOrder)) as OrderData
         : null;
-
-      console.log('💾 [DELETE - BACKUP TAKEN]:', previousOrderState ? {
-        id: previousOrderState.id,
-        lines_count: previousOrderState.order_lines.length,
-        lines: previousOrderState.order_lines.map(l => ({ product_id: l.product?.id, qty: l.quantity }))
-      } : 'null');
 
       // ✅ OPTIMISTIC DELETE: Remove item from local state immediately for instant UI feedback
       if (freshCurrentOrder) {
@@ -519,12 +517,6 @@ export function OrderProvider({ children }: GlobalProviderProps) {
             line => line.product?.id !== productId
           )
         };
-
-        console.log('✅ [DELETE - OPTIMISTIC UPDATE APPLIED]:', {
-          id: optimisticOrder.id,
-          lines_count: optimisticOrder.order_lines.length,
-          removed_product_id: productId
-        });
 
         // Update state immediately for instant UI feedback
         dispatch({
@@ -544,19 +536,12 @@ export function OrderProvider({ children }: GlobalProviderProps) {
           },
         });
 
-        console.log('🚀 [DELETE - API CALL START]');
-
         // 🚀 OPTIMIZATION: Use response from DELETE directly (no additional GET needed)
         const response = (await orderService.deleteOrderLine(
           getDate(location.search)!,
           orderLines,
           queryParams
         )) as SuccessResponse;
-
-        console.log('✅ [DELETE - API SUCCESS]:', {
-          id: response.data.id,
-          lines_count: response.data.order_lines.length
-        });
 
         // ✅ Update order state with response data from DELETE
         dispatch({
@@ -588,8 +573,6 @@ export function OrderProvider({ children }: GlobalProviderProps) {
           });
         }, 2000);
 
-        console.log('🏁 [DELETE - QUEUE END - SUCCESS]');
-
       } catch (error) {
         console.error('❌ [DELETE - API ERROR]:', error);
 
@@ -598,18 +581,10 @@ export function OrderProvider({ children }: GlobalProviderProps) {
           autoHideDuration: configuration.toast.duration,
         });
 
-        // 🔄 ROLLBACK: Restore previous order state on error
-        console.log('🔄 [DELETE - ROLLBACK START]:', previousOrderState ? {
-          id: previousOrderState.id,
-          lines_count: previousOrderState.order_lines.length
-        } : 'null');
-
         dispatch({
           type: CART_ACTION_TYPES.SET_CURRENT_ORDER,
           payload: { currentOrder: previousOrderState },
         });
-
-        console.log('🔄 [DELETE - ROLLBACK COMPLETE]');
 
         // Clear all operation flags on error
         dispatch({
@@ -621,7 +596,6 @@ export function OrderProvider({ children }: GlobalProviderProps) {
           },
         });
 
-        console.log('🏁 [DELETE - QUEUE END - ERROR]');
       } finally {
         // Clear loading state for this product
         setLoadingStates(prev => {

@@ -16,7 +16,15 @@ interface ProductItemProps {
   title: string;
   price: string | number;
   ingredients: Ingredients[];
-  addProductToCart: (id: string | number, quantity: number) => void;
+  addProductToCart: (orderLines: Array<{
+    id: string | number,
+    quantity: number | string,
+    productInfo?: {
+      name: string,
+      price: string,
+      image: string | null
+    }
+  }>) => void;
   maximumOrderTime?: string;
   productSubcategories?: any[];
 }
@@ -171,7 +179,15 @@ export const ProductItem = ({
                 className="inline-flex items-center rounded-md bg-green-50 px-3 py-1 text-xs md:text-md font-medium font-cera-bold text-white hover:bg-green-100 focus:outline-none focus:ring-4"
                 onClick={(e) => {
                   e.stopPropagation();
-                  addProductToCart(id, 1);
+                  addProductToCart([{
+                    id,
+                    quantity: 1,
+                    productInfo: {
+                      name: title,
+                      price: typeof price === 'string' ? price : price.toString(),
+                      image: imageLight
+                    }
+                  }]);
                 }}
               >
                 {isLoading ? (

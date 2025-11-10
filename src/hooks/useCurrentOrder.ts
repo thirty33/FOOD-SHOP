@@ -29,8 +29,18 @@ export function useOrder() {
         loadingStates
     } = useContext(OrderContext);
 
-    const modifyOrder = async (id: string | number, quantity: number | string) => {
-        addProductToCart([{ id, quantity }])
+    const modifyOrder = async (
+        orderLines: Array<{
+            id: string | number,
+            quantity: number | string,
+            productInfo?: {
+                name: string,
+                price: string,
+                image: string | null
+            }
+        }>
+    ) => {
+        addProductToCart(orderLines)
     }
 
     const updateOrderLineItem = async (id: string | number, quantity: number | string, partiallyScheduled: boolean = false) => {
