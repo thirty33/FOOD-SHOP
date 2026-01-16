@@ -5,7 +5,7 @@ import { MenuItem } from "./menus";
 import { Category } from "./categories";
 import { Product } from "./products";
 import { OrderData } from "./order";
-import { Permission, Role } from "./user";
+import { User } from "./user";
 
 export interface state {
     showHeader: boolean;
@@ -40,15 +40,8 @@ export interface state {
     showSideCart: boolean;
     setShowSideCart: (value: boolean) => void;
     cartItemsCount: number;
-    user: {
-        role: Role;
-        permission: Permission;
-        master_user: boolean;
-        nickname: string;
-        name: string;
-        branch_fantasy_name: string | null;
-    };
-    setUser: (role: Role, permission: Permission, master_user: boolean, nickname: string, name: string, branch_fantasy_name: string | null) => void;
+    user: User;
+    setUser: (user: User) => void;
     updateCurrentOrder: (orderLines: Array<{id: string | number, quantity: number | string, partiallyScheduled?: boolean }>) => void;
     updateOrderStatus: (status: string) => void;
     partiallyScheduleOrder: (status: string) => void;
@@ -74,14 +67,7 @@ export interface globalState {
     selectedMenu: MenuItem | null;
     currentOrder: OrderData | null;
     showSideCart: boolean;
-    user: {
-        role: Role;
-        permission: Permission;
-        master_user: boolean;
-        nickname: string;
-        name: string;
-        branch_fantasy_name: string | null;
-    }
+    user: User;
     orders: OrderData[] | null;
     showModal: boolean;
     isPendingReload: boolean;

@@ -6,7 +6,8 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import { menuReducer } from "../store/reducers/menuReducer";
 import { MenuItem } from "../types/menus";
 import { Category } from "../types/categories";
-import { Permission, Role } from "../types/user";
+import { User } from "../types/user";
+import { getInitialUser } from "../utils/userHelpers";
 
 type globalContextState = Pick<
   state,
@@ -56,14 +57,7 @@ export const GlobalContext = createContext<globalContextState>({
   signOut: () => {},
   currentOrder: null,
   setUser: () => {},
-  user: {
-    role: null,
-    permission: null,
-    master_user: false,
-    nickname: '',
-    name: '',
-    branch_fantasy_name: null,
-  },
+  user: getInitialUser(),
   showModal: false,
   setShowModal: () => {},
 });
@@ -84,24 +78,13 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
     showModal,
   } = state;
 
-  const setUser = (role: Role, permission: Permission, master_user: boolean, nickname: string, name: string, branch_fantasy_name: string | null) => {
-
-    const user =  {
-      role,
-      permission,
-      master_user,
-      nickname,
-      name,
-      branch_fantasy_name,
-    };
-
+  const setUser = (user: User) => {
     dispatch({
       type: CART_ACTION_TYPES.SET_USER_INFO,
       payload: { user },
     });
 
-    localStorage.setItem('user', JSON.stringify(user))
-
+    localStorage.setItem('user', JSON.stringify(user));
   };
 
   const getUser = useMemo(() => {

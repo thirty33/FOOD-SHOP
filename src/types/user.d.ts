@@ -13,6 +13,7 @@ export interface User {
     role: Role;
     permission: Permission;
     master_user: boolean;
+    super_master_user: boolean;
     nickname: string;
     name: string;
     branch_fantasy_name: string | null;
@@ -21,15 +22,9 @@ export interface User {
 export interface SuccessResponse {
     status: 'success';
     message: string;
-    data: {
+    data: User & {
         token: string;
         token_type: string;
-        role: Role;
-        permission: Permission;
-        master_user: boolean;
-        nickname: string;
-        name: string;
-        branch_fantasy_name: string | null;
     };
 }
 

@@ -12,13 +12,17 @@ import { truncateString, capitalizeWords } from "../../../helpers/texts";
 import { useAuth } from "../../../hooks/useAuth";
 import { useBreakpoint } from "../../../hooks/useBreakpoint";
 import { isDispatchDateValid } from "../../../helpers/dateValidation";
+import { Pagination } from "../../Pagination";
+import { PaginationState } from "../../../hooks/usePagination";
 
 interface OrderLinesProps {
   orders: OrderData[] | null;
   isLoading: boolean;
   showTotalPrice: boolean;
-  hasMore?: boolean;
-  loadMore?: () => void;
+  // hasMore?: boolean;
+  // loadMore?: () => void;
+  pagination?: PaginationState;
+  onPageChange?: (page: number) => void;
 }
 
 const getPriceFontSize = (price: string): string => {
@@ -35,12 +39,30 @@ const getPriceFontSize = (price: string): string => {
   }
 };
 
+const getNicknameFontSize = (nickname: string): string => {
+  const length = nickname.length;
+
+  if (length <= 9) {
+    return 'text-sm md:text-base lg:text-xl';
+  } else if (length <= 12) {
+    return 'text-xs md:text-sm lg:text-lg';
+  } else if (length <= 16) {
+    return 'text-xs md:text-xs lg:text-base';
+  } else if (length <= 20) {
+    return 'text-[10px] md:text-xs lg:text-sm';
+  } else {
+    return 'text-[9px] md:text-[10px] lg:text-xs';
+  }
+};
+
 export const OrderLines = ({
   orders,
   isLoading,
   showTotalPrice,
-  hasMore = false,
-  loadMore,
+  // hasMore = false,
+  // loadMore,
+  pagination,
+  onPageChange,
 }: OrderLinesProps) => {
   const { user } = useAuth();
   const { isMdAndBelow, isLgAndAbove } = useBreakpoint();
@@ -65,12 +87,15 @@ export const OrderLines = ({
                     </div>
                     {user.master_user && order.user && isMdAndBelow && (
                       <div className="mt-2 text-sm md:text-base lg:text-base text-green-100">
-                        <div className="font-cera-medium">{capitalizeWords(order.user.nickname)}</div>
+                        <div className={`font-cera-medium ${getNicknameFontSize(order.user.nickname)}`}>{capitalizeWords(order.user.nickname)}</div>
+                        {order.user.company_name && (
+                          <div className="text-xs md:text-sm lg:text-sm font-cera-medium text-green-100/80">{capitalizeWords(order.user.company_name)}</div>
+                        )}
                         {order.user.branch_name && (
-                          <div className="text-sm md:text-sm lg:text-sm">{capitalizeWords(order.user.branch_name)}</div>
+                          <div className="text-xs md:text-xs lg:text-sm">{capitalizeWords(order.user.branch_name)}</div>
                         )}
                         {order.user.branch_address && (
-                          <div className="text-sm md:text-sm lg:text-sm">{capitalizeWords(order.user.branch_address)}</div>
+                          <div className="text-xs md:text-xs lg:text-sm">{capitalizeWords(order.user.branch_address)}</div>
                         )}
                       </div>
                     )}
@@ -91,7 +116,10 @@ export const OrderLines = ({
                       Usuario
                     </dt>
                     <dd className="mt-1.5 text-sm md:text-lg lg:text-xl font-cera-light text-green-100">
-                      <div className="font-cera-medium">{capitalizeWords(order.user.nickname)}</div>
+                      <div className={`font-cera-medium ${getNicknameFontSize(order.user.nickname)}`}>{capitalizeWords(order.user.nickname)}</div>
+                      {order.user.company_name && (
+                        <div className="text-xs lg:text-sm font-cera-medium text-green-100/80">{capitalizeWords(order.user.company_name)}</div>
+                      )}
                       {order.user.branch_name && (
                         <div className="text-xs lg:text-sm">{capitalizeWords(order.user.branch_name)}</div>
                       )}
@@ -199,8 +227,8 @@ export const OrderLines = ({
           </div>
         )}
 
-        {/* Load More Button */}
-        {hasMore && !isLoading && loadMore && (
+        {/* Load More Button - DISABLED, using Pagination instead */}
+        {/* {hasMore && !isLoading && loadMore && (
           <div className="flex justify-center m-4">
             <button
               onClick={loadMore}
@@ -208,6 +236,19 @@ export const OrderLines = ({
             >
               Cargar más
             </button>
+          </div>
+        )} */}
+
+        {/* Pagination */}
+        {pagination && pagination.lastPage > 1 && onPageChange && (
+          <div className="mt-4 flex justify-center">
+            <Pagination
+              currentPage={pagination.currentPage}
+              totalPages={pagination.lastPage}
+              onPageChange={onPageChange}
+              previousLabel="Anterior"
+              nextLabel="Siguiente"
+            />
           </div>
         )}
 

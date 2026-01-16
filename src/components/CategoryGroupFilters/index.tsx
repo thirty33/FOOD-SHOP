@@ -2,7 +2,8 @@ import React from 'react';
 import CloseButton from '../Icons/CloseButton';
 import { useCategoryGroupFilters } from '../../hooks/useCategoryGroupFilters';
 import { useAuth } from '../../hooks/useAuth';
-import { ROLES_TYPES } from '../../config/constant';
+import { useNavigationParams } from '../../hooks/useNavigationParams';
+import { shouldShowCategoryGroupFilters } from '../../helpers/userRoles';
 import { capitalizeFirstLetter } from '../../helpers/texts';
 
 interface CategoryGroupFiltersProps {
@@ -14,9 +15,11 @@ export const CategoryGroupFilters: React.FC<CategoryGroupFiltersProps> = ({
 }) => {
 
   const { user } = useAuth();
+  const { getParam } = useNavigationParams();
+  const delegateUserRole = getParam('user_role');
 
-  // Only show filters for CAFE users
-  if (!user || user.role !== ROLES_TYPES.CAFE) {
+  // Only show filters for CAFE users (or super_master_user delegating to CAFE)
+  if (!shouldShowCategoryGroupFilters({ user, delegateUserRole })) {
     return null;
   }
   

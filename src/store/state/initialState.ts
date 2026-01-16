@@ -1,4 +1,5 @@
 import { globalState } from "../../types/state";
+import { getInitialUser } from "../../utils/userHelpers";
 
 export const InitialState: globalState = {
     showHeader: false,
@@ -12,14 +13,7 @@ export const InitialState: globalState = {
     selectedMenu: null,
     currentOrder: null,
     showSideCart: false,
-    user: {
-        role: null,
-        permission: null,
-        master_user: false,
-        nickname: '',
-        name: '',
-        branch_fantasy_name: null,
-    },
+    user: getInitialUser(),
     orders: null,
     showModal: false,
     isPendingReload: false,

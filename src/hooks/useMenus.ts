@@ -1,14 +1,13 @@
 import { useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { menuService } from "../services/menu";
 import { MenuItemPagination } from "../types/menus";
 import { useInfiniteScroll } from "./useInfiniteScroll";
 import { useOrder } from "./useCurrentOrder";
-import { useQueryParams } from "./useQueryParams";
+import { useNavigationParams } from "./useNavigationParams";
 import { ROUTES } from "../config/routes";
 
 export function useMenus() {
-    const navigate = useNavigate();
+    const { params, navigateWithParams } = useNavigationParams();
 
     const {
         currentPage,
@@ -27,17 +26,15 @@ export function useMenus() {
         // setCurrentOrder
     } = useOrder();
 
-    const queryParams = useQueryParams(['delegate_user']);
-
     const fetchMenus = async () => {
         try {
             setIsLoading(true);
 
             if(currentPage > lastPage) return;
 
-            const { last_page, current_page, data } = await menuService.list({ 
+            const { last_page, current_page, data } = await menuService.list({
                 page: currentPage,
-                ...queryParams
+                ...(params.delegate_user && { delegate_user: params.delegate_user })
             }) as MenuItemPagination;
 
             setHasMore(current_page < last_page);
@@ -79,19 +76,12 @@ export function useMenus() {
         if (menuSelected) {
             setSelectedMenu(menuSelected);
         }
-        
-        // Construir los search params preservando delegate_user si existe
-        const searchParams = new URLSearchParams();
-        searchParams.set('date', date);
-        
-        if (queryParams.delegate_user) {
-            searchParams.set('delegate_user', queryParams.delegate_user);
-        }
-        
-        navigate({
-            pathname: ROUTES.GET_CATEGORY_ROUTE(menuId),
-            search: searchParams.toString()
-        });
+
+        // Navigate preserving persistent params (delegate_user) + adding date
+        navigateWithParams(
+            ROUTES.GET_CATEGORY_ROUTE(menuId),
+            { date }
+        );
     };
 
     return {

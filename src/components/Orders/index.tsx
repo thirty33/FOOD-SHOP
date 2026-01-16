@@ -1,12 +1,14 @@
 import { isAdminOrCafe } from "../../helpers/permissions";
 import { useAuth } from "../../hooks/useAuth";
-import { useCurrentList } from "../../hooks/useCurrentList";
+// import { useCurrentList } from "../../hooks/useCurrentList";
+import { useCurrentListPaginated } from "../../hooks/useCurrentListPaginated";
 import { OrderLines } from "./OrderLines";
 import { OrdersFilters } from "./OrdersFilters";
 
 export const Orders = () => {
 
-  const { orders, isLoading, hasMore, loadMore, changeFilter, onSearch } = useCurrentList();
+  // const { orders, isLoading, hasMore, loadMore, changeFilter, onSearch } = useCurrentList();
+  const { orders, isLoading, pagination, handlePageChange, changeFilter, onSearch } = useCurrentListPaginated();
   const { user } = useAuth();
 
   return (
@@ -21,8 +23,10 @@ export const Orders = () => {
             showTotalPrice={isAdminOrCafe(user)}
             orders={orders}
             isLoading={isLoading}
-            hasMore={hasMore}
-            loadMore={loadMore}
+            // hasMore={hasMore}
+            // loadMore={loadMore}
+            pagination={pagination}
+            onPageChange={handlePageChange}
           />
         </div>
       </div>

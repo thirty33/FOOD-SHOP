@@ -51,6 +51,7 @@ export interface OrderLine {
 export interface UserData {
 	nickname: string;
 	email: string;
+	company_name: string | null;
 	branch_name: string | null;
 	branch_address: string | null;
 }

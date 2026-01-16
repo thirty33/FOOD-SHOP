@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import debounce from "just-debounce-it";
 
 interface AsyncSearchInputProps {
@@ -7,6 +7,7 @@ interface AsyncSearchInputProps {
   debounceDelay?: number;
   className?: string;
   name?: string;
+  value?: string;
 }
 
 export const AsyncSearchInput = ({
@@ -14,9 +15,17 @@ export const AsyncSearchInput = ({
   onSearch,
   debounceDelay = 500,
   className = "",
-  name = "search"
+  name = "search",
+  value: externalValue
 }: AsyncSearchInputProps) => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState(externalValue ?? "");
+
+  // Sync internal state with external value when it changes
+  useEffect(() => {
+    if (externalValue !== undefined) {
+      setInputValue(externalValue);
+    }
+  }, [externalValue]);
 
   // Crear función debounced que emite el evento al componente padre
   const debouncedSearch = useCallback(
@@ -29,7 +38,7 @@ export const AsyncSearchInput = ({
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setInputValue(value);
-    
+
     // Llamar a la función debounced
     debouncedSearch(value);
   };

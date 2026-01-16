@@ -3,6 +3,8 @@ import { useRoutes } from "react-router-dom";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import { ROUTES } from "../config/routes";
 import { CategoryFilterProvider } from "../context/CategoryFilterContext";
+import { SubordinatesFiltersProvider } from "../context/SubordinatesFiltersContext";
+import { NavigationParamsProvider } from "../context/NavigationParamsContext";
 import { SpinnerLoading } from "../components/SpinnerLoading";
 
 // Lazy load all route components
@@ -98,8 +100,12 @@ export const AppRouter = () => {
   ]);
 
   return (
-    <Suspense fallback={<LoadingFallback />}>
-      {routes}
-    </Suspense>
+    <NavigationParamsProvider>
+      <SubordinatesFiltersProvider>
+        <Suspense fallback={<LoadingFallback />}>
+          {routes}
+        </Suspense>
+      </SubordinatesFiltersProvider>
+    </NavigationParamsProvider>
   );
 };
