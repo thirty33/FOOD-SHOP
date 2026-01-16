@@ -5,6 +5,8 @@ interface SubordinatesFilters {
     company_search: string;
     branch_search: string;
     user_search: string;
+    user_role: string;
+    user_permission: string;
     start_date: string;
     end_date: string;
     order_status: string;
@@ -23,6 +25,8 @@ const DEFAULT_FILTERS: SubordinatesFilters = {
     company_search: '',
     branch_search: '',
     user_search: '',
+    user_role: '',
+    user_permission: '',
     start_date: '',
     end_date: '',
     order_status: '',

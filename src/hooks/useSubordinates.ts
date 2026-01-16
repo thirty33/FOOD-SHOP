@@ -21,7 +21,7 @@ interface PaginationState {
 
 const DEFAULT_PER_PAGE = 8;
 
-const FILTER_KEYS = ['company_search', 'branch_search', 'user_search', 'start_date', 'end_date', 'order_status'] as const;
+const FILTER_KEYS = ['company_search', 'branch_search', 'user_search', 'user_role', 'user_permission', 'start_date', 'end_date', 'order_status'] as const;
 type FilterKey = typeof FILTER_KEYS[number];
 
 export function useSubordinates() {
@@ -91,6 +91,8 @@ export function useSubordinates() {
         if (currentFilters.company_search) params.company_search = currentFilters.company_search;
         if (currentFilters.branch_search) params.branch_search = currentFilters.branch_search;
         if (currentFilters.user_search) params.user_search = currentFilters.user_search;
+        if (currentFilters.user_role) params.user_role = currentFilters.user_role;
+        if (currentFilters.user_permission) params.user_permission = currentFilters.user_permission;
         if (currentFilters.start_date) params.start_date = currentFilters.start_date;
         if (currentFilters.end_date) params.end_date = currentFilters.end_date;
         if (currentFilters.order_status) params.order_status = currentFilters.order_status;
@@ -232,6 +234,8 @@ export function useSubordinates() {
             normalizeFilter(urlFilters.company_search) !== normalizeFilter(filtersRef.current.company_search) ||
             normalizeFilter(urlFilters.branch_search) !== normalizeFilter(filtersRef.current.branch_search) ||
             normalizeFilter(urlFilters.user_search) !== normalizeFilter(filtersRef.current.user_search) ||
+            normalizeFilter(urlFilters.user_role) !== normalizeFilter(filtersRef.current.user_role) ||
+            normalizeFilter(urlFilters.user_permission) !== normalizeFilter(filtersRef.current.user_permission) ||
             normalizeFilter(urlFilters.start_date) !== normalizeFilter(filtersRef.current.start_date) ||
             normalizeFilter(urlFilters.end_date) !== normalizeFilter(filtersRef.current.end_date) ||
             normalizeFilter(urlFilters.order_status) !== normalizeFilter(filtersRef.current.order_status);

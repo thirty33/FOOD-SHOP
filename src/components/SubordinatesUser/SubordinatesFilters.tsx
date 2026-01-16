@@ -1,10 +1,12 @@
 import { AsyncSearchInput } from "../Orders/OrdersFilters/AsyncSearchInput";
-import { ORDER_STATUS, ORDER_STATUS_TEXT } from "../../config/constant";
+import { ORDER_STATUS, ORDER_STATUS_TEXT, ROLES_TYPES, PERMISSION_TYPES } from "../../config/constant";
 
 export interface SubordinatesFiltersValues {
   company_search: string;
   branch_search: string;
   user_search: string;
+  user_role: string;
+  user_permission: string;
   start_date: string;
   end_date: string;
   order_status: string;
@@ -39,6 +41,8 @@ export const SubordinatesFilters = ({
     filters.company_search !== "" ||
     filters.branch_search !== "" ||
     filters.user_search !== "" ||
+    filters.user_role !== "" ||
+    filters.user_permission !== "" ||
     filters.start_date !== "" ||
     filters.end_date !== "" ||
     filters.order_status !== "";
@@ -113,6 +117,56 @@ export const SubordinatesFilters = ({
                 debounceDelay={500}
                 className={inputClassName}
               />
+            </div>
+          </div>
+        </div>
+
+        {/* User Role/Permission Filters */}
+        <div>
+          <h4 className={sectionTitleClassName}>Rol / Permiso</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label htmlFor="user_role" className={labelClassName}>
+                Rol
+              </label>
+              <select
+                id="user_role"
+                name="user_role"
+                value={filters.user_role}
+                onChange={handleSelectChange}
+                className={selectClassName}
+              >
+                <option value="">Todos los roles</option>
+                {Object.entries(ROLES_TYPES).map(([key, value]) =>
+                  value !== null && (
+                    <option key={key} value={value}>
+                      {value}
+                    </option>
+                  )
+                )}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="user_permission" className={labelClassName}>
+                Permiso
+              </label>
+              <select
+                id="user_permission"
+                name="user_permission"
+                value={filters.user_permission}
+                onChange={handleSelectChange}
+                className={selectClassName}
+              >
+                <option value="">Todos los permisos</option>
+                {Object.entries(PERMISSION_TYPES).map(([key, value]) =>
+                  value !== null && (
+                    <option key={key} value={value}>
+                      {value}
+                    </option>
+                  )
+                )}
+              </select>
             </div>
           </div>
         </div>

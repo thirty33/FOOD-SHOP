@@ -32,6 +32,8 @@ export interface SubordinatesParams {
   company_search?: string;
   branch_search?: string;
   user_search?: string;
+  user_role?: string;
+  user_permission?: string;
   // Menu filters
   start_date?: string;
   end_date?: string;
