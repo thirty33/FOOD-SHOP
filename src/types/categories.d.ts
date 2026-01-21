@@ -49,6 +49,7 @@ type CategoryDetail = {
     id: number;
     name: string;
     description: string;
+    is_dynamic?: boolean;
     products: Product[];
     category_lines: CategoryLine[];
     category_user_lines: CategoryLine[];

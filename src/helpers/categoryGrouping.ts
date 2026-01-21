@@ -17,6 +17,7 @@ export interface ExtendedCategoryDetail {
   id: number | null;
   name: string;
   description: string;
+  is_dynamic?: boolean;
   products: any[]; // Keep flexible for grouped products
   category_lines: ExtendedCategoryLine[];
   category_user_lines: CategoryLine[];

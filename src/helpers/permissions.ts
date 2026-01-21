@@ -5,6 +5,10 @@ export const isAdminOrCafe = (user: User) => {
 	return user.role === ROLES_TYPES.ADMIN || user.role === ROLES_TYPES.CAFE
 }
 
+export const isCafe = (user: User) => {
+	return user.role === ROLES_TYPES.CAFE
+}
+
 export const isAgreementIndividual = (user: User) => {
 	return user.role === ROLES_TYPES.CONVENIO && user.permission === PERMISSION_TYPES.INDIVIDUAL
 }

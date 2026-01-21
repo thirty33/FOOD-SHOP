@@ -6,7 +6,7 @@ import { Product, Category
 import { ExtendedCategory } from "../../helpers/categoryGrouping";
 import { SpinnerLoading } from "../SpinnerLoading";
 import { useOrder } from "../../hooks/useCurrentOrder";
-import { isAgreementIndividual, isAgreementConsolidated } from "../../helpers/permissions";
+import { isAgreementIndividual, isAgreementConsolidated, isCafe } from "../../helpers/permissions";
 import { useAuth } from "../../hooks/useAuth";
 import { User } from "../../types/user";
 import { useMemo, useRef } from "react";
@@ -16,19 +16,25 @@ import ArrowUpIcon from "../Icons/ArrowUpIcon";
 import { textMessages } from "../../config/textMessages";
 
 // Component for product list of a category
-const ProductList = ({ 
-  products, 
-  maximumOrderTime, 
-  category, 
-  user 
-}: { 
-  products: Product[], 
+const ProductList = ({
+  products,
+  maximumOrderTime,
+  category,
+  user
+}: {
+  products: Product[],
   maximumOrderTime: string,
   category: Category | ExtendedCategory,
   user: User
 }) => {
   const { addProductToCart } = useOrder();
-  
+
+  // Check if this is a dynamic category
+  const isDynamicCategory = category?.category?.is_dynamic === true;
+
+  // For Cafe users in dynamic category, show availability per product
+  const showAvailabilityForCafeDynamic = isCafe(user) && isDynamicCategory;
+
   // Function to calculate maximumOrderTime per product
   const getProductMaximumOrderTime = useMemo(() => {
     return (product: Product): string => {
@@ -44,11 +50,16 @@ const ProductList = ({
         }
       }
 
+      // For Cafe users in dynamic category, get from product's original category
+      if (showAvailabilityForCafeDynamic && (product as any).category?.category_lines?.[0]) {
+        return (product as any).category.category_lines[0].maximum_order_time;
+      }
+
       // For all other users, use the category's maximumOrderTime
       return maximumOrderTime;
     };
-  }, [user, category, maximumOrderTime]);
-  
+  }, [user, category, maximumOrderTime, showAvailabilityForCafeDynamic]);
+
   // Function to get subcategories for a product
   const getProductSubcategories = useMemo(() => {
     return (product: Product): any[] => {
@@ -63,7 +74,7 @@ const ProductList = ({
       return [];
     };
   }, [user, category]);
-  
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 2xl:gap-8">
       {products.map((product, index) => (
@@ -77,6 +88,7 @@ const ProductList = ({
           addProductToCart={addProductToCart}
           maximumOrderTime={getProductMaximumOrderTime(product)}
           productSubcategories={getProductSubcategories(product)}
+          showAvailabilityForCafeDynamic={showAvailabilityForCafeDynamic}
         />
       ))}
     </div>
@@ -119,6 +131,9 @@ const CategorySection = ({
     [subcategories, user]
   );
 
+  // Check if this is a dynamic category
+  const isDynamicCategory = category?.category?.is_dynamic === true;
+
   return (
 
     <div className="mb-6">
@@ -155,8 +170,8 @@ const CategorySection = ({
         </div>
       )}
       
-      {/* Show availability text only for non-convenio users */}
-      {!isAgreementIndividual(user) && !isAgreementConsolidated(user) && (
+      {/* Show availability text only for non-convenio users and not for Cafe users in dynamic categories */}
+      {!isAgreementIndividual(user) && !isAgreementConsolidated(user) && !(isCafe(user) && isDynamicCategory) && (
         <p className="text-green-100 font-cera-regular tracking-normal text-sm md:text-base mb-3 md:mb-6">
           {maximumOrderTime}
         </p>

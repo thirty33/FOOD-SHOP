@@ -27,6 +27,7 @@ interface ProductItemProps {
   }>) => void;
   maximumOrderTime?: string;
   productSubcategories?: any[];
+  showAvailabilityForCafeDynamic?: boolean;
 }
 
 export const ProductItem = ({
@@ -38,6 +39,7 @@ export const ProductItem = ({
   addProductToCart,
   maximumOrderTime,
   productSubcategories,
+  showAvailabilityForCafeDynamic,
 }: ProductItemProps): JSX.Element => {
   const {
     handleQuantityChange,
@@ -252,6 +254,15 @@ export const ProductItem = ({
             
             {/* Show availability text for agreement users (individual or consolidated) */}
             {(isAgreementIndividual(user) || isAgreementConsolidated(user)) && maximumOrderTime && (
+              <div className="mt-2">
+                <p className="text-green-100 font-cera-regular tracking-normal text-xs md:text-sm">
+                  {maximumOrderTime}
+                </p>
+              </div>
+            )}
+
+            {/* Show availability text for Cafe users in dynamic category only */}
+            {showAvailabilityForCafeDynamic && maximumOrderTime && (
               <div className="mt-2">
                 <p className="text-green-100 font-cera-regular tracking-normal text-xs md:text-sm">
                   {maximumOrderTime}
