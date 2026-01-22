@@ -19,6 +19,7 @@ export interface MenuData {
     id: string | number;
     has_order: number;
     order_id?: number | null;
+    order_status?: string | null;
 }
 
 export type MenuApiResponse = SuccessResponse<Pagination<MenuData>> | UnauthorizedResponse | RateLimitResponse;

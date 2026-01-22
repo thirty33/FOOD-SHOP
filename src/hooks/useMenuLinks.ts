@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from './useAuth';
 import { useNotification } from './useNotification';
 import { useQueryParams } from './useQueryParams';
+import { useNavigationParamsContext } from '../context/NavigationParamsContext';
 import { ROUTES } from '../config/routes';
 import { textMessages } from '../config/textMessages';
 import { configuration } from '../config/config';
@@ -22,6 +23,7 @@ interface MenuLink {
 export const useMenuLinks = () => {
   const { logOut, setToken, signOut, user } = useAuth();
   const { enqueueSnackbar } = useNotification();
+  const { clearParams } = useNavigationParamsContext();
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = useQueryParams(['delegate_user']);
@@ -37,11 +39,12 @@ export const useMenuLinks = () => {
         await logOut();
         setToken(null);
         signOut();
+        clearParams();
         navigate(ROUTES.LOGIN);
       } catch (error) {
-        enqueueSnackbar((error as Error).message, { 
-          variant: "error", 
-          autoHideDuration: configuration.toast.duration 
+        enqueueSnackbar((error as Error).message, {
+          variant: "error",
+          autoHideDuration: configuration.toast.duration
         });
       }
       event.preventDefault();
@@ -86,7 +89,7 @@ export const useMenuLinks = () => {
     });
 
     return links;
-  }, [logOut, setToken, signOut, navigate, enqueueSnackbar, user, location.pathname, queryParams]);
+  }, [logOut, setToken, signOut, clearParams, navigate, enqueueSnackbar, user, location.pathname, queryParams]);
 
   // Helper functions to filter links for different contexts
   const getDesktopLinks = useMemo(() => {

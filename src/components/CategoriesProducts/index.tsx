@@ -32,8 +32,8 @@ const ProductList = ({
   // Check if this is a dynamic category
   const isDynamicCategory = category?.category?.is_dynamic === true;
 
-  // For Cafe users in dynamic category, show availability per product
-  const showAvailabilityForCafeDynamic = isCafe(user) && isDynamicCategory;
+  // For Cafe/super users in dynamic category, show availability per product
+  const showAvailabilityForCafeDynamic = (isCafe(user) || user.super_master_user) && isDynamicCategory;
 
   // Function to calculate maximumOrderTime per product
   const getProductMaximumOrderTime = useMemo(() => {
@@ -170,8 +170,8 @@ const CategorySection = ({
         </div>
       )}
       
-      {/* Show availability text only for non-convenio users and not for Cafe users in dynamic categories */}
-      {!isAgreementIndividual(user) && !isAgreementConsolidated(user) && !(isCafe(user) && isDynamicCategory) && (
+      {/* Show availability text only for non-convenio users and not for Cafe/super users in dynamic categories */}
+      {!isAgreementIndividual(user) && !isAgreementConsolidated(user) && !((isCafe(user) || user.super_master_user) && isDynamicCategory) && (
         <p className="text-green-100 font-cera-regular tracking-normal text-sm md:text-base mb-3 md:mb-6">
           {maximumOrderTime}
         </p>

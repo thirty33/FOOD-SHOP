@@ -101,7 +101,7 @@ export const SubordinatesUser = () => {
                               dayName={dayName}
                               dayNumber={dayNumber}
                               month={month}
-                              isCompleted={menu.has_order === 1}
+                              orderStatus={menu.order_status}
                               onClick={() => handleMenuCardClick(
                                 menu.id,
                                 menu.publication_date,
