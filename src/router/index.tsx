@@ -17,6 +17,7 @@ const OrderSummary = lazy(() => import("../components/OrderSummary").then(module
 const Orders = lazy(() => import("../components/Orders").then(module => ({ default: module.Orders })));
 const CategoriesProducts = lazy(() => import("../components/CategoriesProducts").then(module => ({ default: module.CategoriesProducts })));
 const CategoryGroupFilters = lazy(() => import("../components/CategoryGroupFilters").then(module => ({ default: module.CategoryGroupFilters })));
+const PreviousOrderActions = lazy(() => import("../components/PreviousOrderActions").then(module => ({ default: module.PreviousOrderActions })));
 const SubordinatesUser = lazy(() => import("../components/SubordinatesUser").then(module => ({ default: module.SubordinatesUser })));
 
 // Loading component for Suspense fallback
@@ -43,6 +44,7 @@ export const AppRouter = () => {
       element: (
         <ProtectedRoute>
           <CategoryFilterProvider>
+            <PreviousOrderActions />
             <CategoryGroupFilters />
             <CategoriesProducts />
           </CategoryFilterProvider>

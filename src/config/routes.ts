@@ -55,6 +55,7 @@ export const API_ROUTES = {
             partiallyScheduleOrder: 'partially-schedule-order',
             getOrders: 'get-orders',
             updateUserComment: 'update-user-comment',
+            getPreviousOrder: 'get-previous-order',
         }
     },
     users: {

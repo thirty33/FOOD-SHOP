@@ -152,7 +152,7 @@ export const BreadCrumbsNavigation = () => {
     if (!isMasterUser && user?.branch_fantasy_name) {
       return (
         <div className="flex items-center">
-          <span className="font-cera-light tracking-tight text-sm md:text-xl font-medium text-gray-400 leading-none">
+          <span className="font-cera-light tracking-tight text-sm md:text-xl font-medium text-gray-400 leading-none text-center md:text-left">
             {user.branch_fantasy_name}
           </span>
           <div className="inline-flex items-center">
