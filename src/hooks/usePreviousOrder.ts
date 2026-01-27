@@ -13,18 +13,20 @@ export function usePreviousOrder() {
   const { enqueueSnackbar } = useNotification();
   const queryParams = useQueryParams(['delegate_user']);
 
-  const fetchPreviousOrder = useCallback(async (date: string) => {
+  const fetchPreviousOrder = useCallback(async (date: string, overrideParams?: { [key: string]: string }) => {
     if (!date) return;
 
     try {
       setIsLoading(true);
       setError(null);
-      const response = await orderService.getPreviousOrder(date, queryParams);
+      const params = overrideParams ? { ...queryParams, ...overrideParams } : queryParams;
+      const response = await orderService.getPreviousOrder(date, params);
 
-      if ('data' in response) {
+      if ('data' in response && response.data !== null) {
         setPreviousOrder(response.data);
       } else {
         setPreviousOrder(null);
+        setError('not_found');
       }
     } catch (err) {
       console.error('Error fetching previous order:', err);

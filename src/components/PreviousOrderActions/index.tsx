@@ -3,11 +3,14 @@ import { useNotification } from '../../hooks/useNotification';
 import { useQueryParams } from '../../hooks/useQueryParams';
 import { usePreviousOrder } from '../../hooks/usePreviousOrder';
 import { usePreviousOrderItems, PreviousOrderItem } from '../../hooks/usePreviousOrderItems';
-import { useLoadOrderItems } from '../../hooks/useLoadOrderItems';
+import { useLoadOrderItems, LoadItemResult } from '../../hooks/useLoadOrderItems';
 import { PreviousOrderModal } from '../PreviousOrderModal';
+import { CompactPreviousOrderButtons } from '../CompactPreviousOrderButtons';
 import { OrderContext } from '../../context/orderContext';
+import { GlobalContext } from '../../context/globalContext';
 import { orderService } from '../../services/order';
 import { SuccessResponse } from '../../types/order';
+import { ORDER_STATUS } from '../../config/constant';
 
 const InfoIcon: React.FC<{ onClick: (e: React.MouseEvent) => void }> = ({ onClick }) => (
   <button
@@ -19,15 +22,27 @@ const InfoIcon: React.FC<{ onClick: (e: React.MouseEvent) => void }> = ({ onClic
   </button>
 );
 
-export const PreviousOrderActions: React.FC = () => {
+interface PreviousOrderActionsProps {
+  date?: string;
+  compact?: boolean;
+  delegateUser?: string;
+  onOrderConfirmed?: (date: string) => void;
+}
+
+export const PreviousOrderActions: React.FC<PreviousOrderActionsProps> = ({ date: dateProp, compact = false, delegateUser, onOrderConfirmed }) => {
   const { enqueueSnackbar } = useNotification();
-  const queryParams = useQueryParams(['date', 'delegate_user']);
+  const urlQueryParams = useQueryParams(['date', 'delegate_user']);
+  const effectiveQueryParams = delegateUser
+    ? { ...urlQueryParams, delegate_user: delegateUser }
+    : urlQueryParams;
   const { setCurrentOrder } = useContext(OrderContext);
+  const { menuItems, setMenus } = useContext(GlobalContext);
   const { previousOrder, isLoading, error, fetchPreviousOrder, clearPreviousOrder } = usePreviousOrder();
   const {
     items,
     initializeItems,
     updateItemQuantity,
+    removeItem,
     clearItems,
     getItemError,
     setItemLoading,
@@ -37,6 +52,12 @@ export const PreviousOrderActions: React.FC = () => {
   } = usePreviousOrderItems();
   const { isLoading: isLoadingItems, loadItems } = useLoadOrderItems();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [autoLoad, setAutoLoad] = useState(false);
+  const [loadComplete, setLoadComplete] = useState(false);
+  const [hasLoadErrors, setHasLoadErrors] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
+
+  const effectiveDate = dateProp || effectiveQueryParams.date;
 
   useEffect(() => {
     if (previousOrder) {
@@ -44,14 +65,31 @@ export const PreviousOrderActions: React.FC = () => {
     }
   }, [previousOrder, initializeItems]);
 
-  const handleRepeatOrder = () => {
-    // TODO: Implement repeat order logic with modal
-    console.log('Repetir pedido clicked');
+  useEffect(() => {
+    if (autoLoad && items.length > 0 && !isLoadingItems) {
+      setAutoLoad(false);
+      handleLoadOrder(items);
+    }
+  }, [autoLoad, items, isLoadingItems]);
+
+  const handleRepeatOrder = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (!effectiveDate) {
+      enqueueSnackbar('No se pudo obtener la fecha del menu', {
+        variant: 'error',
+        autoHideDuration: 4000,
+      });
+      return;
+    }
+
+    setAutoLoad(true);
+    setIsModalOpen(true);
+    fetchPreviousOrder(effectiveDate, delegateUser ? { delegate_user: delegateUser } : undefined);
   };
 
-  const handleViewPreviousOrder = () => {
-    const date = queryParams.date;
-    if (!date) {
+  const handleViewPreviousOrder = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (!effectiveDate) {
       enqueueSnackbar('No se pudo obtener la fecha del menu', {
         variant: 'error',
         autoHideDuration: 4000,
@@ -60,18 +98,53 @@ export const PreviousOrderActions: React.FC = () => {
     }
 
     setIsModalOpen(true);
-    fetchPreviousOrder(date);
+    fetchPreviousOrder(effectiveDate, delegateUser ? { delegate_user: delegateUser } : undefined);
   };
 
   const handleCloseModal = () => {
+    if (isLoadingItems || isConfirming) return;
     setIsModalOpen(false);
     clearPreviousOrder();
     clearItems();
+    setLoadComplete(false);
+    setHasLoadErrors(false);
+  };
+
+  const handleConfirmOrder = async () => {
+    if (!effectiveDate) return;
+    setIsConfirming(true);
+    try {
+      const response = await orderService.updateOrderStatus(effectiveDate, ORDER_STATUS.PROCESSED, effectiveQueryParams) as SuccessResponse;
+      setCurrentOrder(response.data);
+      enqueueSnackbar('Pedido confirmado!', {
+        variant: 'success',
+        autoHideDuration: 4000,
+      });
+      if (onOrderConfirmed) {
+        onOrderConfirmed(effectiveDate);
+      } else {
+        const updatedMenus = menuItems.map((menu) =>
+          menu.publication_date === effectiveDate ? { ...menu, has_order: 1 } : menu
+        );
+        setMenus(updatedMenus);
+      }
+      setIsModalOpen(false);
+      clearPreviousOrder();
+      clearItems();
+      setLoadComplete(false);
+      setHasLoadErrors(false);
+    } catch (err) {
+      enqueueSnackbar((err as Error).message || 'Error al confirmar el pedido', {
+        variant: 'error',
+        autoHideDuration: 4000,
+      });
+    } finally {
+      setIsConfirming(false);
+    }
   };
 
   const handleLoadOrder = async (orderItems: PreviousOrderItem[]) => {
-    const date = queryParams.date;
-    if (!date) {
+    if (!effectiveDate) {
       enqueueSnackbar('No se pudo obtener la fecha del menu', {
         variant: 'error',
         autoHideDuration: 4000,
@@ -79,16 +152,27 @@ export const PreviousOrderActions: React.FC = () => {
       return;
     }
 
-    await loadItems(orderItems, date, queryParams, {
+    await loadItems(orderItems, effectiveDate, effectiveQueryParams, {
       onItemLoading: (productId) => setItemLoading(productId, true),
       onItemSuccess: (productId) => setItemSuccess(productId),
       onItemError: (productId, errorMessage) => setItemError(productId, errorMessage),
-      onComplete: async () => {
+      onComplete: async (results: LoadItemResult[]) => {
+        const hasErrors = results.some((r) => !r.success);
+        setHasLoadErrors(hasErrors);
+        setLoadComplete(true);
+
         try {
-          const response = await orderService.get(date, queryParams) as SuccessResponse;
+          const response = await orderService.get(effectiveDate, effectiveQueryParams) as SuccessResponse;
           setCurrentOrder(response.data);
         } catch (err) {
           console.error('Error refreshing order:', err);
+        }
+
+        if (hasErrors) {
+          enqueueSnackbar('Algunos productos tuvieron errores. Entra al menu y revisa tu pedido', {
+            variant: 'warning',
+            autoHideDuration: 6000,
+          });
         }
       },
     });
@@ -109,6 +193,38 @@ export const PreviousOrderActions: React.FC = () => {
       autoHideDuration: 4000,
     });
   };
+
+  if (compact) {
+    return (
+      <>
+        <CompactPreviousOrderButtons
+          onRepeat={handleRepeatOrder}
+          onViewPrevious={handleViewPreviousOrder}
+          onRepeatInfo={showRepeatInfo}
+          onViewInfo={showViewInfo}
+        />
+
+        <PreviousOrderModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          previousOrder={previousOrder}
+          isLoading={isLoading}
+          error={error}
+          items={items}
+          onQuantityChange={updateItemQuantity}
+          onRemoveItem={removeItem}
+          getItemError={getItemError}
+          getItemStatus={getItemStatus}
+          onLoadOrder={handleLoadOrder}
+          isLoadingItems={isLoadingItems}
+          loadComplete={loadComplete}
+          hasLoadErrors={hasLoadErrors}
+          onConfirmOrder={handleConfirmOrder}
+          isConfirming={isConfirming}
+        />
+      </>
+    );
+  }
 
   return (
     <>
@@ -143,10 +259,15 @@ export const PreviousOrderActions: React.FC = () => {
         error={error}
         items={items}
         onQuantityChange={updateItemQuantity}
+        onRemoveItem={removeItem}
         getItemError={getItemError}
         getItemStatus={getItemStatus}
         onLoadOrder={handleLoadOrder}
         isLoadingItems={isLoadingItems}
+        loadComplete={loadComplete}
+        hasLoadErrors={hasLoadErrors}
+        onConfirmOrder={handleConfirmOrder}
+        isConfirming={isConfirming}
       />
     </>
   );

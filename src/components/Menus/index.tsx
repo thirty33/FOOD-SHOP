@@ -1,6 +1,7 @@
 import { useMenus } from "../../hooks/useMenus";
 import { SpinnerLoading } from "../SpinnerLoading";
 import { formatMenuDate } from "../../helpers/dates";
+import { PreviousOrderActions } from "../PreviousOrderActions";
 
 const MenuCard: React.FC<{
   title: string;
@@ -60,16 +61,22 @@ export const Menus = (): JSX.Element => {
       <div className="mt-8 px-1 md:px-0 2xl:px-[21rem] lg:px-52">
         <div className="grid grid-cols-3 gap-y-3 gap-x-3 md:w-[600px] lg:w-[750px] xl:w-[900px] md:mx-auto place-items-center">
           {menuItems.map((item) => (
-            <MenuCard
-              key={item.id}
-              title={item.title}
-              description={item.description}
-              imageUrl={item.imageUrl}
-              menuId={item.id}
-              date={item.publication_date}
-              has_order={item.has_order}
-              handleClick={handleMenuClick}
-            />
+            <div key={item.id} className="relative">
+              {item.has_order !== 1 && (
+                <div className="absolute top-4 md:top-6 left-2 md:left-3 z-10">
+                  <PreviousOrderActions date={item.publication_date} compact />
+                </div>
+              )}
+              <MenuCard
+                title={item.title}
+                description={item.description}
+                imageUrl={item.imageUrl}
+                menuId={item.id}
+                date={item.publication_date}
+                has_order={item.has_order}
+                handleClick={handleMenuClick}
+              />
+            </div>
           ))}
         </div>
         {menuItems.length === 0 && !isLoading && (

@@ -8,12 +8,14 @@ import { PreviousOrderItem as PreviousOrderItemType } from '../../hooks/usePrevi
 interface PreviousOrderItemProps {
   line: OrderLine;
   onQuantityChange: (productId: number, quantity: number) => void;
+  onRemove: (productId: number) => void;
   quantity: number;
   error: { show: boolean; message: string };
   status: { isSuccess: boolean; isLoading: boolean };
+  disabled: boolean;
 }
 
-const PreviousOrderItem: React.FC<PreviousOrderItemProps> = ({ line, onQuantityChange, quantity, error, status }) => {
+const PreviousOrderItem: React.FC<PreviousOrderItemProps> = ({ line, onQuantityChange, onRemove, quantity, error, status, disabled }) => {
   const product = line.product;
   if (!product) return null;
 
@@ -27,17 +29,26 @@ const PreviousOrderItem: React.FC<PreviousOrderItemProps> = ({ line, onQuantityC
   };
 
   const addOneItem = () => {
-    onQuantityChange(product.id, quantity + 1);
+    if (!disabled) onQuantityChange(product.id, quantity + 1);
   };
 
   const restOneItem = () => {
-    if (quantity > 1) {
+    if (!disabled && quantity > 1) {
       onQuantityChange(product.id, quantity - 1);
     }
   };
 
   return (
-    <div className={`flex items-center gap-2 rounded-lg border bg-white p-2 shadow-sm ${status.isSuccess ? 'border-green-500' : 'border-gray-200'}`}>
+    <div className={`relative flex items-center gap-2 rounded-lg border bg-white p-2 shadow-sm ${status.isSuccess ? 'border-green-500' : 'border-gray-200'}`}>
+      {!disabled && (
+        <button
+          onClick={() => onRemove(product.id)}
+          className="absolute top-[-6px] right-[-6px] w-5 h-5 flex items-center justify-center rounded-full bg-red-500 text-white text-xs font-cera-bold hover:bg-red-600 transition-colors z-10"
+          aria-label="Eliminar producto"
+        >
+          ✕
+        </button>
+      )}
       <div className="h-16 w-16 flex-shrink-0 relative">
         {status.isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-70 rounded-md">
@@ -100,10 +111,15 @@ interface PreviousOrderModalProps {
   error: string | null;
   items: PreviousOrderItemType[];
   onQuantityChange: (productId: number, quantity: number) => void;
+  onRemoveItem: (productId: number) => void;
   getItemError: (productId: number) => { show: boolean; message: string };
   getItemStatus: (productId: number) => { isSuccess: boolean; isLoading: boolean };
   onLoadOrder?: (items: PreviousOrderItemType[]) => void;
   isLoadingItems?: boolean;
+  loadComplete?: boolean;
+  hasLoadErrors?: boolean;
+  onConfirmOrder?: () => void;
+  isConfirming?: boolean;
 }
 
 export const PreviousOrderModal: React.FC<PreviousOrderModalProps> = ({
@@ -114,10 +130,15 @@ export const PreviousOrderModal: React.FC<PreviousOrderModalProps> = ({
   error,
   items,
   onQuantityChange,
+  onRemoveItem,
   getItemError,
   getItemStatus,
   onLoadOrder,
   isLoadingItems = false,
+  loadComplete = false,
+  hasLoadErrors = false,
+  onConfirmOrder,
+  isConfirming = false,
 }) => {
   if (!isOpen) return null;
 
@@ -150,18 +171,20 @@ export const PreviousOrderModal: React.FC<PreviousOrderModalProps> = ({
   return (
     <div
       className="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-black bg-opacity-50"
-      onClick={onClose}
+      onClick={(isLoadingItems || isConfirming) ? undefined : onClose}
     >
       <div
         className="relative p-4 w-full max-w-md max-h-full"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative rounded-xl shadow-lg bg-white">
-          <CloseButton
-            className="w-8 h-8 cursor-pointer absolute top-[-1rem] right-0"
-            size="32"
-            onClick={onClose}
-          />
+          {!isLoadingItems && !isConfirming && (
+            <CloseButton
+              className="w-8 h-8 cursor-pointer absolute top-[-1rem] right-0"
+              size="32"
+              onClick={onClose}
+            />
+          )}
 
           <div className="p-4">
             <h2 className="font-cera-bold text-xl text-green-100 tracking-tight mb-1">
@@ -197,32 +220,48 @@ export const PreviousOrderModal: React.FC<PreviousOrderModalProps> = ({
 
             {!isLoading && !error && hasProducts && (
               <>
-                <div className="flex flex-col gap-2 max-h-60 overflow-y-auto mb-4">
+                <div className="flex flex-col gap-2 max-h-60 overflow-y-auto mb-4 pr-2 pt-2">
                   {previousOrder.order_lines
-                    .filter((line) => line.product && Number(line.quantity) > 0)
+                    .filter((line) => line.product && Number(line.quantity) > 0 && items.some((item) => item.productId === line.product!.id))
                     .map((line) => (
                       <PreviousOrderItem
                         key={`prev-${line.id}-${line.product_id}`}
                         line={line}
                         onQuantityChange={onQuantityChange}
+                        onRemove={onRemoveItem}
                         quantity={getItemQuantity(line.product!.id)}
                         error={getItemError(line.product!.id)}
                         status={getItemStatus(line.product!.id)}
+                        disabled={isLoadingItems}
                       />
                     ))}
                 </div>
 
-                <button
-                  onClick={handleLoadOrder}
-                  disabled={isLoadingItems}
-                  className={`w-full py-3 text-white font-cera-bold text-base rounded-lg transition-colors ${
-                    isLoadingItems
-                      ? 'bg-gray-400 cursor-not-allowed'
-                      : 'bg-green-100 hover:bg-yellow-active'
-                  }`}
-                >
-                  {isLoadingItems ? 'Cargando...' : 'Cargar pedido'}
-                </button>
+                {loadComplete && !hasLoadErrors && onConfirmOrder ? (
+                  <button
+                    onClick={onConfirmOrder}
+                    disabled={isConfirming}
+                    className={`w-full py-3 text-white font-cera-bold text-base rounded-lg transition-colors ${
+                      isConfirming
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : 'bg-yellow-active hover:bg-green-100'
+                    }`}
+                  >
+                    {isConfirming ? 'Confirmando pedido...' : 'Confirmar orden'}
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleLoadOrder}
+                    disabled={isLoadingItems || loadComplete}
+                    className={`w-full py-3 text-white font-cera-bold text-base rounded-lg transition-colors ${
+                      isLoadingItems || loadComplete
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : 'bg-green-100 hover:bg-yellow-active'
+                    }`}
+                  >
+                    {isLoadingItems ? 'Espera mientras se cargan los productos al carrito...' : 'Cargar pedido'}
+                  </button>
+                )}
               </>
             )}
           </div>

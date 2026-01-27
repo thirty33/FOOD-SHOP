@@ -1,3 +1,5 @@
+import { ORDER_STATUS } from '../../config/constant';
+
 interface MenuCardSubordinateProps {
   dayName: string;
   dayNumber: number;
@@ -9,10 +11,9 @@ interface MenuCardSubordinateProps {
 type StatusType = 'completed' | 'partiallyScheduled' | 'pending';
 
 export const MenuCardSubordinate = ({ dayName, dayNumber, month, orderStatus, onClick }: MenuCardSubordinateProps) => {
-  // Determine status type based on order_status
   const getStatusType = (): StatusType => {
-    if (orderStatus === 'PROCESSED') return 'completed';
-    if (orderStatus === 'PARTIALLY_SCHEDULED') return 'partiallyScheduled';
+    if (orderStatus === ORDER_STATUS.PROCESSED) return 'completed';
+    if (orderStatus === ORDER_STATUS.PARTIALLY_SCHEDULED) return 'partiallyScheduled';
     return 'pending';
   };
 

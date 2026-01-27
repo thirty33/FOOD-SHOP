@@ -247,6 +247,22 @@ export function useSubordinates() {
         }
     }, [searchParams]);
 
+    const updateMenuOrderStatus = useCallback((nickname: string, publicationDate: string, newStatus: string) => {
+        setSubordinates((prev) =>
+            prev.map((sub) => {
+                if (sub.nickname !== nickname) return sub;
+                return {
+                    ...sub,
+                    available_menus: sub.available_menus.map((menu) =>
+                        menu.publication_date === publicationDate
+                            ? { ...menu, order_status: newStatus, has_order: 1 }
+                            : menu
+                    ),
+                };
+            })
+        );
+    }, []);
+
     return {
         subordinates,
         isLoading,
@@ -258,6 +274,7 @@ export function useSubordinates() {
         handleMenuCardClick,
         handleFilterChange,
         handleClearFilters,
+        updateMenuOrderStatus,
     };
 }
 

@@ -14,6 +14,7 @@ interface UsePreviousOrderItemsReturn {
   items: PreviousOrderItem[];
   initializeItems: (order: OrderData) => void;
   updateItemQuantity: (productId: number, quantity: number) => void;
+  removeItem: (productId: number) => void;
   clearItems: () => void;
   getItemQuantity: (productId: number) => number;
   getItemError: (productId: number) => { show: boolean; message: string };
@@ -54,6 +55,10 @@ export function usePreviousOrderItems(): UsePreviousOrderItemsReturn {
           : item
       )
     );
+  }, []);
+
+  const removeItem = useCallback((productId: number) => {
+    setItems((prevItems) => prevItems.filter((item) => item.productId !== productId));
   }, []);
 
   const clearItems = useCallback(() => {
@@ -113,6 +118,7 @@ export function usePreviousOrderItems(): UsePreviousOrderItemsReturn {
     items,
     initializeItems,
     updateItemQuantity,
+    removeItem,
     clearItems,
     getItemQuantity,
     getItemError,

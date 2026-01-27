@@ -4,7 +4,9 @@ import { SpinnerLoading } from "../SpinnerLoading";
 import { Pagination } from "../Pagination";
 import { MenuCardSubordinate } from "./MenuCardSubordinate";
 import { SubordinatesFilters } from "./SubordinatesFilters";
+import { PreviousOrderActions } from "../PreviousOrderActions";
 import { formatMenuDateShort } from "../../helpers/dates";
+import { ORDER_STATUS } from "../../config/constant";
 
 export const SubordinatesUser = () => {
   const {
@@ -17,6 +19,7 @@ export const SubordinatesUser = () => {
     handleMenuCardClick,
     handleFilterChange,
     handleClearFilters,
+    updateMenuOrderStatus,
   } = useSubordinates();
   const { user } = useAuth();
 
@@ -95,22 +98,32 @@ export const SubordinatesUser = () => {
                       {user.available_menus && user.available_menus.length > 0 ? (
                         user.available_menus.map((menu) => {
                           const { dayName, dayNumber, month } = formatMenuDateShort(menu.publication_date);
+                          const isPending = menu.order_status !== ORDER_STATUS.PROCESSED && menu.order_status !== ORDER_STATUS.PARTIALLY_SCHEDULED;
                           return (
-                            <MenuCardSubordinate
-                              key={menu.id}
-                              dayName={dayName}
-                              dayNumber={dayNumber}
-                              month={month}
-                              orderStatus={menu.order_status}
-                              onClick={() => handleMenuCardClick(
-                                menu.id,
-                                menu.publication_date,
-                                menu.has_order,
-                                menu.order_id,
-                                user.nickname,
-                                user.role
+                            <div key={menu.id} className="flex flex-col items-center gap-1">
+                              <MenuCardSubordinate
+                                dayName={dayName}
+                                dayNumber={dayNumber}
+                                month={month}
+                                orderStatus={menu.order_status}
+                                onClick={() => handleMenuCardClick(
+                                  menu.id,
+                                  menu.publication_date,
+                                  menu.has_order,
+                                  menu.order_id,
+                                  user.nickname,
+                                  user.role
+                                )}
+                              />
+                              {isPending && (
+                                <PreviousOrderActions
+                                  date={menu.publication_date}
+                                  compact
+                                  delegateUser={user.nickname}
+                                  onOrderConfirmed={(date) => updateMenuOrderStatus(user.nickname, date, ORDER_STATUS.PROCESSED)}
+                                />
                               )}
-                            />
+                            </div>
                           );
                         })
                       ) : (
