@@ -43,7 +43,7 @@ const PreviousOrderItem: React.FC<PreviousOrderItemProps> = ({ line, onQuantityC
       {!disabled && (
         <button
           onClick={() => onRemove(product.id)}
-          className="absolute top-[-6px] right-[-6px] w-5 h-5 flex items-center justify-center rounded-full bg-red-500 text-white text-xs font-cera-bold hover:bg-red-600 transition-colors z-10"
+          className="absolute top-[-6px] right-[-6px] w-5 h-5 flex items-center justify-center rounded-full bg-[#FF6A41] text-white text-xs font-cera-bold hover:bg-[#E55A35] transition-colors z-10"
           aria-label="Eliminar producto"
         >
           ✕
@@ -120,6 +120,7 @@ interface PreviousOrderModalProps {
   hasLoadErrors?: boolean;
   onConfirmOrder?: () => void;
   isConfirming?: boolean;
+  currentDate?: string;
 }
 
 export const PreviousOrderModal: React.FC<PreviousOrderModalProps> = ({
@@ -139,6 +140,7 @@ export const PreviousOrderModal: React.FC<PreviousOrderModalProps> = ({
   hasLoadErrors = false,
   onConfirmOrder,
   isConfirming = false,
+  currentDate,
 }) => {
   if (!isOpen) return null;
 
@@ -170,7 +172,7 @@ export const PreviousOrderModal: React.FC<PreviousOrderModalProps> = ({
 
   return (
     <div
-      className="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-black bg-opacity-50"
+      className="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-[100] flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-black bg-opacity-50"
       onClick={(isLoadingItems || isConfirming) ? undefined : onClose}
     >
       <div
@@ -188,11 +190,11 @@ export const PreviousOrderModal: React.FC<PreviousOrderModalProps> = ({
 
           <div className="p-4">
             <h2 className="font-cera-bold text-xl text-green-100 tracking-tight mb-1">
-              Tu pedido anterior
+              Repite tu pedido
             </h2>
             {previousOrder && (
               <p className="text-sm text-gray-500 font-cera-light mb-4">
-                {formatDate(previousOrder.dispatch_date)}
+                del {formatDate(previousOrder.dispatch_date)}
               </p>
             )}
 
@@ -259,7 +261,9 @@ export const PreviousOrderModal: React.FC<PreviousOrderModalProps> = ({
                         : 'bg-green-100 hover:bg-yellow-active'
                     }`}
                   >
-                    {isLoadingItems ? 'Espera mientras se cargan los productos al carrito...' : 'Cargar pedido'}
+                    {isLoadingItems
+                      ? 'Espera mientras se cargan los productos al carrito...'
+                      : `Cargar pedido para el ${currentDate ? formatDate(currentDate) : 'día actual'}`}
                   </button>
                 )}
               </>

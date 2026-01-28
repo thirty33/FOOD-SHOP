@@ -63,7 +63,7 @@ export const Menus = (): JSX.Element => {
           {menuItems.map((item) => (
             <div key={item.id} className="relative">
               {item.has_order !== 1 && (
-                <div className="absolute top-4 md:top-6 left-2 md:left-3 z-10">
+                <div className="absolute top-4 md:top-6 left-2 md:left-3">
                   <PreviousOrderActions date={item.publication_date} compact />
                 </div>
               )}

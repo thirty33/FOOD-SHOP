@@ -221,6 +221,7 @@ export const PreviousOrderActions: React.FC<PreviousOrderActionsProps> = ({ date
           hasLoadErrors={hasLoadErrors}
           onConfirmOrder={handleConfirmOrder}
           isConfirming={isConfirming}
+          currentDate={effectiveDate}
         />
       </>
     );
@@ -230,6 +231,7 @@ export const PreviousOrderActions: React.FC<PreviousOrderActionsProps> = ({ date
     <>
       <div className="w-full bg-white py-4 px-4">
         <div className="flex gap-3 justify-center items-center">
+          {/* DISABLED: Repetir pedido button
           <div className="flex items-center gap-1">
             <button
               onClick={handleRepeatOrder}
@@ -239,12 +241,13 @@ export const PreviousOrderActions: React.FC<PreviousOrderActionsProps> = ({ date
             </button>
             <InfoIcon onClick={showRepeatInfo} />
           </div>
+          */}
           <div className="flex items-center gap-1">
             <button
               onClick={handleViewPreviousOrder}
               className="py-3 px-4 bg-white text-green-100 font-cera-medium text-sm rounded-full border-2 border-green-100 hover:bg-green-100 hover:text-white transition-colors"
             >
-              Ver ultimo pedido
+              Ver pedido anterior y repetir
             </button>
             <InfoIcon onClick={showViewInfo} />
           </div>
@@ -268,6 +271,7 @@ export const PreviousOrderActions: React.FC<PreviousOrderActionsProps> = ({ date
         hasLoadErrors={hasLoadErrors}
         onConfirmOrder={handleConfirmOrder}
         isConfirming={isConfirming}
+        currentDate={effectiveDate}
       />
     </>
   );

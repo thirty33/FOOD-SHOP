@@ -52,6 +52,7 @@ export const CompactPreviousOrderButtons: React.FC<CompactPreviousOrderButtonsPr
         </button>
         {dropdownOpen && (
           <div className="absolute top-7 left-0 bg-white rounded-lg shadow-lg py-1 z-20 w-[100px]">
+            {/* DISABLED: Repetir button
             <div className="flex items-center justify-between px-2 py-2 hover:bg-gray-100">
               <button
                 onClick={handleDropdownRepeat}
@@ -61,12 +62,13 @@ export const CompactPreviousOrderButtons: React.FC<CompactPreviousOrderButtonsPr
               </button>
               <CompactInfoIcon onClick={onRepeatInfo} />
             </div>
+            */}
             <div className="flex items-center justify-between px-2 py-2 hover:bg-gray-100">
               <button
                 onClick={handleDropdownView}
                 className="text-[11px] text-green-100 font-cera-medium"
               >
-                Ver anterior
+                Repetir
               </button>
               <CompactInfoIcon onClick={onViewInfo} />
             </div>
@@ -76,6 +78,7 @@ export const CompactPreviousOrderButtons: React.FC<CompactPreviousOrderButtonsPr
 
       {/* Desktop: inline buttons */}
       <div className="hidden md:flex items-center gap-1">
+        {/* DISABLED: Repetir button
         <div className="flex items-center gap-0.5">
           <button
             onClick={onRepeat}
@@ -85,12 +88,13 @@ export const CompactPreviousOrderButtons: React.FC<CompactPreviousOrderButtonsPr
           </button>
           <CompactInfoIcon onClick={onRepeatInfo} />
         </div>
+        */}
         <div className="flex items-center gap-0.5">
           <button
             onClick={onViewPrevious}
-            className="py-0.5 px-1.5 bg-white bg-opacity-90 text-green-100 font-cera-medium text-[9px] rounded-full hover:bg-yellow-active hover:text-white transition-colors leading-tight"
+            className="py-0.5 px-1.5 bg-white bg-opacity-90 text-green-100 font-cera-medium text-[9px] md:text-xs rounded-full hover:bg-yellow-active hover:text-white transition-colors leading-tight"
           >
-            Ver anterior
+            Repetir
           </button>
           <CompactInfoIcon onClick={onViewInfo} />
         </div>
