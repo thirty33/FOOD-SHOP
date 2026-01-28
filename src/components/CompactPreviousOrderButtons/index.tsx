@@ -18,9 +18,9 @@ const CompactInfoIcon: React.FC<{ onClick: (e: React.MouseEvent) => void }> = ({
 );
 
 export const CompactPreviousOrderButtons: React.FC<CompactPreviousOrderButtonsProps> = ({
-  onRepeat,
+  onRepeat: _onRepeat,
   onViewPrevious,
-  onRepeatInfo,
+  onRepeatInfo: _onRepeatInfo,
   onViewInfo,
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -30,10 +30,12 @@ export const CompactPreviousOrderButtons: React.FC<CompactPreviousOrderButtonsPr
     setDropdownOpen((prev) => !prev);
   };
 
+  /* DISABLED: Used by commented Repetir button
   const handleDropdownRepeat = (e: React.MouseEvent) => {
     setDropdownOpen(false);
-    onRepeat(e);
+    _onRepeat(e);
   };
+  */
 
   const handleDropdownView = (e: React.MouseEvent) => {
     setDropdownOpen(false);
