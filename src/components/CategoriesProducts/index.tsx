@@ -84,6 +84,7 @@ const ProductList = ({
           imageLight={product.image}
           price={product.price_list_lines[0].unit_price}
           title={product.name}
+          description={product.description}
           ingredients={product.ingredients}
           addProductToCart={addProductToCart}
           maximumOrderTime={getProductMaximumOrderTime(product)}

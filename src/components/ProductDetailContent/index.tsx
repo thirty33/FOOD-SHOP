@@ -1,7 +1,7 @@
-import { useMemo } from "react";
 import { Product } from "../../types/categories";
 import MonkeyIcon from "../Icons/MonkeyIcon";
 import { useQuantityChange } from "../../hooks/useQuantityChange";
+import { useProductDetail } from "../../hooks/useProductDetail";
 
 interface ProductDetailContentProps {
   product: Product;
@@ -9,13 +9,7 @@ interface ProductDetailContentProps {
 
 export const ProductDetailContent = ({ product }: ProductDetailContentProps) => {
   const { showPrices } = useQuantityChange();
-  
-  const IngredientsText = useMemo(() => {
-    return product.ingredients.map((ingredient, index, row) => {
-      const formattedText = ingredient.descriptive_text.charAt(0).toUpperCase() + ingredient.descriptive_text.slice(1).toLowerCase();
-      return `${formattedText}${index + 1 === row.length ? '.' : ','}`
-    }).join(' ')
-  }, [product.ingredients]);
+  const { detailText, detailLabel } = useProductDetail(product);
 
   return (
     <div className="flex flex-col px-6 pt-4 h-full">
@@ -40,11 +34,11 @@ export const ProductDetailContent = ({ product }: ProductDetailContentProps) => 
             alt={product.name}
           />
         ) : (
-          <div 
+          <div
             className="w-full h-full flex items-center justify-center text-center p-4"
             style={{ backgroundColor: '#E6E6E6' }}
           >
-            <span 
+            <span
               className="text-lg md:text-xl font-cera-bold leading-tight"
               style={{ color: '#CCCCCC' }}
             >
@@ -60,19 +54,23 @@ export const ProductDetailContent = ({ product }: ProductDetailContentProps) => 
           {product.name ? product.name.charAt(0).toUpperCase() + product.name.slice(1).toLowerCase() : ''}
         </div>
 
-        <div className="flex items-center justify-start gap-4 mb-2">
-          <span className="text-lg md:text-xl font-cera-medium tracking-tighter text-white">
-            Ingredientes
-          </span>
-        </div>
+        {detailText && (
+          <>
+            <div className="flex items-center justify-start gap-4 mb-2">
+              <span className="text-lg md:text-xl font-cera-medium tracking-tighter text-white">
+                {detailLabel}
+              </span>
+            </div>
 
-        <div className="mb-4 space-y-2 text-left">
-          <section className="text-base md:text-lg text-white space-y-1 font-cera-light tracking-tighter leading-5">
-            <p className="text-wrap">
-              {IngredientsText}
-            </p>
-          </section>
-        </div>
+            <div className="mb-4 space-y-2 text-left">
+              <section className="text-base md:text-lg text-white space-y-1 font-cera-light tracking-tighter leading-5">
+                <p className="text-wrap">
+                  {detailText}
+                </p>
+              </section>
+            </div>
+          </>
+        )}
 
         {showPrices && (
           <div className="text-left flex flex-col gap-2 justify-start mb-4">

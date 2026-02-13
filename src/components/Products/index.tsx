@@ -14,6 +14,7 @@ interface ProductItemProps {
   id: string | number;
   imageLight: string | null;
   title: string;
+  description: string;
   price: string | number;
   ingredients: Ingredients[];
   addProductToCart: (orderLines: Array<{
@@ -34,6 +35,7 @@ export const ProductItem = ({
   id,
   imageLight,
   title,
+  description,
   price,
   ingredients,
   addProductToCart,
@@ -77,7 +79,7 @@ export const ProductItem = ({
     const product = {
       id: typeof id === 'string' ? parseInt(id) : id,
       name: title,
-      description: "",
+      description,
       price: typeof price === 'string' ? price : price.toString(),
       image: imageLight,
       category_id: 0,
